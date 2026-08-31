@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../api/client";
 
@@ -11,7 +11,7 @@ function ProjectDetail() {
     }, []);
 
     async function loadProject() {
-        const res = await api.get( `/projects/${id}` );
+        const res = await api.get(`/projects/${id}`);
         setProject(res.data);
     }
 
@@ -27,9 +27,11 @@ function ProjectDetail() {
             <p>
                 {project.description}
             </p>
-            <h3>
-                Tasks coming next...
-            </h3>
+            <Link
+                to={`/projects/${project.id}/tasks`}
+            >
+                View Tasks
+            </Link>
         </div>
     );
 }

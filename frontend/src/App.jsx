@@ -11,6 +11,8 @@ import Dashboard from "./pages/Dashboard";
 import AppLayout from "./layouts/AppLayout";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
+import Tasks from "./pages/Tasks";
+import TaskDetail from "./pages/TaskDetail";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -57,6 +59,14 @@ function App() {
         <Route
           path="/projects/:id"
           element={<ProjectDetail />}
+        />
+        <Route
+          path="/projects/:projectId/tasks"
+          element={<Tasks />}
+        />
+        <Route
+          path="/tasks/:id"
+          element={<TaskDetail />}
         />
         <Route
           path="*"
