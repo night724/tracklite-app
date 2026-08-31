@@ -11,27 +11,103 @@ function ProjectDetail() {
     }, []);
 
     async function loadProject() {
-        const res = await api.get(`/projects/${id}`);
-        setProject(res.data);
+        try {
+            const res = await api.get(`/projects/${id}`);
+            setProject(res.data);
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
-
     if (!project) {
         return <h2>Loading...</h2>;
     }
 
     return (
-        <div>
-            <h1>
-                {project.name}
-            </h1>
-            <p>
-                {project.description}
-            </p>
-            <Link
-                to={`/projects/${project.id}/tasks`}
-            >
-                View Tasks
-            </Link>
+        <div className="project-detail">
+            <div className="project-banner">
+                <div>
+                    <h1>
+                        {project.name}
+                    </h1>
+                    <p>
+                        {
+                            project.description ||
+                            "No project description"
+                        }
+                    </p>
+                </div>
+                <span className="project-status">
+                    {project.status || "ACTIVE"}
+                </span>
+            </div>
+
+            <div className="project-actions">
+                <Link
+                    to={`/projects/${id}/tasks`}
+                    className="action-btn"
+                >
+                    Tasks
+                </Link>
+                <Link
+                    to={`/projects/${id}/issues`}
+                    className="action-btn"
+                >
+                    Issues
+                </Link>
+                <button className="action-btn">
+                    + Add Task
+                </button>
+            </div>
+            <div className="project-stats">
+                <div>
+                    <h2>
+                        12
+                    </h2>
+                    <p>
+                        Tasks
+                    </p>
+                </div>
+                <div>
+                    <h2>
+                        8
+                    </h2>
+                    <p>
+                        Issues
+                    </p>
+                </div>
+                <div>
+                    <h2>
+                        5
+                    </h2>
+                    <p>
+                        Members
+                    </p>
+                </div>
+            </div>
+            <div className="project-section">
+                <h2>
+                    Recent Activity
+                </h2>
+                <div className="activity-item">
+                    <span>
+                        ✓
+                    </span>
+                    Created project
+                </div>
+                <div className="activity-item">
+                    <span>
+                        ⚡
+                    </span>
+                    Updated dashboard task
+                </div>
+                <div className="activity-item">
+                    <span>
+                        🐞
+                    </span>
+                    Fixed login issue
+                </div>
+            </div>
         </div>
     );
 }
