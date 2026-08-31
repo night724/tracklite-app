@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/client";
+import CreateIssueModal from "../components/CreateIssueModal";
 
 function Issues() {
     const { projectId } = useParams();
@@ -8,6 +9,7 @@ function Issues() {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("ALL");
     const [priority, setPriority] = useState("ALL");
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         loadIssues();
@@ -57,7 +59,10 @@ function Issues() {
                     </p>
                 </div>
 
-                <button className="primary-btn">
+                <button
+                    className="primary-btn"
+                    onClick={() => setShowModal(true)}
+                >
                     + New Issue
                 </button>
 
@@ -162,8 +167,20 @@ function Issues() {
                     ))
                 }
             </div>
+            {
+                showModal && (
+                    <CreateIssueModal
+                        projectId={projectId}
+                        closeModal={() =>
+                            setShowModal(false)
+                        }
+                        refresh={loadIssues}
+                    />
+                )
+            }
         </div>
     );
+
 }
 
 export default Issues;

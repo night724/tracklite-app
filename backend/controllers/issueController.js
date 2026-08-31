@@ -36,6 +36,9 @@ exports.getIssue = async (req, res) => {
 
 exports.createIssue = async (req, res) => {
     try {
+        console.log("========== CREATE ISSUE ==========");
+        console.log("BODY:", req.body);
+        console.log("USER:", req.user);
         const {
             task_id,
             title,
@@ -44,39 +47,35 @@ exports.createIssue = async (req, res) => {
             assigned_to
         } = req.body;
 
-        const count =
-            Date.now()
-                .toString()
-                .slice(-3);
         const issue =
             await Issue.create({
                 id: uuidv4(),
                 task_id,
                 issue_key:
-                    `TL-${count}`,
+                    `TL-${Date.now().toString().slice(-3)}`,
                 title,
                 description,
-                priority:
-                    priority || "MEDIUM",
-                assigned_to,
-                created_by:
-                    req.user.id
+                priority: priority || "MEDIUM",
+                assigned_to: assigned_to || null,
+                created_by: req.user.id
             });
-
+        console.log("ISSUE CREATED:", issue);
         await Issue.addActivity(
             issue.id,
             req.user.id,
             `Created issue ${issue.issue_key}`
         );
-        res.status(201)
-            .json(issue);
+        res.status(201).json(issue);
     }
     catch (error) {
-        console.log(error);
-        res.status(500)
-            .json({
-                message: "Create issue failed"
-            });
+        console.error(
+            "CREATE ISSUE FAILED:"
+        );
+        console.error(error);
+        res.status(500).json({
+            message: error.message,
+            detail: error.detail || null
+        });
     }
 };
 
@@ -100,16 +99,16 @@ exports.updateIssue = async (req, res) => {
             });
     }
 };
-exports.getProjectIssues = async (req,res)=>{
+exports.getProjectIssues = async (req, res) => {
 
     try {
 
-        const {projectId} = req.params;
+        const { projectId } = req.params;
 
 
         const result = await db.query(
 
-        `
+            `
         SELECT
             issues.*,
             tasks.title AS task_title
@@ -124,14 +123,14 @@ exports.getProjectIssues = async (req,res)=>{
         ORDER BY issues.created_at DESC
         `,
 
-        [projectId]
+            [projectId]
 
         );
 
         res.json(result.rows);
 
     }
-    catch(error){
+    catch (error) {
 
         console.log(
             "GET PROJECT ISSUES ERROR:",
@@ -139,9 +138,9 @@ exports.getProjectIssues = async (req,res)=>{
         );
 
         res.status(500)
-        .json({
-            message:error.message
-        });
+            .json({
+                message: error.message
+            });
 
     }
 };

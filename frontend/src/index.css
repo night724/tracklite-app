@@ -1583,3 +1583,110 @@ a {
   color: #475569;
 
 }
+
+/* =========================
+ CREATE ISSUE MODAL
+========================= */
+
+
+.modal-overlay {
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 100%;
+
+  background: rgba(0, 0, 0, .45);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  z-index: 1000;
+
+}
+
+
+
+.issue-modal {
+
+  background: white;
+
+  width: 450px;
+
+  padding: 30px;
+
+  border-radius: 20px;
+
+}
+
+
+
+.issue-modal h2 {
+
+  margin-top: 0;
+
+}
+
+
+
+.issue-modal input,
+.issue-modal textarea,
+.issue-modal select {
+
+  width: 100%;
+
+  padding: 12px;
+
+  margin-bottom: 15px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 10px;
+
+}
+
+
+
+.issue-modal textarea {
+
+  height: 120px;
+
+  resize: none;
+
+}
+
+
+
+.modal-actions {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 15px;
+
+}
+
+
+
+.cancel-btn {
+
+  padding: 12px 20px;
+
+  border: none;
+
+  background: #e5e7eb;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+}
