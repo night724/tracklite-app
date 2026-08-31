@@ -31,9 +31,12 @@ function TaskDetail() {
                         }
                     </p>
                 </div>
-                <button className="primary-btn">
-                    + Create Issue
-                </button>
+                <Link
+                    to={`/projects/${task.project_id}/issues`}
+                    className="primary-btn"
+                >
+                    + View Issues
+                </Link>
             </div>
 
             <div className="task-info-grid">

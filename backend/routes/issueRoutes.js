@@ -1,12 +1,28 @@
 const express = require("express");
 const router = express.Router();
 const authenticate = require("../middleware/auth");
-const controller = require("../controllers/issueController");
+const issueController = require("../controllers/issueController");
 
 router.use(authenticate);
-router.get( "/task/:taskId", controller.getIssues );
-router.get( "/:id", controller.getIssue );
-router.post( "/", controller.createIssue );
-router.patch( "/:id", controller.updateIssue );
+router.get(
+    "/task/:taskId",
+    issueController.getIssues
+);
+router.get(
+    "/project/:projectId",
+    issueController.getProjectIssues
+);
+router.get(
+    "/:id",
+    issueController.getIssue
+);
+router.post(
+    "/",
+    issueController.createIssue
+);
+router.patch(
+    "/:id",
+    issueController.updateIssue
+);
 
 module.exports = router;
