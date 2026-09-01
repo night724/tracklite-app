@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import api from "../api/client";
 import ProjectCard from "../components/ProjectCard";
+import CreateProjectModal from "../components/CreateProjectModal";
+import { useParams, Link } from "react-router-dom";
 
 function Projects() {
     const [projects, setProjects] = useState([]);
+    const [showModal, setShowModal] = useState(false);
     const [search, setSearch] = useState("");
-    const workspaceId =
-        "22222222-2222-2222-2222-222222222222";
+    const { workspaceId } = useParams();
     useEffect(() => {
         loadProjects();
     }, []);
@@ -42,7 +44,10 @@ function Projects() {
                         Manage your workspace projects
                     </p>
                 </div>
-                <button className="primary-btn">
+                <button
+                    className="primary-btn"
+                    onClick={() => setShowModal(true)}
+                >
                     + New Project
                 </button>
             </div>
@@ -58,14 +63,36 @@ function Projects() {
 
             <div className="projects-grid">
                 {
-                    filteredProjects.map(project => (
-                        <ProjectCard
+                    projects.map(project => (
+                        <Link
                             key={project.id}
-                            project={project}
-                        />
+                            to={`/projects/${project.id}`}
+                            className="project-card"
+                        >
+                            <h2>
+                                {project.name}
+                            </h2>
+                            <p>
+                                {
+                                    project.description ||
+                                    "No description"
+                                }
+                            </p>
+                            <span>
+                                {project.status}
+                            </span>
+                        </Link>
                     ))
                 }
             </div>
+            {
+                showModal &&
+                <CreateProjectModal
+                    workspaceId={workspaceId}
+                    closeModal={() => setShowModal(false)}
+                    refresh={loadProjects}
+                />
+            }
         </div>
     );
 }

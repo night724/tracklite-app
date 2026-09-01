@@ -1,191 +1,101 @@
-import {
-    useEffect,
-    useState
-}
-    from "react";
-
-
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/client";
-
-
-import { useAuth }
-    from "../context/AuthContext";
-
-
+import { useAuth } from "../context/AuthContext";
 
 function Dashboard() {
-
-
     const { user } = useAuth();
+    console.log("CURRENT USER:", user);
+    const [data, setData] = useState(null);
+    const workspaceId = user?.workspaceId;
 
-
-    const [data, setData]
-        =
-        useState(null);
-
-
-
-
+    if (!workspaceId) {
+        return <h2>No workspace found</h2>;
+    }
     useEffect(() => {
-
-
         loadDashboard();
-
-
     }, []);
-
-
-
-
-
     async function loadDashboard() {
-
-
         try {
-
-
-            const res =
-                await api.get(
-                    "/dashboard"
-                );
-
-
+            const res = await api.get("/dashboard");
             setData(res.data);
-
-
         }
-
         catch (error) {
-
             console.log(error);
-
         }
-
-
     }
-
-
-
-
-
-
     if (!data) {
-
         return <h2>Loading dashboard...</h2>;
-
     }
-
-
 
 
 
     return (
-
         <div className="dashboard-container">
-
-
-
             <div className="dashboard-header">
-
-
                 <div>
-
                     <h1>
-
                         Welcome {user?.name} 👋
-
                     </h1>
-
-
                     <p>
                         Workspace overview
                     </p>
-
-
                 </div>
-
-
             </div>
 
-
-
-
-
-
-
             <div className="stats-grid">
-
-
-                <div className="stat-card">
-
+                <Link
+                    to={`/workspace/${workspaceId}/projects`}
+                    className="stat-card"
+                >
                     <div className="stat-icon">
                         📁
                     </div>
-
-
                     <div>
-
                         <h2>
                             {data.stats.projects}
                         </h2>
-
-
                         <p>
                             Total Projects
                         </p>
-
-
                     </div>
+                </Link>
 
-
-                </div>
-
-
-
-
-                <div className="stat-card">
-
+                <Link
+                    to={`/workspace/${workspaceId}/projects`}
+                    className="stat-card"
+                >
                     <h2>
                         ✅ {data.stats.tasks}
                     </h2>
-
                     <p>
                         Tasks
                     </p>
+                </Link>
 
-                </div>
-
-
-
-
-
-                <div className="stat-card">
-
+                <Link
+                     to={`/workspace/${workspaceId}/projects`}
+                    className="stat-card"
+                >
                     <h2>
                         🐞 {data.stats.issues}
                     </h2>
-
                     <p>
                         Issues
                     </p>
+                </Link>
 
-                </div>
-
-
-
-
-
-                <div className="stat-card">
-
+                <Link
+                    to={`/workspace/${workspaceId}/tasks?status=DONE`}
+                    className="stat-card"
+                >
                     <h2>
                         📈 {data.stats.completed}
                     </h2>
-
                     <p>
                         Completed
                     </p>
-
-                </div>
+                </Link>
 
 
 

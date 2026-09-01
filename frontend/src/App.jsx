@@ -15,6 +15,7 @@ import Tasks from "./pages/Tasks";
 import TaskDetail from "./pages/TaskDetail";
 import Issues from "./pages/Issues";
 import IssueDetail from "./pages/IssueDetail";
+import Completed from "./pages/Completed";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -55,11 +56,11 @@ function App() {
           />
         </Route>
         <Route
-          path="/projects"
+          path="/workspace/:workspaceId/projects"
           element={<Projects />}
         />
         <Route
-          path="/projects/:id"
+          path="/projects/:projectId"
           element={<ProjectDetail />}
         />
         <Route
@@ -77,6 +78,10 @@ function App() {
         <Route
           path="/issues/:id"
           element={<IssueDetail />}
+        />
+        <Route
+          path="/workspace/:workspaceId/completed"
+          element={<Completed />}
         />
         <Route
           path="*"

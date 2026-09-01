@@ -1,38 +1,47 @@
 const db = require("../config/database");
 
 class User {
-    static async findByEmail(email){
-        const result =
-            await db.query(
+    static async findByEmail(email) {
+        const result = await db.query(
             `
-            SELECT *
-            FROM users
-            WHERE email=$1
-            `,
+        SELECT
+            u.*,
+            w.id AS workspace_id
+        FROM users u
+        LEFT JOIN workspace_members wm
+        ON wm.user_id = u.id
+        LEFT JOIN workspaces w
+        ON w.id = wm.workspace_id
+        WHERE u.email=$1
+        LIMIT 1
+        `,
             [email]
         );
         return result.rows[0];
     }
 
-    static async findById(id){
-        const result =
-            await db.query(
+    static async findById(id) {
+
+        const result = await db.query(
             `
-            SELECT 
-                id,
-                name,
-                email,
-                role,
-                avatar
-            FROM users
-            WHERE id=$1
-            `,
+        SELECT
+            u.id,
+            u.name,
+            u.email,
+            u.role,
+            u.avatar,
+            wm.workspace_id
+        FROM users u
+        LEFT JOIN workspace_members wm
+            ON wm.user_id = u.id
+        WHERE u.id = $1
+        LIMIT 1
+        `,
             [id]
         );
         return result.rows[0];
     }
-
-    static async create(user){
+    static async create(user) {
         const {
             id,
             organization_id,
@@ -44,7 +53,7 @@ class User {
         } = user;
         const result =
             await db.query(
-            `
+                `
             INSERT INTO users
             (
                 id,
@@ -63,16 +72,16 @@ class User {
             RETURNING *
             `,
 
-            [
-                id,
-                organization_id,
-                name,
-                email,
-                password,
-                role
-            ]
+                [
+                    id,
+                    organization_id,
+                    name,
+                    email,
+                    password,
+                    role
+                ]
 
-        );
+            );
 
         return result.rows[0];
 

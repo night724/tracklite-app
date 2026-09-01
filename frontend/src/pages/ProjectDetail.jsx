@@ -1,18 +1,19 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../api/client";
+import CreateTaskModal from "../components/CreateTaskModal";
 
 function ProjectDetail() {
-    const { id } = useParams();
+    const { projectId } = useParams();
     const [project, setProject] = useState(null);
-
+    const [showModal, setShowModal] = useState(false);
     useEffect(() => {
         loadProject();
     }, []);
 
     async function loadProject() {
         try {
-            const res = await api.get(`/projects/${id}`);
+            const res = await api.get(`/projects/${projectId}`);
             setProject(res.data);
         }
         catch (error) {
@@ -44,18 +45,21 @@ function ProjectDetail() {
 
             <div className="project-actions">
                 <Link
-                    to={`/projects/${id}/tasks`}
+                    to={`/projects/${project.id}/tasks`}
                     className="action-btn"
                 >
                     Tasks
                 </Link>
                 <Link
-                    to={`/projects/${id}/issues`}
+                    to={`/projects/${projectId}/issues`}
                     className="action-btn"
                 >
                     Issues
                 </Link>
-                <button className="action-btn">
+                <button
+                    className="primary-btn"
+                    onClick={() => setShowModal(true)}
+                >
                     + Add Task
                 </button>
             </div>
@@ -108,6 +112,17 @@ function ProjectDetail() {
                     Fixed login issue
                 </div>
             </div>
+            {
+                showModal && (
+                    <CreateTaskModal
+                        projectId={project.id}
+                        closeModal={() =>
+                            setShowModal(false)
+                        }
+                        refresh={loadProject}
+                    />
+                )
+            }
         </div>
     );
 }

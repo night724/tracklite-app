@@ -12,8 +12,15 @@ function Issues() {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        loadIssues();
-    }, []);
+        if (projectId) {
+            loadIssues();
+        }
+    }, [projectId]);
+
+    if (!projectId) {
+        return <h2>No project selected</h2>;
+    }
+    
     async function loadIssues() {
         try {
             const res =

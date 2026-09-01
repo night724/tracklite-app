@@ -1,16 +1,33 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../api/client";
+import CreateIssueModal from "../components/CreateIssueModal";
 
 function TaskDetail() {
     const { id } = useParams();
+    const [issues, setIssues] = useState([]);
+    const [showModal, setShowModal] = useState(false);
     const [task, setTask] = useState(null);
-
+    
     useEffect(() => { loadTask(); }, []);
 
     async function loadTask() {
-        const res = await api.get(`/tasks/${id}`);
-        setTask(res.data);
+        try {
+            const taskRes =
+                await api.get(
+                    `/tasks/${id}`
+                );
+            const issueRes =
+                await api.get(
+                    `/issues/task/${id}`
+                );
+            setTask(taskRes.data);
+            setIssues(issueRes.data);
+        }
+        catch (error) {
+
+            console.log(error);
+        }
     }
 
     if (!task) {
@@ -31,12 +48,14 @@ function TaskDetail() {
                         }
                     </p>
                 </div>
-                <Link
-                    to={`/projects/${task.project_id}/issues`}
+                <button
                     className="primary-btn"
+                    onClick={() =>
+                        setShowModal(true)
+                    }
                 >
-                    + View Issues
-                </Link>
+                    + New Issue
+                </button>
             </div>
 
             <div className="task-info-grid">
@@ -75,41 +94,69 @@ function TaskDetail() {
                 </div>
 
             </div>
-
-            <div className="task-content">
-
-                <div className="task-section">
-                    <h2>
-                        Issues
-                    </h2>
-
-                    <div className="empty-box">
-                        No issues yet.
-                        <br />
-                        Create your first issue.
-                    </div>
-
-                </div>
-
-                <div className="task-section">
-
-                    <h2>
-                        Activity
-                    </h2>
-
-                    <div className="activity-row">
-
-                        ✓ Task created
-
-                    </div>
-
-                    <div className="activity-row">
-
-                        ⚡ Task updated
-
-                    </div>
-                </div>
+            <div className="task-section">
+                <h2>
+                    Issues
+                </h2>
+                {
+                    issues.length === 0 ?
+                        (
+                            <div className="empty-box">
+                                No issues yet.
+                                <br />
+                                Create your first issue.
+                            </div>
+                        )
+                        :
+                        (
+                            <div className="issues-container">
+                                {
+                                    issues.map(issue => (
+                                        <Link
+                                            key={issue.id}
+                                            to={`/issues/${issue.id}`}
+                                            className="issue-item"
+                                        >
+                                            <div className="issue-key">
+                                                {issue.issue_key}
+                                            </div>
+                                            <div className="issue-content">
+                                                <h3>
+                                                    {issue.title}
+                                                </h3>
+                                                <p>
+                                                    {
+                                                        issue.description ||
+                                                        "No description"
+                                                    }
+                                                </p>
+                                                <div className="issue-tags">
+                                                    <span className="priority-tag">
+                                                        {issue.priority}
+                                                    </span>
+                                                    <span className="status-tag">
+                                                        {issue.status}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    ))
+                                }
+                            </div>
+                        )
+                }
             </div>
+            {
+                showModal && (
+                    <CreateIssueModal
+                        taskId={id}
+                        closeModal={() =>
+                            setShowModal(false)
+                        }
+                        refresh={loadTask}
+                    />
+                )
+            }
         </div>
     );
 }

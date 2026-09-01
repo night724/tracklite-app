@@ -2,18 +2,31 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/client";
 import TaskCard from "../components/TaskCard";
-import CreateTaskModal from "../components/CreateTaskModal";
+
+import { useSearchParams } from "react-router-dom";
 
 function Tasks() {
     const { projectId } = useParams();
     const [tasks, setTasks] = useState([]);
-    const [showModal, setShowModal] = useState(false);
 
-    useEffect(() => { loadTasks(); }, []);
+    const [searchParams] = useSearchParams();
+    const status = searchParams.get("status");
+
+    useEffect(() => {
+        if (projectId) {
+            loadTasks();
+        }
+    }, [projectId]);
+    
+    if (!projectId) {
+        return <h2>No project selected</h2>;
+    }
 
     async function loadTasks() {
         try {
-            const res = await api.get(`/tasks/project/${projectId}`);
+            const res = await api.get(
+                `/tasks/project/${projectId}`
+            );
             setTasks(res.data);
         }
         catch (error) {
@@ -46,12 +59,7 @@ function Tasks() {
                         Manage project workflow
                     </p>
                 </div>
-                <button
-                    className="primary-btn"
-                    onClick={() => setShowModal(true)}
-                >
-                    + New Task
-                </button>
+
             </div>
             <div className="kanban-board">
                 {
@@ -106,17 +114,7 @@ function Tasks() {
                     ))
                 }
             </div>
-            {
-                showModal && (
-                    <CreateTaskModal
-                        projectId={projectId}
-                        closeModal={() =>
-                            setShowModal(false)
-                        }
-                        refresh={loadTasks}
-                    />
-                )
-            }
+
         </div>
     );
 }

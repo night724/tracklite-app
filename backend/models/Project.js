@@ -2,20 +2,22 @@ const db = require("../config/database");
 
 class Project {
     static async getAll(workspaceId) {
-
         const result =
             await db.query(
                 `
                 SELECT
-                    p.*,
-                    u.name AS creator_name
-                FROM projects p
-                LEFT JOIN users u
-                ON p.created_by=u.id
-                WHERE p.workspace_id=$1
-                ORDER BY p.created_at DESC
+                    id,
+                    name,
+                    description,
+                    status,
+                    created_at
+                FROM projects
+                WHERE workspace_id=$1
+                ORDER BY created_at DESC
                 `,
-                [workspaceId]
+                [
+                    workspaceId
+                ]
             );
         return result.rows;
     }
@@ -24,15 +26,13 @@ class Project {
         const result =
             await db.query(
                 `
-                SELECT
-                    p.*,
-                    u.name AS creator_name
-                FROM projects p
-                LEFT JOIN users u
-                ON p.created_by=u.id
-                WHERE p.id=$1
+                SELECT *
+                FROM projects
+                WHERE id=$1
                 `,
-                [id]
+                [
+                    id
+                ]
             );
         return result.rows[0];
     }
@@ -45,20 +45,21 @@ class Project {
             description,
             created_by
         } = data;
-
         const result =
             await db.query(
                 `
                 INSERT INTO projects
                 (
-                id,
-                workspace_id,
-                name,
-                description,
-                created_by
+                    id,
+                    workspace_id,
+                    name,
+                    description,
+                    created_by
                 )
+
                 VALUES
                 ($1,$2,$3,$4,$5)
+
                 RETURNING *
                 `,
                 [
@@ -69,10 +70,8 @@ class Project {
                     created_by
                 ]
             );
-
         return result.rows[0];
     }
-
     static async update(id, data) {
         const {
             name,

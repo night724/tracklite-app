@@ -2,8 +2,8 @@ import { useState } from "react";
 import api from "../api/client";
 
 
-function CreateIssueModal({
-    taskId,
+function CreateProjectModal({
+    workspaceId,
     closeModal,
     refresh
 }) {
@@ -11,9 +11,8 @@ function CreateIssueModal({
 
     const [form, setForm] = useState({
 
-        title: "",
-        description: "",
-        priority: "MEDIUM"
+        name: "",
+        description: ""
 
     });
 
@@ -33,8 +32,7 @@ function CreateIssueModal({
 
 
 
-
-    async function submitIssue(e) {
+    async function submitProject(e) {
 
         e.preventDefault();
 
@@ -43,21 +41,12 @@ function CreateIssueModal({
 
 
             await api.post(
-
-                "/issues",
-
+                "/projects",
                 {
-
-                    task_id: taskId,
-
-                    title: form.title,
-
-                    description: form.description,
-
-                    priority: form.priority
-
+                    workspace_id: workspaceId,
+                    name: form.name,
+                    description: form.description
                 }
-
             );
 
 
@@ -77,31 +66,30 @@ function CreateIssueModal({
 
 
 
-
-
     return (
 
         <div className="modal-overlay">
 
-            <div className="issue-modal">
+
+            <div className="project-modal">
 
 
                 <h2>
-                    Create Issue
+                    Create Project
                 </h2>
 
 
 
-                <form onSubmit={submitIssue}>
+                <form onSubmit={submitProject}>
 
 
                     <input
 
-                        name="title"
+                        name="name"
 
-                        placeholder="Issue title"
+                        placeholder="Project name"
 
-                        value={form.title}
+                        value={form.name}
 
                         onChange={handleChange}
 
@@ -115,42 +103,13 @@ function CreateIssueModal({
 
                         name="description"
 
-                        placeholder="Description"
+                        placeholder="Project description"
 
                         value={form.description}
 
                         onChange={handleChange}
 
                     />
-
-
-
-                    <select
-
-                        name="priority"
-
-                        value={form.priority}
-
-                        onChange={handleChange}
-
-                    >
-
-                        <option value="HIGH">
-                            High
-                        </option>
-
-
-                        <option value="MEDIUM">
-                            Medium
-                        </option>
-
-
-                        <option value="LOW">
-                            Low
-                        </option>
-
-
-                    </select>
 
 
 
@@ -161,9 +120,9 @@ function CreateIssueModal({
 
                             type="button"
 
-                            onClick={closeModal}
-
                             className="cancel-btn"
+
+                            onClick={closeModal}
 
                         >
 
@@ -179,7 +138,7 @@ function CreateIssueModal({
 
                         >
 
-                            Create Issue
+                            Create Project
 
                         </button>
 
@@ -192,6 +151,7 @@ function CreateIssueModal({
 
             </div>
 
+
         </div>
 
     );
@@ -199,4 +159,4 @@ function CreateIssueModal({
 }
 
 
-export default CreateIssueModal;
+export default CreateProjectModal;
