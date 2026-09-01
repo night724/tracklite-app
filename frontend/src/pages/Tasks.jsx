@@ -1,129 +1,293 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/client";
-import TaskCard from "../components/TaskCard";
 
-import { useSearchParams } from "react-router-dom";
 
 function Tasks() {
+
     const { projectId, workspaceId } = useParams();
+
     const [tasks, setTasks] = useState([]);
 
-    const [searchParams] = useSearchParams();
-    const status = searchParams.get("status");
+    const [search, setSearch] = useState("");
+
+
 
     useEffect(() => {
+
         if (projectId || workspaceId) {
             loadTasks();
         }
+
     }, [projectId, workspaceId]);
-    if (!projectId && !workspaceId) {
-        return <h2>No project selected</h2>;
-    }
+
+
 
     async function loadTasks() {
+
         try {
+
             let res;
+
             if (projectId) {
-                res = await api.get(
-                    `/tasks/project/${projectId}`
-                );
+
+                res =
+                    await api.get(
+                        `/tasks/project/${projectId}`
+                    );
+
             }
-            else if (workspaceId) {
-                res = await api.get(
-                    `/tasks/workspace/${workspaceId}`
-                );
+            else {
+
+                res =
+                    await api.get(
+                        `/tasks/workspace/${workspaceId}`
+                    );
+
             }
+
+
             setTasks(res.data);
+
+
         }
         catch (error) {
+
             console.log(error);
+
         }
+
     }
+
+
+
+
+
     const columns = [
+
         {
-            title: "TODO",
+            title: "To Do",
             status: "TODO"
         },
+
         {
-            title: "IN PROGRESS",
+            title: "In Progress",
             status: "IN_PROGRESS"
         },
+
         {
-            title: "DONE",
+            title: "Completed",
             status: "DONE"
         }
+
     ];
 
+
+
+
     return (
+
         <div className="tasks-page">
-            <div className="page-header">
+
+
+
+            <div className="tasks-header">
+
+
                 <div>
+
                     <h1>
                         Tasks
                     </h1>
+
                     <p>
-                        Manage project workflow
+                        Track and manage your project workflow
                     </p>
+
                 </div>
 
+
+
+                <button className="primary-btn">
+
+                    + New Task
+
+                </button>
+
+
             </div>
+
+
+
+
+
+            <div className="task-toolbar">
+
+
+                <input
+
+                    placeholder="Search tasks..."
+
+                    value={search}
+
+                    onChange={
+                        e => setSearch(e.target.value)
+                    }
+
+                />
+
+
+            </div>
+
+
+
+
+
+
+
             <div className="kanban-board">
+
+
                 {
                     columns.map(column => (
+
+
                         <div
                             className="kanban-column"
                             key={column.status}
                         >
-                            <div className="kanban-header">
+
+
+
+                            <div className="column-header">
+
+
                                 <h3>
                                     {column.title}
                                 </h3>
+
+
                                 <span>
+
                                     {
                                         tasks.filter(
-                                            task => task.status === column.status
+                                            t =>
+                                                t.status === column.status
                                         ).length
                                     }
+
                                 </span>
+
+
                             </div>
+
+
+
+
+
                             {
+
                                 tasks
-                                    .filter(
-                                        task => task.status === column.status
+
+                                    .filter(task =>
+
+                                        task.status === column.status &&
+
+                                        task.title
+                                            .toLowerCase()
+                                            .includes(
+                                                search.toLowerCase()
+                                            )
+
                                     )
+
                                     .map(task => (
+
+
                                         <Link
+
                                             key={task.id}
+
                                             to={`/tasks/${task.id}`}
-                                            className="kanban-card"
+
+                                            className="task-item"
+
                                         >
+
+
+
                                             <h4>
+
                                                 {task.title}
+
                                             </h4>
 
+
+
                                             <p>
+
                                                 {
                                                     task.description ||
                                                     "No description"
                                                 }
+
                                             </p>
-                                            <div className="task-meta">
-                                                <span>
+
+
+
+
+                                            <div className="task-footer">
+
+
+                                                <span
+                                                    className={
+                                                        `priority ${task.priority?.toLowerCase()}`
+                                                    }
+                                                >
+
                                                     {task.priority}
+
                                                 </span>
+
+
+
+                                                <span>
+
+                                                    👤
+
+                                                </span>
+
+
                                             </div>
+
+
+
                                         </Link>
 
+
                                     ))
+
                             }
+
+
+
                         </div>
+
+
                     ))
                 }
+
+
             </div>
 
+
+
+
         </div>
+
     );
+
 }
+
 
 export default Tasks;
