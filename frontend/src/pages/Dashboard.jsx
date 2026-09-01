@@ -12,7 +12,7 @@ function Dashboard() {
     useEffect(() => {
         loadDashboard();
     }, []);
-    
+
     if (!workspaceId) {
         return <h2>No workspace found</h2>;
     }
@@ -75,7 +75,7 @@ function Dashboard() {
                 </Link>
 
                 <Link
-                    to={`/workspace/${workspaceId}/projects`}
+                    to={`/workspace/${workspaceId}/issues`}
                     className="stat-card"
                 >
                     <h2>

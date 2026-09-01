@@ -4,7 +4,7 @@ import api from "../api/client";
 import CreateIssueModal from "../components/CreateIssueModal";
 
 function Issues() {
-    const { projectId } = useParams();
+    const { projectId, workspaceId } = useParams();
     const [issues, setIssues] = useState([]);
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("ALL");
@@ -12,21 +12,26 @@ function Issues() {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        if (projectId) {
+        if (projectId || workspaceId) {
             loadIssues();
         }
-    }, [projectId]);
-
-    if (!projectId) {
-        return <h2>No project selected</h2>;
+    }, [projectId, workspaceId]);
+    if (!projectId && !workspaceId) {
+        return <h2>No project or workspace selected</h2>;
     }
-    
     async function loadIssues() {
         try {
-            const res =
-                await api.get(
+            let res;
+            if (projectId) {
+                res = await api.get(
                     `/issues/project/${projectId}`
                 );
+            }
+            else if (workspaceId) {
+                res = await api.get(
+                    `/issues/workspace/${workspaceId}`
+                );
+            }
             setIssues(res.data);
         }
         catch (error) {

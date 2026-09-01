@@ -80,6 +80,10 @@ function App() {
           element={<Issues />}
         />
         <Route
+          path="/workspace/:workspaceId/issues"
+          element={<Issues />}
+        />
+        <Route
           path="/issues/:id"
           element={<IssueDetail />}
         />

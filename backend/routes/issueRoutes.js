@@ -13,6 +13,10 @@ router.get(
     issueController.getProjectIssues
 );
 router.get(
+    "/workspace/:workspaceId",
+    issueController.getWorkspaceIssues
+);
+router.get(
     "/:id",
     issueController.getIssue
 );

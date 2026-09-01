@@ -144,3 +144,38 @@ exports.getProjectIssues = async (req, res) => {
 
     }
 };
+exports.getWorkspaceIssues = async (req, res) => {
+    try {
+        const issues = await db.query(
+            `
+            SELECT
+                i.*,
+                t.title AS task_title,
+                p.name AS project_name
+            FROM issues i
+            JOIN tasks t
+            ON i.task_id = t.id
+            JOIN projects p
+            ON t.project_id = p.id
+            WHERE p.workspace_id=$1
+            ORDER BY i.created_at DESC
+            `,
+            [
+                req.params.workspaceId
+            ]
+        );
+        res.json(
+            issues.rows
+        );
+    }
+    catch (error) {
+        console.log(
+            "WORKSPACE ISSUES ERROR:",
+            error
+        );
+        res.status(500)
+            .json({
+                message: "Cannot load workspace issues"
+            });
+    }
+};
