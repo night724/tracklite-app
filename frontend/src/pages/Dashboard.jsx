@@ -127,12 +127,11 @@ function Dashboard() {
                         data.projects.map(project => (
 
 
-                            <div
+                            <Link
+                                to={`/projects/${project.id}`}
                                 className="project-row"
                                 key={project.id}
                             >
-
-
                                 <div>
 
                                     <h3>
@@ -148,7 +147,7 @@ function Dashboard() {
                                 </div>
 
 
-                            </div>
+                            </Link>
 
 
                         ))
@@ -173,63 +172,33 @@ function Dashboard() {
                         Recent Tasks
                     </h2>
 
-
-
                     {
                         data.tasks.map(task => (
-
-
-                            <div
+                            <Link
                                 className="task-row"
                                 key={task.id}
+                                to={`/tasks/${task.id}`}
                             >
-
-
                                 <div>
-
                                     <h3>
                                         {task.title}
                                     </h3>
-
-
                                     <p>
                                         Priority:
                                         {task.priority}
                                     </p>
-
-
                                 </div>
-
-
 
                                 <span>
                                     {task.status}
                                 </span>
-
-
-                            </div>
-
-
+                            </Link>
                         ))
-
                     }
-
-
-
                 </div>
-
-
-
             </div>
-
-
-
         </div>
-
     );
-
-
 }
-
 
 export default Dashboard;

@@ -18,21 +18,32 @@ class Task {
             );
         return result.rows;
     }
-    static async getByWorkspace(workspaceId) {
-
-        const result = await db.query(
-            `
+    static async getByWorkspace(workspaceId, status) {
+        let query = `
         SELECT
             t.*
         FROM tasks t
         JOIN projects p
         ON t.project_id = p.id
         WHERE p.workspace_id=$1
+    `;
+        const params = [
+            workspaceId
+        ];
+        if (status) {
+            query += `
+            AND t.status=$2
+        `;
+            params.push(status);
+        }
+        query += `
         ORDER BY t.created_at DESC
-        `,
-            [workspaceId]
-        );
-
+    `;
+        const result =
+            await db.query(
+                query,
+                params
+            );
         return result.rows;
 
     }

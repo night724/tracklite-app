@@ -1,5 +1,6 @@
 const Task = require("../models/Task");
 const { v4: uuidv4 } = require("uuid");
+const db = require("../config/database");
 
 exports.getTasks = async (req, res) => {
     try {
@@ -40,6 +41,7 @@ exports.getTask = async (req, res) => {
 
 exports.createTask = async (req, res) => {
     try {
+
         const {
             project_id,
             title,
@@ -49,6 +51,11 @@ exports.createTask = async (req, res) => {
             assigned_to
         } = req.body;
 
+
+        console.log("REQ USER:", req.user);
+        console.log("REQ BODY:", req.body);
+
+
         const task = await Task.create({
             id: uuidv4(),
             project_id,
@@ -57,16 +64,24 @@ exports.createTask = async (req, res) => {
             status: status || "TODO",
             priority: priority || "MEDIUM",
             assigned_to,
-            created_by:
-                req.user.id
+            created_by: req.user.id
         });
-        res.status(201)
-            .json(task);
+
+
+        res.status(201).json(task);
+
     }
     catch (error) {
-        console.log(error);
-        res.status(500)
-            .json({ message: "Task creation failed" });
+
+        console.log(
+            "CREATE TASK ERROR:",
+            error.message
+        );
+
+        res.status(500).json({
+            message: error.message
+        });
+
     }
 };
 
@@ -97,25 +112,19 @@ exports.deleteTask = async (req, res) => {
     }
 };
 exports.getWorkspaceTasks = async (req, res) => {
-
     try {
-
+        const status = req.query.status;
         const tasks =
             await Task.getByWorkspace(
-                req.params.workspaceId
+                req.params.workspaceId,
+                status
             );
-
         res.json(tasks);
-
     }
     catch (error) {
-
         console.log(error);
-
         res.status(500).json({
             message: "Cannot load workspace tasks"
         });
-
     }
-
 };
