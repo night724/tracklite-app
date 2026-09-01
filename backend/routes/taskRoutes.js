@@ -4,7 +4,6 @@ const authenticate = require("../middleware/auth");
 const controller = require("../controllers/taskController");
 
 router.use(authenticate);
-
 router.get(
     "/project/:projectId",
     controller.getTasks
@@ -13,7 +12,6 @@ router.get(
     "/:id",
     controller.getTask
 );
-
 router.post( "/", controller.createTask );
 
 router.patch("/:id", controller.updateTask );

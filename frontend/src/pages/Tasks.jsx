@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/client";
 import TaskCard from "../components/TaskCard";
+import CreateTaskModal from "../components/CreateTaskModal";
 
 function Tasks() {
     const { projectId } = useParams();
     const [tasks, setTasks] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => { loadTasks(); }, []);
 
@@ -44,7 +46,10 @@ function Tasks() {
                         Manage project workflow
                     </p>
                 </div>
-                <button className="primary-btn">
+                <button
+                    className="primary-btn"
+                    onClick={() => setShowModal(true)}
+                >
                     + New Task
                 </button>
             </div>
@@ -101,7 +106,19 @@ function Tasks() {
                     ))
                 }
             </div>
+            {
+                showModal && (
+                    <CreateTaskModal
+                        projectId={projectId}
+                        closeModal={() =>
+                            setShowModal(false)
+                        }
+                        refresh={loadTasks}
+                    />
+                )
+            }
         </div>
     );
 }
+
 export default Tasks;

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authenticate = require("../middleware/auth");
 const controller = require("../controllers/commentController");
+const db = require("../config/database");
 
 router.use(authenticate);
 router.get( "/issue/:issueId", controller.getComments );
