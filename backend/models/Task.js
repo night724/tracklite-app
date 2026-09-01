@@ -18,7 +18,24 @@ class Task {
             );
         return result.rows;
     }
+    static async getByWorkspace(workspaceId) {
 
+        const result = await db.query(
+            `
+        SELECT
+            t.*
+        FROM tasks t
+        JOIN projects p
+        ON t.project_id = p.id
+        WHERE p.workspace_id=$1
+        ORDER BY t.created_at DESC
+        `,
+            [workspaceId]
+        );
+
+        return result.rows;
+
+    }
     static async getById(id) {
         const result =
             await db.query(

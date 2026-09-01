@@ -68,6 +68,10 @@ function App() {
           element={<Tasks />}
         />
         <Route
+          path="/workspace/:workspaceId/tasks"
+          element={<Tasks />}
+        />
+        <Route
           path="/tasks/:id"
           element={<TaskDetail />}
         />

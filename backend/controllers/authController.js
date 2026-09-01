@@ -357,46 +357,45 @@ exports.login = async (req, res) => {
 
 };
 
-
-
-
-
-
-
 // CURRENT USER
 exports.me = async (req, res) => {
-
     try {
-
         const user =
             await User.findById(req.user.id);
-
         if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
+            return res.status(404)
+                .json({
+                    message: "User not found"
+                });
         }
-
+        const workspace =
+            await db.query(
+                `
+                SELECT workspace_id
+                FROM workspace_members
+                WHERE user_id=$1
+                LIMIT 1
+                `,
+                [
+                    user.id
+                ]
+            );
+        const workspaceId =
+            workspace.rows[0]?.workspace_id || null;
         res.json({
             id: user.id,
             name: user.name,
             email: user.email,
             role: user.role,
             avatar: user.avatar || null,
-            workspaceId: user.workspace_id
+            workspaceId
         });
-
     }
     catch (error) {
-
-        console.log(
-            "CURRENT USER ERROR:",
-            error
-        );
-
-        res.status(500).json({
-            message: "Cannot get user"
-        });
-
+        console.log(error);
+        res.status(500)
+            .json({
+                message: "Cannot get user"
+            });
     }
 };

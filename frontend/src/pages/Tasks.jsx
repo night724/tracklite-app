@@ -6,27 +6,34 @@ import TaskCard from "../components/TaskCard";
 import { useSearchParams } from "react-router-dom";
 
 function Tasks() {
-    const { projectId } = useParams();
+    const { projectId, workspaceId } = useParams();
     const [tasks, setTasks] = useState([]);
 
     const [searchParams] = useSearchParams();
     const status = searchParams.get("status");
 
     useEffect(() => {
-        if (projectId) {
+        if (projectId || workspaceId) {
             loadTasks();
         }
-    }, [projectId]);
-    
-    if (!projectId) {
+    }, [projectId, workspaceId]);
+    if (!projectId && !workspaceId) {
         return <h2>No project selected</h2>;
     }
 
     async function loadTasks() {
         try {
-            const res = await api.get(
-                `/tasks/project/${projectId}`
-            );
+            let res;
+            if (projectId) {
+                res = await api.get(
+                    `/tasks/project/${projectId}`
+                );
+            }
+            else if (workspaceId) {
+                res = await api.get(
+                    `/tasks/workspace/${workspaceId}`
+                );
+            }
             setTasks(res.data);
         }
         catch (error) {

@@ -9,12 +9,13 @@ function Dashboard() {
     const [data, setData] = useState(null);
     const workspaceId = user?.workspaceId;
 
-    if (!workspaceId) {
-        return <h2>No workspace found</h2>;
-    }
     useEffect(() => {
         loadDashboard();
     }, []);
+    
+    if (!workspaceId) {
+        return <h2>No workspace found</h2>;
+    }
     async function loadDashboard() {
         try {
             const res = await api.get("/dashboard");
@@ -62,7 +63,7 @@ function Dashboard() {
                 </Link>
 
                 <Link
-                    to={`/workspace/${workspaceId}/projects`}
+                    to={`/workspace/${workspaceId}/tasks`}
                     className="stat-card"
                 >
                     <h2>
@@ -74,7 +75,7 @@ function Dashboard() {
                 </Link>
 
                 <Link
-                     to={`/workspace/${workspaceId}/projects`}
+                    to={`/workspace/${workspaceId}/projects`}
                     className="stat-card"
                 >
                     <h2>

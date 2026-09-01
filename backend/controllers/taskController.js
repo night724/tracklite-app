@@ -96,3 +96,26 @@ exports.deleteTask = async (req, res) => {
             .json({ message: "Delete failed" });
     }
 };
+exports.getWorkspaceTasks = async (req, res) => {
+
+    try {
+
+        const tasks =
+            await Task.getByWorkspace(
+                req.params.workspaceId
+            );
+
+        res.json(tasks);
+
+    }
+    catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Cannot load workspace tasks"
+        });
+
+    }
+
+};
