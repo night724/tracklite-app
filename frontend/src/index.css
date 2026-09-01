@@ -684,20 +684,23 @@ a {
  PROJECT DETAIL
 ========================= */
 
-
 .project-detail {
 
-  width: 100%;
+  padding: 40px;
+
+  background: #f8fafc;
+
+  min-height: 100vh;
 
 }
 
 
 
-.project-banner {
+.project-hero {
 
   background: white;
 
-  padding: 35px;
+  padding: 30px;
 
   border-radius: 20px;
 
@@ -707,97 +710,31 @@ a {
 
   align-items: center;
 
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, .06);
-
 }
 
 
 
-.project-banner h1 {
-
-  font-size: 34px;
-
-  margin: 0 0 10px;
-
-}
-
-
-
-.project-banner p {
-
-  color: #64748b;
-
-}
-
-
-
-.project-actions {
+.project-title {
 
   display: flex;
 
-  gap: 15px;
-
-  margin: 25px 0;
-
-}
-
-
-
-.action-btn {
-
-  background: #2563eb;
-
-  color: white;
-
-  padding: 12px 20px;
-
-  border-radius: 10px;
-
-  border: none;
-
-  cursor: pointer;
-
-}
-
-
-
-
-.project-stats {
-
-  display: grid;
-
-  grid-template-columns:
-
-    repeat(3, 1fr);
-
   gap: 20px;
 
-  margin-bottom: 30px;
+  align-items: center;
 
 }
 
 
 
-.project-stats div {
+.project-icon {
 
-  background: white;
-
-  padding: 25px;
-
-  border-radius: 18px;
-
-  text-align: center;
-
-  box-shadow:
-
-    0 8px 25px rgba(0, 0, 0, .06);
+  font-size: 40px;
 
 }
 
 
 
-.project-stats h2 {
+.project-title h1 {
 
   font-size: 32px;
 
@@ -807,17 +744,47 @@ a {
 
 
 
-.project-stats p {
+.status-badge {
 
-  color: #64748b;
+  background: #dcfce7;
+
+  color: #166534;
+
+  padding: 8px 16px;
+
+  border-radius: 20px;
+
+  font-weight: 600;
 
 }
 
 
 
+.project-actions {
+
+  display: flex;
+
+  gap: 12px;
+
+  margin: 25px 0;
+
+}
 
 
-.project-section {
+
+.project-stats {
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 20px;
+
+}
+
+
+
+.stat-box {
 
   background: white;
 
@@ -825,26 +792,61 @@ a {
 
   border-radius: 18px;
 
-  box-shadow:
+  text-decoration: none;
 
-    0 8px 25px rgba(0, 0, 0, .06);
+  color: #111827;
+
+}
+
+
+
+.stat-box h2 {
+
+  font-size: 36px;
+
+  margin: 0;
 
 }
 
 
 
-.activity-item {
+.project-content {
 
-  padding: 15px 0;
+  display: grid;
 
-  border-bottom:
+  grid-template-columns: 2fr 1fr;
 
-    1px solid #eee;
+  gap: 20px;
 
-  color: #475569;
+  margin-top: 30px;
 
 }
 
+
+
+.content-card {
+
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 18px;
+
+}
+
+
+
+.detail-row {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid #eee;
+
+}
 
 /* =========================
    RESPONSIVE
@@ -1849,6 +1851,244 @@ a {
   border: 1px solid #ddd;
 
   background: white;
+
+  cursor: pointer;
+
+}
+
+.stat-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+.modal-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(15, 23, 42, .45);
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  z-index: 1000;
+
+}
+
+
+
+.project-modal {
+
+  width: 480px;
+
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 0;
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, .2);
+
+}
+
+
+
+.modal-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  padding: 24px;
+
+  border-bottom: 1px solid #eee;
+
+}
+
+
+.modal-header h2 {
+
+  margin: 0;
+
+  font-size: 22px;
+
+}
+
+
+
+.modal-header p {
+
+  margin-top: 6px;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+}
+
+
+
+.close-btn {
+
+  border: none;
+
+  background: none;
+
+  cursor: pointer;
+
+  font-size: 20px;
+
+}
+
+
+
+.project-form {
+
+  padding: 24px;
+
+}
+
+
+
+.form-group {
+
+  margin-bottom: 18px;
+
+}
+
+
+
+.form-group label {
+
+  display: block;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  margin-bottom: 8px;
+
+}
+
+
+
+.form-group input,
+.form-group textarea {
+
+  width: 100%;
+
+  padding: 12px 14px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+
+}
+
+
+
+.form-group textarea {
+
+  height: 100px;
+
+  resize: none;
+
+}
+
+
+
+.project-preview {
+
+  display: flex;
+
+  gap: 14px;
+
+  padding: 15px;
+
+  background: #f8fafc;
+
+  border-radius: 12px;
+
+  margin-bottom: 20px;
+
+}
+
+
+
+.preview-icon {
+
+  font-size: 28px;
+
+}
+
+
+
+.project-preview h3 {
+
+  margin: 0;
+
+}
+
+
+
+.project-preview p {
+
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+}
+
+
+
+.modal-actions {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 12px;
+
+}
+
+
+
+.cancel-btn {
+
+  background: #f1f5f9;
+
+  border: none;
+
+  padding: 10px 18px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+}
+
+
+
+.primary-btn {
+
+  background: #2563eb;
+
+  color: white;
+
+  border: none;
+
+  padding: 10px 20px;
+
+  border-radius: 10px;
 
   cursor: pointer;
 

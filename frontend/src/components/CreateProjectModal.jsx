@@ -70,78 +70,122 @@ function CreateProjectModal({
 
         <div className="modal-overlay">
 
-
             <div className="project-modal">
 
+                <div className="modal-header">
 
-                <h2>
-                    Create Project
-                </h2>
+                    <div>
+                        <h2>
+                            Create New Project
+                        </h2>
 
-
-
-                <form onSubmit={submitProject}>
-
-
-                    <input
-
-                        name="name"
-
-                        placeholder="Project name"
-
-                        value={form.name}
-
-                        onChange={handleChange}
-
-                        required
-
-                    />
+                        <p>
+                            Organize your work and collaborate with your team
+                        </p>
+                    </div>
 
 
+                    <button
+                        type="button"
+                        className="close-btn"
+                        onClick={closeModal}
+                    >
+                        ✕
+                    </button>
 
-                    <textarea
+                </div>
 
-                        name="description"
 
-                        placeholder="Project description"
+                <form
+                    className="project-form"
+                    onSubmit={submitProject}
+                >
 
-                        value={form.description}
+                    <div className="form-group">
 
-                        onChange={handleChange}
+                        <label>
+                            Project Name
+                        </label>
 
-                    />
+                        <input
+                            name="name"
+                            placeholder="e.g. Website Redesign"
+                            value={form.name}
+                            onChange={handleChange}
+                            required
+                        />
+
+                    </div>
+
+
+
+                    <div className="form-group">
+
+                        <label>
+                            Description
+                        </label>
+
+                        <textarea
+
+                            name="description"
+
+                            placeholder="Describe your project..."
+
+                            value={form.description}
+
+                            onChange={handleChange}
+
+                        />
+
+                    </div>
+
+
+
+                    <div className="project-preview">
+
+                        <div className="preview-icon">
+                            📁
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                {
+                                    form.name ||
+                                    "Project name"
+                                }
+                            </h3>
+
+                            <p>
+                                {
+                                    form.description ||
+                                    "No description yet"
+                                }
+                            </p>
+
+                        </div>
+
+                    </div>
 
 
 
                     <div className="modal-actions">
 
-
                         <button
-
                             type="button"
-
                             className="cancel-btn"
-
                             onClick={closeModal}
-
                         >
-
                             Cancel
-
                         </button>
-
 
 
                         <button
-
+                            type="submit"
                             className="primary-btn"
-
                         >
-
                             Create Project
-
                         </button>
-
 
                     </div>
 

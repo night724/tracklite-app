@@ -26,103 +26,224 @@ function ProjectDetail() {
 
     return (
         <div className="project-detail">
-            <div className="project-banner">
-                <div>
-                    <h1>
-                        {project.name}
-                    </h1>
-                    <p>
-                        {
-                            project.description ||
-                            "No project description"
-                        }
-                    </p>
-                </div>
-                <span className="project-status">
-                    {project.status || "ACTIVE"}
-                </span>
+
+
+            <div className="project-topbar">
+
+                <Link
+                    to="/workspace"
+                    className="back-link"
+                >
+                    ← Projects
+                </Link>
+
             </div>
 
+
+
+            <div className="project-hero">
+
+
+                <div className="project-title">
+
+
+                    <div className="project-icon">
+                        📁
+                    </div>
+
+
+                    <div>
+
+                        <h1>
+                            {project.name}
+                        </h1>
+
+
+                        <p>
+                            {
+                                project.description ||
+                                "No description"
+                            }
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <span className="status-badge">
+                    {project.status || "ACTIVE"}
+                </span>
+
+
+            </div>
+
+
+
+
             <div className="project-actions">
-                <Link
-                    to={`/projects/${project.id}/tasks`}
-                    className="action-btn"
-                >
-                    Tasks
-                </Link>
-                <Link
-                    to={`/projects/${projectId}/issues`}
-                    className="action-btn"
-                >
-                    Issues
-                </Link>
+
                 <button
                     className="primary-btn"
                     onClick={() => setShowModal(true)}
                 >
                     + Add Task
                 </button>
+
+
             </div>
+
+
+
+
+
             <div className="project-stats">
-                <div>
+
+
+                <Link
+                    to={`/projects/${project.id}/tasks`}
+                    className="stat-box"
+                >
+
                     <h2>
-                        12
+                        {project.taskCount || 0}
                     </h2>
+
                     <p>
                         Tasks
                     </p>
-                </div>
-                <div>
+
+                </Link>
+
+
+
+                <Link
+                    to={`/projects/${project.id}/issues`}
+                    className="stat-box"
+                >
+
                     <h2>
-                        8
+                        {project.issueCount || 0}
                     </h2>
+
                     <p>
                         Issues
                     </p>
-                </div>
-                <div>
+
+                </Link>
+
+
+
+
+                <Link
+                    to={`/projects/${project.id}/members`}
+                    className="stat-box"
+                >
+
                     <h2>
-                        5
+                        {project.memberCount || 0}
                     </h2>
+
                     <p>
                         Members
                     </p>
-                </div>
+
+                </Link>
+
+
             </div>
-            <div className="project-section">
-                <h2>
-                    Recent Activity
-                </h2>
-                <div className="activity-item">
-                    <span>
-                        ✓
-                    </span>
-                    Created project
+
+
+
+
+            <div className="project-content">
+
+
+                <div className="content-card">
+
+
+                    <h2>
+                        Recent Activity
+                    </h2>
+
+
+                    <div className="activity-item">
+                        ✓ Project created
+                    </div>
+
+
+                    <div className="activity-item">
+                        ⚡ Task updated
+                    </div>
+
+
+                    <div className="activity-item">
+                        🐞 Issue fixed
+                    </div>
+
+
                 </div>
-                <div className="activity-item">
-                    <span>
-                        ⚡
-                    </span>
-                    Updated dashboard task
+
+
+
+
+
+                <div className="content-card">
+
+
+                    <h2>
+                        Project Details
+                    </h2>
+
+
+                    <div className="detail-row">
+                        <span>Status</span>
+                        <strong>
+                            {project.status}
+                        </strong>
+                    </div>
+
+
+                    <div className="detail-row">
+                        <span>Created</span>
+                        <strong>
+                            {project.created_at}
+                        </strong>
+                    </div>
+
+
                 </div>
-                <div className="activity-item">
-                    <span>
-                        🐞
-                    </span>
-                    Fixed login issue
-                </div>
+
+
             </div>
+
+
+
+
+
             {
                 showModal && (
+
                     <CreateTaskModal
+
                         projectId={project.id}
+
                         closeModal={() =>
                             setShowModal(false)
                         }
+
                         refresh={loadProject}
+
                     />
+
                 )
+
             }
+
+
+
         </div>
     );
 }

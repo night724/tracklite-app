@@ -21,19 +21,35 @@ class Project {
             );
         return result.rows;
     }
-
     static async getById(id) {
-        const result =
-            await db.query(
-                `
-                SELECT *
-                FROM projects
-                WHERE id=$1
-                `,
-                [
-                    id
-                ]
-            );
+        const result = await db.query(
+            `
+        SELECT
+            p.*,
+            (
+                SELECT COUNT(*)
+                FROM tasks t
+                WHERE t.project_id = p.id
+            ) AS "taskCount",
+            (
+                SELECT COUNT(*)
+                FROM project_members pm
+                WHERE pm.project_id = p.id
+            ) AS "memberCount",
+            (
+                SELECT COUNT(*)
+                FROM issues i
+                INNER JOIN tasks t2
+                ON i.task_id = t2.id
+                WHERE t2.project_id = p.id
+            ) AS "issueCount"
+        FROM projects p
+        WHERE p.id=$1
+        `,
+            [
+                id
+            ]
+        );
         return result.rows[0];
     }
 
