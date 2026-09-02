@@ -2,15 +2,34 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import DashboardPieChart from "../components/DashboardPieChart";
 
 function Dashboard() {
     const { user } = useAuth();
     console.log("CURRENT USER:", user);
     const [data, setData] = useState(null);
+    const [charts, setCharts] = useState(null);
     const workspaceId = user?.workspaceId;
-
+    const projectProgressChart =
+        charts?.projectProgress.map(project => {
+            const completed =
+                Number(project.completed_tasks);
+            const total =
+                Number(project.total_tasks);
+            return {
+                name: project.name,
+                value:
+                    total === 0
+                        ? 0
+                        :
+                        Math.round(
+                            (completed / total) * 100
+                        )
+            };
+        });
     useEffect(() => {
         loadDashboard();
+        loadCharts();
     }, []);
 
     if (!workspaceId) {
@@ -28,7 +47,21 @@ function Dashboard() {
     if (!data) {
         return <h2>Loading dashboard...</h2>;
     }
-
+    async function loadCharts() {
+        try {
+            const res =
+                await api.get(
+                    "/dashboard/charts"
+                );
+            setCharts(res.data);
+        }
+        catch (error) {
+            console.log(
+                "CHART ERROR",
+                error
+            );
+        }
+    }
 
 
     return (
@@ -103,7 +136,43 @@ function Dashboard() {
             </div>
 
 
+            {
+                charts && (
 
+                    <div className="dashboard-charts">
+
+
+                        <DashboardPieChart
+
+                            title="Task Status"
+
+                            data={charts.tasks}
+
+                        />
+
+
+
+                        <DashboardPieChart
+
+                            title="Issue Priority"
+
+                            data={charts.issues}
+
+                        />
+
+
+                        <DashboardPieChart
+
+                            title="Projects Progress"
+
+                            data={projectProgressChart}
+
+                        />
+
+                    </div>
+
+                )
+            }
 
 
 

@@ -12,17 +12,17 @@ const authenticate =
 
 const controller =
     require("../controllers/dashboardController");
-
+router.get(
+    "/",
+    authenticate,
+    controller.getDashboard
+);
 
 
 router.get(
-
-    "/",
-
+    "/charts",
     authenticate,
-
-    controller.getDashboard
-
+    controller.getCharts
 );
 
 

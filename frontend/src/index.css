@@ -4922,6 +4922,128 @@ label {
 
 }
 
+/* =========================
+   dashboard-charts
+========================= */
+.dashboard-charts {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 25px;
+
+  margin: 35px 0;
+
+}
+
+
+
+.chart-card {
+
+  background: #ffffff;
+
+  border-radius: 24px;
+
+  padding: 25px;
+
+  min-height: 350px;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, .08);
+
+}
+
+
+
+.chart-header h2 {
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+  margin-bottom: 20px;
+
+}
+
+
+
+.donut-wrapper {
+
+  position: relative;
+
+  display: flex;
+
+  justify-content: center;
+
+}
+
+
+
+.chart-center {
+
+  position: absolute;
+
+  top: 105px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  text-align: center;
+
+}
+
+
+
+.chart-center strong {
+
+  display: block;
+
+  font-size: 32px;
+
+  font-weight: 700;
+
+}
+
+
+
+.chart-center span {
+
+  color: #777;
+
+  font-size: 14px;
+
+}
+
+
+
+.chart-empty {
+
+  height: 260px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #999;
+
+}
+
+
+
+@media(max-width:1100px) {
+
+  .dashboard-charts {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
 
 /* =========================
    GLOBAL DARK MODE FIX
@@ -5153,17 +5275,436 @@ body.dark .user-dropdown button:hover {
 
 /* COMMENT BOX */
 
-body.dark .comment-box {
+/* =========================
+   COMPLETE DARK MODE FIX
+========================= */
+
+
+/* cards */
+body.dark .chart-card,
+body.dark .project-toolbar,
+body.dark .task-search,
+body.dark .project-card,
+body.dark .task-card,
+body.dark .issue-card,
+body.dark .chart-card,
+body.dark .member-card,
+body.dark .team-card,
+body.dark .settings-card,
+body.dark .settings-menu,
+body.dark .dashboard-panel,
+body.dark .stat-card {
+
+  background: #111827;
+  color: #f8fafc;
+}
+
+
+
+/* card secondary areas */
+
+body.dark .project-stat,
+body.dark .project-stats div,
+body.dark .task-info-grid div,
+body.dark .kanban-column,
+body.dark .workspace-box,
+body.dark .toggle-row,
+body.dark .comment-item,
+body.dark .activity-item,
+body.dark .project-preview,
+body.dark .role-info {
+
+  background: #1e293b;
+  color: #e5e7eb;
+
+}
+
+
+
+/* text */
+
+body.dark .project-description,
+body.dark .project-card p,
+body.dark .task-card p,
+body.dark .issue-card p,
+body.dark .member-info p,
+body.dark .team-card p,
+body.dark .chart-center span,
+body.dark .progress-text {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* inputs */
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+
+  background: #020617;
+  color: #f8fafc;
+  border: 1px solid #475569;
+
+}
+
+
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* links */
+
+body.dark a {
+
+  color: inherit;
+
+}
+
+
+
+/* badges */
+
+body.dark .status-badge {
+
+  background: #064e3b;
+  color: #86efac;
+
+}
+
+
+body.dark .priority.high {
+
+  background: #450a0a;
+  color: #fca5a5;
+
+}
+
+
+body.dark .priority.medium {
+
+  background: #451a03;
+  color: #fdba74;
+
+}
+
+
+body.dark .priority.low {
+
+  background: #052e16;
+  color: #86efac;
+
+}
+
+
+
+/* charts */
+
+body.dark .chart-center strong {
+
+  color: white;
+
+}
+
+
+body.dark .recharts-default-tooltip {
+
+  background: #020617 !important;
+  border: 1px solid #334155 !important;
+  color: white;
+
+}
+
+
+
+/* buttons */
+
+body.dark .notification-btn {
+
+  background: #1e293b;
+  color: white;
+
+}
+
+
+body.dark .notification-btn:hover {
+
+  background: #334155;
+
+}
+
+
+
+/* navbar user */
+
+body.dark .user-menu:hover {
 
   background: #1e293b;
 
 }
 
 
-body.dark .comment-box textarea {
+
+/* dropdown */
+
+body.dark .user-dropdown {
+
+  background: #111827;
+
+}
+
+
+body.dark .user-dropdown button {
+
+  color: white;
+
+}
+
+
+body.dark .user-dropdown button:hover {
+
+  background: #1e293b;
+
+}
+
+
+
+/* modal */
+
+body.dark .issue-modal,
+body.dark .task-modal,
+body.dark .project-modal,
+body.dark .invite-modal {
+
+  background: #111827;
+
+}
+
+
+body.dark .modal-header {
+
+  border-color: #334155;
+
+}
+
+
+
+/* sidebar */
+
+body.dark .sidebar nav a {
+
+  color: #cbd5e1;
+
+}
+
+
+body.dark .sidebar nav a.active {
+
+  background: #4f46e5;
+  color: white;
+
+}
+
+
+
+/* progress */
+
+body.dark .progress-track,
+body.dark .mini-progress {
+
+  background: #334155;
+
+}
+
+
+
+/* scrollbar */
+
+body.dark::-webkit-scrollbar {
+
+  width: 10px;
+
+}
+
+
+body.dark::-webkit-scrollbar-track {
+
+  background: #020617;
+
+}
+
+
+body.dark::-webkit-scrollbar-thumb {
+
+  background: #334155;
+
+}
+
+/* =========================
+   ISSUE PAGE DARK MODE FIX
+========================= */
+
+
+body.dark .issue-page {
 
   background: #0f172a;
 
-  color: white;
+}
+
+
+
+body.dark .issue-header {
+
+  background: #111827;
+
+  color: #f8fafc;
+
+  border: 1px solid #334155;
+
+}
+
+
+
+body.dark .issue-header h1 {
+
+  color: #f8fafc;
+
+}
+
+
+
+body.dark .issue-header p {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* filters */
+
+body.dark .issue-controls input,
+body.dark .issue-controls select {
+
+  background: #1e293b;
+
+  color: #f8fafc;
+
+  border: 1px solid #475569;
+
+}
+
+
+
+body.dark .issue-controls input::placeholder {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* issue cards */
+
+body.dark .issues-list .issue-card {
+
+  background: #111827;
+
+  color: #f8fafc;
+
+  border: 1px solid #334155;
+
+}
+
+
+
+body.dark .issues-list .issue-card:hover {
+
+  background: #1e293b;
+
+  border-color: #6366f1;
+
+}
+
+
+
+/* issue title */
+
+body.dark .issues-list .issue-card h3 {
+
+  color: #f8fafc;
+
+}
+
+
+
+/* description */
+
+body.dark .issues-list .issue-card p {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* issue key */
+
+body.dark .issue-key {
+
+  background: #312e81;
+
+  color: #c7d2fe;
+
+}
+
+
+
+/* status */
+
+body.dark .issue-footer .status {
+
+  background: #1e293b;
+
+  color: #cbd5e1;
+
+}
+
+
+
+/* priority badges */
+
+body.dark .priority.high {
+
+  background: #450a0a;
+
+  color: #fca5a5;
+
+}
+
+
+
+body.dark .priority.medium {
+
+  background: #451a03;
+
+  color: #fdba74;
+
+}
+
+
+
+body.dark .priority.low {
+
+  background: #052e16;
+
+  color: #86efac;
 
 }
