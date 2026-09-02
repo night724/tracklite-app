@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../api/client";
-
 
 function InviteMemberModal({
     workspaceId,
@@ -8,34 +7,42 @@ function InviteMemberModal({
     refresh
 }) {
 
-
-    const [users, setUsers] = useState([]);
-
-    const [form, setForm] = useState({
-        user_id: "",
-        role: "MEMBER"
-    });
+    const [email, setEmail] = useState("");
+    const [role, setRole] = useState("MEMBER");
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
 
 
+    async function inviteMember(e) {
 
-    useEffect(() => {
+        e.preventDefault();
 
-        loadUsers();
+        if (!email.trim()) return;
 
-    }, []);
-
-
-
-    async function loadUsers() {
 
         try {
 
-            const res =
-                await api.get(
-                    "/members/users"
-                );
+            setLoading(true);
 
-            setUsers(res.data);
+
+            await api.post(
+                "/team/invite",
+                {
+                    workspace_id: workspaceId,
+                    email,
+                    role
+                }
+            );
+
+
+            setMessage(
+                "Invitation sent successfully"
+            );
+
+
+            setEmail("");
+
+            refresh();
 
 
         }
@@ -43,35 +50,15 @@ function InviteMemberModal({
 
             console.log(error);
 
-        }
-
-    }
-
-
-
-    async function submit(e) {
-
-        e.preventDefault();
-
-
-        try {
-            console.log(form);
-            await api.post(
-                `/members/workspace/${workspaceId}`,
-                form
+            setMessage(
+                error.response?.data?.message ||
+                "Invite failed"
             );
 
-
-            refresh();
-            closeModal();
-
-
         }
-        catch (error) {
+        finally {
 
-            console.log(
-                error.response?.data
-            );
+            setLoading(false);
 
         }
 
@@ -81,71 +68,72 @@ function InviteMemberModal({
 
     return (
 
-        <div className="modal-backdrop">
-
-            <div className="task-modal">
+        <div className="modal-overlay">
 
 
-                <h2>
-                    Invite Member
-                </h2>
+            <div className="invite-modal">
 
 
+                <div className="modal-header">
 
-                <form onSubmit={submit}>
+                    <div>
+
+                        <h2>
+                            Invite Member
+                        </h2>
+
+                        <p>
+                            Add someone to your workspace
+                        </p>
+
+                    </div>
 
 
-                    <select
-
-                        required
-
-                        value={form.user_id}
-
-                        onChange={
-                            e => setForm({
-                                ...form,
-                                user_id: e.target.value
-                            })
-                        }
-
+                    <button
+                        className="close-btn"
+                        onClick={closeModal}
                     >
-
-                        <option value="">
-                            Select User
-                        </option>
+                        ×
+                    </button>
 
 
-                        {
-                            users.map(user => (
+                </div>
 
-                                <option
-                                    key={user.id}
-                                    value={user.id}
-                                >
 
-                                    {user.name} ({user.email})
 
-                                </option>
 
-                            ))
+
+                <form onSubmit={inviteMember}>
+
+
+                    <label>
+                        Email Address
+                    </label>
+
+
+                    <input
+                        type="email"
+                        placeholder="example@email.com"
+                        value={email}
+                        onChange={
+                            e => setEmail(e.target.value)
                         }
+                    />
 
 
-                    </select>
 
+
+
+                    <label>
+                        Workspace Role
+                    </label>
 
 
                     <select
-
-                        value={form.role}
-
+                        value={role}
                         onChange={
-                            e => setForm({
-                                ...form,
-                                role: e.target.value
-                            })
+                            e => setRole(e.target.value)
                         }
-
                     >
 
                         <option value="MEMBER">
@@ -161,33 +149,87 @@ function InviteMemberModal({
 
 
 
-                    <button className="primary-btn">
-
-                        Invite
-
-                    </button>
 
 
-                    <button
-                        type="button"
-                        onClick={closeModal}
-                    >
+                    <div className="role-info">
 
-                        Cancel
+                        <strong>
+                            {role}
+                        </strong>
 
-                    </button>
+                        <p>
+
+                            {
+                                role === "ADMIN"
+                                    ?
+                                    "Can manage workspace members and settings"
+                                    :
+                                    "Can access projects and collaborate"
+
+                            }
+
+                        </p>
+
+                    </div>
+
+
+
+
+
+                    {
+                        message &&
+                        <p className="modal-message">
+                            {message}
+                        </p>
+                    }
+
+
+
+
+
+
+                    <div className="modal-actions">
+
+
+                        <button
+                            type="button"
+                            className="cancel-btn"
+                            onClick={closeModal}
+                        >
+                            Cancel
+                        </button>
+
+
+                        <button
+                            className="primary-btn"
+                            disabled={loading}
+                        >
+
+                            {
+                                loading
+                                    ?
+                                    "Sending..."
+                                    :
+                                    "Send Invite"
+                            }
+
+                        </button>
+
+
+                    </div>
 
 
 
                 </form>
 
 
+
             </div>
+
 
         </div>
 
     );
-
 
 }
 

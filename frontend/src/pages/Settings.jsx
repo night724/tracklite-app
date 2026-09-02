@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../api/client";
 
 function Settings() {
     const navigate = useNavigate();
@@ -7,7 +8,53 @@ function Settings() {
     const [name, setName] = useState("Knight");
     const [email, setEmail] = useState("knight@email.com");
     const [editing, setEditing] = useState(false);
-    const [darkMode, setDarkMode] = useState(false);
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        async function loadUser() {
+            try {
+                const res =
+                    await api.get("/auth/me");
+                setName(
+                    res.data.name
+                );
+                setEmail(
+                    res.data.email
+                );
+            }
+            catch (error) {
+                console.log(error);
+            }
+            finally {
+                setLoading(false);
+            }
+        }
+
+        loadUser();
+
+    }, []);
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+    });
+    const [darkMode, setDarkMode] = useState(localStorage.getItem("theme") === "dark");
+    useEffect(() => {
+        if (darkMode) {
+            document.body.classList.add("dark");
+            localStorage.setItem(
+                "theme",
+                "dark"
+            );
+        } else {
+            document.body.classList.remove("dark");
+            localStorage.setItem(
+                "theme",
+                "light"
+            );
+        }
+    }, [darkMode]);
     const [notifications, setNotifications] =
         useState({
             task: true,
@@ -15,17 +62,86 @@ function Settings() {
             comment: false,
             invite: true
         });
-    function saveProfile() {
-        setEditing(false);
-        alert(
-            "Profile updated successfully"
-        );
+    async function saveProfile() {
+
+        try {
+
+
+            const response =
+                await api.put(
+                    "/auth/profile",
+                    {
+                        name,
+                        email
+                    }
+                );
+
+
+            setName(
+                response.data.user.name
+            );
+
+
+            setEmail(
+                response.data.user.email
+            );
+
+
+            setEditing(false);
+
+
+            alert(
+                "Profile updated successfully"
+            );
+
+
+        }
+        catch (error) {
+
+            alert(
+                error.response?.data?.message ||
+                "Update failed"
+            );
+
+        }
+
     }
 
-    function changePassword() {
-        alert(
-            "Password change feature coming soon"
-        );
+    async function changePassword() {
+
+        if (
+            passwordData.newPassword !==
+            passwordData.confirmPassword
+        ) {
+
+            alert(
+                "Passwords do not match"
+            );
+
+            return;
+        }
+        try {
+            await api.put(
+                "/auth/change-password",
+                {
+                    currentPassword:
+                        passwordData.currentPassword,
+
+                    newPassword:
+                        passwordData.newPassword
+                }
+            );
+            alert(
+                "Password changed successfully"
+            );
+            setShowPasswordModal(false);
+        }
+        catch (error) {
+            alert(
+                error.response?.data?.message ||
+                "Password change failed"
+            );
+        }
     }
 
     function deleteWorkspace() {
@@ -401,26 +517,18 @@ function Settings() {
 
                                 className="secondary-btn"
 
-                                onClick={changePassword}
+                                onClick={() =>
+                                    setShowPasswordModal(true)
+                                }
 
                             >
-
                                 Change Password
-
                             </button>
 
 
                         </div>
 
                     }
-
-
-
-
-
-
-
-
 
                     {
                         activeTab === "alerts" &&
@@ -658,7 +766,134 @@ function Settings() {
 
             </div>
 
+            {
+                showPasswordModal && (
 
+                    <div className="modal-overlay">
+
+                        <div className="invite-modal">
+
+
+                            <h2>
+                                🔒 Change Password
+                            </h2>
+
+
+                            <input
+
+                                type="password"
+
+                                placeholder="Current Password"
+
+                                value={
+                                    passwordData.currentPassword
+                                }
+
+                                onChange={
+                                    e =>
+                                        setPasswordData({
+
+                                            ...passwordData,
+
+                                            currentPassword:
+                                                e.target.value
+
+                                        })
+                                }
+
+                            />
+
+
+
+                            <input
+
+                                type="password"
+
+                                placeholder="New Password"
+
+                                value={
+                                    passwordData.newPassword
+                                }
+
+                                onChange={
+                                    e =>
+                                        setPasswordData({
+
+                                            ...passwordData,
+
+                                            newPassword:
+                                                e.target.value
+
+                                        })
+                                }
+
+                            />
+
+
+
+                            <input
+
+                                type="password"
+
+                                placeholder="Confirm Password"
+
+                                value={
+                                    passwordData.confirmPassword
+                                }
+
+                                onChange={
+                                    e =>
+                                        setPasswordData({
+
+                                            ...passwordData,
+
+                                            confirmPassword:
+                                                e.target.value
+
+                                        })
+                                }
+
+                            />
+
+
+
+                            <div className="modal-actions">
+
+
+                                <button
+
+                                    className="cancel-btn"
+
+                                    onClick={() =>
+                                        setShowPasswordModal(false)
+                                    }
+
+                                >
+                                    Cancel
+                                </button>
+
+
+
+                                <button
+
+                                    className="primary-btn"
+
+                                    onClick={changePassword}
+
+                                >
+                                    Update Password
+                                </button>
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                )
+            }
 
         </div>
 

@@ -481,3 +481,169 @@ exports.me = async (req, res) => {
         });
     }
 };
+
+// =======================
+// CHANGE PASSWORD
+// =======================
+
+exports.changePassword = async (req, res) => {
+
+    try {
+
+        const {
+            currentPassword,
+            newPassword
+        } = req.body;
+
+
+        const user =
+            await User.findById(
+                req.user.id
+            );
+
+
+        if (!user) {
+
+            return res.status(404).json({
+                message: "User not found"
+            });
+
+        }
+
+
+
+        const valid =
+            await bcrypt.compare(
+                currentPassword,
+                user.password
+            );
+
+
+        if (!valid) {
+
+            return res.status(400).json({
+                message: "Current password is incorrect"
+            });
+
+        }
+
+
+
+        const hashedPassword =
+            await bcrypt.hash(
+                newPassword,
+                10
+            );
+
+
+
+        await db.query(
+
+            `
+            UPDATE users
+
+            SET password=$1
+
+            WHERE id=$2
+            `,
+
+            [
+                hashedPassword,
+                req.user.id
+            ]
+
+        );
+
+
+
+        res.json({
+
+            message:
+                "Password changed successfully"
+
+        });
+
+
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "CHANGE PASSWORD ERROR:",
+            error.message
+        );
+
+
+        res.status(500).json({
+
+            message:
+                "Password change failed"
+
+        });
+
+    }
+
+};
+// =======================
+// UPDATE PROFILE
+// =======================
+
+exports.updateProfile = async (req, res) => {
+
+    try {
+
+        const {
+            name,
+            email
+        } = req.body;
+
+
+        const result =
+            await db.query(
+                `
+            UPDATE users
+
+            SET
+                name=$1,
+                email=$2
+
+            WHERE id=$3
+
+            RETURNING id,name,email,role,avatar
+            `,
+                [
+                    name,
+                    email,
+                    req.user.id
+                ]
+            );
+
+
+        res.json({
+
+            message: "Profile updated",
+
+            user: result.rows[0]
+
+        });
+
+
+    }
+    catch (error) {
+
+        console.log(
+            "UPDATE PROFILE ERROR:",
+            error.message
+        );
+
+
+        res.status(500).json({
+
+            message: "Update failed"
+
+        });
+
+    }
+
+};

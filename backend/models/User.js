@@ -21,13 +21,13 @@ class User {
     }
 
     static async findById(id) {
-
         const result = await db.query(
             `
         SELECT
             u.id,
             u.name,
             u.email,
+            u.password,
             u.role,
             u.avatar,
             wm.workspace_id
@@ -39,6 +39,7 @@ class User {
         `,
             [id]
         );
+
         return result.rows[0];
     }
     static async create(user) {
