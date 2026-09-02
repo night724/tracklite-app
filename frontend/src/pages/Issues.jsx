@@ -60,7 +60,16 @@ function Issues() {
 
     return (
         <div className="issue-page">
+            <div className="project-topbar">
 
+                <Link
+                    to="/workspace"
+                    className="back-link"
+                >
+                    ← Dashboard
+                </Link>
+
+            </div>
             <div className="issue-header">
                 <div>
                     <h1>

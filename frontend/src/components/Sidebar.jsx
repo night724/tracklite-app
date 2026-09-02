@@ -1,41 +1,76 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+
 function Sidebar() {
+
     const { logout } = useAuth();
+
+
     return (
+
         <aside className="sidebar">
-            <h2 className="logo">  TrackLite </h2>
+
+
+            <h2 className="logo">
+                TrackLite
+            </h2>
+
+
+
             <nav>
-                <NavLink to="/dashboard">
-                    Dashboard
+
+
+                <NavLink
+                    to="/inbox"
+                    className={({ isActive }) =>
+                        isActive ? "active" : ""
+                    }
+                >
+                    📥 Inbox
                 </NavLink>
-                <NavLink to="/projects">
-                    Projects
+
+
+
+                <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) =>
+                        isActive ? "active" : ""
+                    }
+                >
+                    📊 Dashboard
                 </NavLink>
-                <NavLink to="/tasks">
-                    Tasks
+
+
+
+                <NavLink
+                    to="/team"
+                    className={({ isActive }) =>
+                        isActive ? "active" : ""
+                    }
+                >
+                    👥 My Team
                 </NavLink>
-                <NavLink to="/issues">
-                    Issues
+
+
+
+
+                <NavLink
+                    to="/settings"
+                    className={({ isActive }) =>
+                        isActive ? "active" : ""
+                    }
+                >
+                    ⚙ Settings
                 </NavLink>
-                <NavLink to="/members">
-                    Members
-                </NavLink>
-                <NavLink to="/settings">
-                    Settings
-                </NavLink>
+
             </nav>
 
-            <button
-                className="logout-btn"
-                onClick={logout}
-            >
-                Logout
-            </button>
-
         </aside>
+
     );
+
 }
+
 
 export default Sidebar;

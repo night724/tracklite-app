@@ -9,34 +9,53 @@ function ProjectDetail() {
     const [project, setProject] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [activity, setActivity] = useState([]);
-    const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
         loadProject();
     }, [projectId]);
     async function loadProject() {
+
         try {
+
             const projectRes =
                 await api.get(
                     `/projects/${projectId}`
                 );
+
             setProject(projectRes.data);
-            const taskRes =
-                await api.get(
-                    `/tasks/project/${projectId}`
+
+
+            try {
+
+                const activityRes =
+                    await api.get(
+                        `/activity/project/${projectId}`
+                    );
+
+                setActivity(activityRes.data);
+
+            }
+            catch (activityError) {
+
+                console.log(
+                    "Activity loading failed",
+                    activityError
                 );
-            setTasks(taskRes.data);
-            const activityRes =
-                await api.get(
-                    `/activity/project/${projectId}`
-                );
-            setActivity(
-                activityRes.data
-            );
+
+                setActivity([]);
+
+            }
+
         }
         catch (error) {
-            console.log(error);
+
+            console.log(
+                "Project loading failed",
+                error
+            );
+
         }
+
     }
     if (!project) {
 
@@ -58,14 +77,21 @@ function ProjectDetail() {
 
         <div className="project-detail-page">
 
+            <div className="project-topbar">
 
-            {/* Header */}
+                <Link
+                    to="/dashboard"
+                    className="back-link"
+                >
+                    ← Dashboard
+                </Link>
+
+            </div>
 
             <div className="project-header-card">
 
 
                 <div className="project-header-left">
-
 
                     <div className="big-project-icon">
 

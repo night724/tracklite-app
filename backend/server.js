@@ -16,13 +16,20 @@ app.get("/", (req, res) => {
     });
 }
 );
+const notificationRoutes = require("./routes/notificationRoutes");
+app.use("/api/notifications", notificationRoutes);
+const teamRoutes = require("./routes/teamRoutes");
+const memberRoutes = require("./routes/memberRoutes");
+
+app.use( "/api/members", memberRoutes);
+app.use("/api/team", teamRoutes);
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/projects", require("./routes/projectRoutes"));
 app.use("/api/tasks", require("./routes/taskRoutes"));
 app.use("/api/issues", require("./routes/issueRoutes"));
 app.use("/api/comments", require("./routes/commentRoutes"));
-app.use( "/api/dashboard", require("./routes/dashboardRoutes"));
-app.use( "/api/activity", require("./routes/activityRoutes"));
+app.use("/api/dashboard", require("./routes/dashboardRoutes"));
+app.use("/api/activity", require("./routes/activityRoutes"));
 
 app.listen(
     PORT,

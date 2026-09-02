@@ -8,7 +8,7 @@ function TaskDetail() {
     const [issues, setIssues] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [task, setTask] = useState(null);
-    
+
     useEffect(() => { loadTask(); }, []);
 
     async function loadTask() {
@@ -36,6 +36,17 @@ function TaskDetail() {
 
     return (
         <div className="task-detail">
+
+            <div className="project-topbar">
+
+                <Link
+                    to="/workspace"
+                    className="back-link"
+                >
+                    ← Dashboard
+                </Link>
+
+            </div>
             <div className="task-header">
                 <div>
                     <h1>

@@ -61,8 +61,11 @@ function IssueDetail() {
 
     return (
         <div className="issue-detail">
+            
             <div className="issue-detail-header">
+                
                 <div>
+                    
                     <div className="issue-key-large">
 
                         {issue.issue_key}

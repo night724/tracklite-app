@@ -85,6 +85,16 @@ function Tasks() {
             : columns;
     return (
         <div className="tasks-page">
+            <div className="project-topbar">
+
+                <Link
+                    to="/workspace"
+                    className="back-link"
+                >
+                    ← Dashboard
+                </Link>
+
+            </div>
             <div className="tasks-header">
                 <div>
                     <h1>
@@ -98,6 +108,7 @@ function Tasks() {
                         Track and manage your project workflow
                     </p>
                 </div>
+
                 {
                     projectId && (
                         <button
@@ -106,6 +117,7 @@ function Tasks() {
                         >
                             + New Task
                         </button>
+
                     )
                 }
             </div>
