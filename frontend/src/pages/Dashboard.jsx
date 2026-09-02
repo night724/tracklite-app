@@ -144,6 +144,13 @@ function Dashboard() {
 
                         <DashboardPieChart
 
+                            title="Projects Progress"
+
+                            data={projectProgressChart}
+
+                        />
+                        <DashboardPieChart
+
                             title="Task Status"
 
                             data={charts.tasks}
@@ -161,13 +168,6 @@ function Dashboard() {
                         />
 
 
-                        <DashboardPieChart
-
-                            title="Projects Progress"
-
-                            data={projectProgressChart}
-
-                        />
 
                     </div>
 
@@ -182,47 +182,79 @@ function Dashboard() {
             <div className="dashboard-grid">
 
 
+                {/* RECENT PROJECTS */}
 
-                <div className="dashboard-panel">
+                <div className="dashboard-panel recent-panel">
 
+                    <div className="panel-header">
 
-                    <h2>
-                        Recent Projects
-                    </h2>
+                        <h2>
+                            Recent Projects
+                        </h2>
 
+                        <Link
+                            to={`/workspace/${workspaceId}/projects`}
+                        >
+                            View all
+                        </Link>
 
-
-                    {
-                        data.projects.map(project => (
-
-
-                            <Link
-                                to={`/projects/${project.id}`}
-                                className="project-row"
-                                key={project.id}
-                            >
-                                <div>
-
-                                    <h3>
-                                        {project.name}
-                                    </h3>
+                    </div>
 
 
+                    <div className="recent-list">
+
+                        {
+                            data.projects.length === 0 ? (
+
+                                <div className="empty-state">
+                                    📁
                                     <p>
-                                        {project.status}
+                                        No projects yet
                                     </p>
-
-
                                 </div>
 
+                            ) : (
 
-                            </Link>
+                                data.projects.map(project => (
+
+                                    <Link
+                                        key={project.id}
+                                        to={`/projects/${project.id}`}
+                                        className="recent-card"
+                                    >
+
+                                        <div className="recent-icon">
+                                            📁
+                                        </div>
 
 
-                        ))
+                                        <div className="recent-info">
 
-                    }
+                                            <h3>
+                                                {project.name}
+                                            </h3>
 
+                                            <p>
+                                                {project.status}
+                                            </p>
+
+                                        </div>
+
+
+                                        <span className="arrow">
+                                            →
+                                        </span>
+
+
+                                    </Link>
+
+                                ))
+
+                            )
+                        }
+
+
+                    </div>
 
 
                 </div>
@@ -231,40 +263,95 @@ function Dashboard() {
 
 
 
+                {/* RECENT TASKS */}
+
+
+                <div className="dashboard-panel recent-panel">
+
+
+                    <div className="panel-header">
+
+                        <h2>
+                            Recent Tasks
+                        </h2>
+
+
+                        <Link
+                            to={`/workspace/${workspaceId}/tasks`}
+                        >
+                            View all
+                        </Link>
+
+                    </div>
 
 
 
-                <div className="dashboard-panel">
+                    <div className="recent-list">
 
 
-                    <h2>
-                        Recent Tasks
-                    </h2>
+                        {
+                            data.tasks.length === 0 ? (
 
-                    {
-                        data.tasks.map(task => (
-                            <Link
-                                className="task-row"
-                                key={task.id}
-                                to={`/tasks/${task.id}`}
-                            >
-                                <div>
-                                    <h3>
-                                        {task.title}
-                                    </h3>
+                                <div className="empty-state">
+                                    ✅
                                     <p>
-                                        Priority:
-                                        {task.priority}
+                                        No tasks yet
                                     </p>
                                 </div>
 
-                                <span>
-                                    {task.status}
-                                </span>
-                            </Link>
-                        ))
-                    }
+                            ) : (
+
+                                data.tasks.map(task => (
+
+                                    <Link
+                                        key={task.id}
+                                        to={`/tasks/${task.id}`}
+                                        className="recent-card"
+                                    >
+
+
+                                        <div className="recent-icon">
+                                            ✅
+                                        </div>
+
+
+                                        <div className="recent-info">
+
+                                            <h3>
+                                                {task.title}
+                                            </h3>
+
+
+                                            <p>
+                                                Priority: {task.priority}
+                                            </p>
+
+
+                                        </div>
+
+
+
+                                        <span className={
+                                            `task-status-badge ${task.status.toLowerCase()}`
+                                        }>
+                                            {task.status}
+                                        </span>
+
+
+                                    </Link>
+
+                                ))
+
+                            )
+                        }
+
+
+                    </div>
+
+
                 </div>
+
+
             </div>
         </div>
     );

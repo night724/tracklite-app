@@ -415,56 +415,126 @@ a {
 
 
 
-.dashboard-grid {
-
-  display: grid;
-
-  grid-template-columns:
-
-    1fr 1fr;
-
-  gap: 25px;
-
-}
+/* =========================
+   DASHBOARD RECENT ITEMS
+========================= */
 
 
-
-.dashboard-panel {
-
-  background: white;
+.recent-panel {
 
   padding: 25px;
 
-  border-radius: 18px;
-
-  box-shadow:
-
-    0 8px 25px rgba(0, 0, 0, .06);
-
 }
 
 
 
-.project-row,
-.task-row {
-  text-decoration: none;
-  color: inherit;
+.panel-header {
+
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
-  cursor: pointer;
-}
 
+  margin-bottom: 20px;
 
-.project-row:hover,
-.task-row:hover {
-  transform: translateY(-2px);
 }
 
 
 
-.project-row h3,
-.task-row h3 {
+.panel-header h2 {
+
+  margin: 0;
+
+}
+
+
+
+.panel-header a {
+
+  color: #6366f1;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+}
+
+
+
+.recent-list {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+
+}
+
+
+
+.recent-card {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 16px;
+
+  background: #f8fafc;
+
+  border-radius: 16px;
+
+  transition: .2s;
+
+}
+
+
+
+.recent-card:hover {
+
+  transform: translateY(-3px);
+
+  background: #eef2ff;
+
+}
+
+
+
+.recent-icon {
+
+  width: 45px;
+
+  height: 45px;
+
+  border-radius: 14px;
+
+  background: #e0e7ff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px;
+
+}
+
+
+
+.recent-info {
+
+  flex: 1;
+
+}
+
+
+
+.recent-info h3 {
 
   margin: 0;
 
@@ -472,6 +542,92 @@ a {
 
 }
 
+
+
+.recent-info p {
+
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+}
+
+
+
+.arrow {
+
+  font-size: 20px;
+
+  color: #94a3b8;
+
+}
+
+
+
+.task-status-badge {
+
+  padding: 6px 12px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+}
+
+
+
+.task-status-badge.todo {
+
+  background: #e0e7ff;
+
+  color: #4338ca;
+
+}
+
+
+
+.task-status-badge.in_progress {
+
+  background: #fef3c7;
+
+  color: #d97706;
+
+}
+
+
+
+.task-status-badge.done {
+
+  background: #dcfce7;
+
+  color: #16a34a;
+
+}
+
+
+
+.empty-state {
+
+  text-align: center;
+
+  padding: 40px;
+
+  color: #94a3b8;
+
+  font-size: 30px;
+
+}
+
+
+.empty-state p {
+
+  font-size: 14px;
+
+}
 
 
 /* =========================
@@ -517,21 +673,17 @@ a {
 }
 
 .primary-btn {
-
   background: #2563eb;
-
   color: white;
-
   border: none;
-
-  padding: 12px 20px;
-
-  border-radius: 10px;
-
+  padding: 12px 22px;
+  border-radius: 12px;
   cursor: pointer;
+  font-weight: 600;
+}
 
-  font-size: 15px;
-
+.primary-btn:hover {
+  background: #1d4ed8;
 }
 
 .project-toolbar {
@@ -931,43 +1083,6 @@ a {
   font-weight: 600;
 
 }
-
-
-
-
-
-/* BUTTON */
-
-.primary-btn {
-
-  background: #2563eb;
-
-  color: white;
-
-  border: none;
-
-  padding: 12px 20px;
-
-  border-radius: 10px;
-
-  cursor: pointer;
-
-  font-weight: 600;
-
-  transition: .2s;
-
-}
-
-
-
-.primary-btn:hover {
-
-  background: #1d4ed8;
-
-}
-
-
-
 
 
 /* STATS */
@@ -3268,20 +3383,6 @@ a {
 
 }
 
-
-
-.modal-header {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  margin-bottom: 25px;
-
-}
-
-
-
 .modal-header h2 {
 
   margin: 0;
@@ -3381,19 +3482,14 @@ a {
 }
 
 
-
 .secondary-btn {
-
-  padding: 10px 18px;
-
-  border-radius: 10px;
-
-  border: 1px solid #ddd;
-
-  background: white;
-
+  background: #f1f5f9;
+  color: #334155;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
   cursor: pointer;
-
+  font-weight: 600;
 }
 
 .stat-card {
@@ -3455,22 +3551,6 @@ a {
   font-size: 14px;
 
 }
-
-
-
-.close-btn {
-
-  border: none;
-
-  background: none;
-
-  cursor: pointer;
-
-  font-size: 20px;
-
-}
-
-
 
 .project-form {
 
@@ -3583,38 +3663,12 @@ a {
 
 }
 
-
-
 .cancel-btn {
-
   background: #f1f5f9;
-
   border: none;
-
   padding: 10px 18px;
-
   border-radius: 10px;
-
   cursor: pointer;
-
-}
-
-
-
-.primary-btn {
-
-  background: #2563eb;
-
-  color: white;
-
-  border: none;
-
-  padding: 10px 20px;
-
-  border-radius: 10px;
-
-  cursor: pointer;
-
 }
 
 .projects-page {
@@ -4601,60 +4655,6 @@ label {
 
 }
 
-
-
-/* BUTTONS */
-
-
-.primary-btn {
-
-  background: #2563eb;
-
-  color: white;
-
-  border: none;
-
-  padding: 12px 22px;
-
-  border-radius: 12px;
-
-  cursor: pointer;
-
-  font-weight: 600;
-
-}
-
-
-
-.primary-btn:hover {
-
-  background: #1d4ed8;
-
-}
-
-
-
-.secondary-btn {
-
-  background: #f1f5f9;
-
-  color: #334155;
-
-  border: none;
-
-  padding: 12px 20px;
-
-  border-radius: 12px;
-
-  cursor: pointer;
-
-  font-weight: 600;
-
-}
-
-
-
-
 /* TOGGLE ROW */
 
 
@@ -4854,19 +4854,6 @@ label {
 }
 
 
-
-.close-btn {
-
-  border: none;
-  background: none;
-
-  font-size: 25px;
-  cursor: pointer;
-
-}
-
-
-
 .invite-modal input,
 .invite-modal select {
 
@@ -4908,19 +4895,6 @@ label {
 
 }
 
-
-
-.cancel-btn {
-
-  padding: 10px 20px;
-
-  border-radius: 10px;
-
-  border: 1px solid #ddd;
-
-  background: white;
-
-}
 
 /* =========================
    dashboard-charts
@@ -5706,5 +5680,474 @@ body.dark .priority.low {
   background: #052e16;
 
   color: #86efac;
+
+}
+
+/* =========================
+   TASK DETAIL DARK MODE FIX
+========================= */
+
+
+body.dark .task-detail {
+
+  background: #0f172a;
+
+}
+
+
+
+/* main header */
+
+body.dark .task-header {
+
+  background: #111827;
+
+  color: #f8fafc;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, .3);
+
+}
+
+
+
+body.dark .task-header h1 {
+
+  color: #f8fafc;
+
+}
+
+
+
+body.dark .task-header p {
+
+  color: #94a3b8;
+
+}
+
+
+
+
+/* task information boxes */
+
+body.dark .task-info-grid div {
+
+  background: #1e293b;
+
+  color: #f8fafc;
+
+}
+
+
+
+body.dark .task-info-grid label {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* sections */
+
+body.dark .task-section h2 {
+
+  color: #f8fafc;
+
+}
+
+
+
+/* issue cards inside task detail */
+
+body.dark .task-detail .issue-card {
+
+  background: #111827;
+
+  color: #f8fafc;
+
+  border-color: #334155;
+
+}
+
+
+
+body.dark .task-detail .issue-card:hover {
+
+  background: #1e293b;
+
+}
+
+
+
+
+body.dark .task-detail .issue-card p {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* priority badges */
+
+body.dark .task-detail .priority.high {
+
+  background: #450a0a;
+
+  color: #fca5a5;
+
+}
+
+
+
+body.dark .task-detail .priority.medium {
+
+  background: #451a03;
+
+  color: #fdba74;
+
+}
+
+
+
+body.dark .task-detail .priority.low {
+
+  background: #052e16;
+
+  color: #86efac;
+
+}
+
+
+
+
+/* empty states */
+
+body.dark .empty-comments {
+
+  color: #94a3b8;
+
+}
+
+
+
+
+/* comments */
+
+body.dark .comment-item {
+
+  background: #1e293b;
+
+}
+
+
+
+body.dark .comment-body p {
+
+  color: #cbd5e1;
+
+}
+
+
+
+body.dark .comment-top strong {
+
+  color: #f8fafc;
+
+}
+
+
+
+body.dark .comment-top small {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* comment input */
+
+body.dark .comment-box {
+
+  background: #111827;
+
+}
+
+
+
+body.dark .comment-box textarea {
+
+  background: #020617;
+
+  color: white;
+
+  border: 1px solid #334155;
+
+}
+
+
+
+/* footer */
+
+body.dark .task-card-footer {
+
+  border-color: #334155;
+
+}
+
+body.dark .recent-card {
+
+  background: #1e293b;
+
+}
+
+
+body.dark .recent-card:hover {
+
+  background: #334155;
+
+}
+
+
+body.dark .recent-icon {
+
+  background: #312e81;
+
+}
+
+
+body.dark .panel-header a {
+
+  color: #818cf8;
+
+}
+
+/* =========================
+   SETTINGS DARK MODE FIX
+========================= */
+
+
+body.dark .settings-header h1 {
+
+  color: #f8fafc;
+
+}
+
+
+body.dark .settings-header p {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* LEFT SETTINGS MENU */
+
+
+body.dark .settings-menu {
+
+  background: #111827;
+
+  border-color: #334155;
+
+}
+
+
+
+body.dark .settings-menu h3 {
+
+  color: #94a3b8;
+
+}
+
+
+
+body.dark .settings-menu button {
+
+  color: #cbd5e1;
+
+}
+
+
+
+body.dark .settings-menu button:hover {
+
+  background: #1e293b;
+
+}
+
+
+
+body.dark .settings-menu button.active {
+
+  background: #2563eb;
+
+  color: white;
+
+}
+
+
+
+/* PROFILE AREA */
+
+
+body.dark .profile-area {
+
+  background: #1e293b;
+
+}
+
+
+
+body.dark .profile-area h3 {
+
+  color: #f8fafc;
+
+}
+
+
+
+body.dark .profile-area p {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* INPUTS */
+
+
+body.dark .settings-card input {
+
+  background: #0f172a;
+
+  color: #f8fafc;
+
+  border-color: #475569;
+
+}
+
+
+
+body.dark label {
+
+  color: #e5e7eb;
+
+}
+
+
+
+/* TOGGLE ROW */
+
+
+body.dark .toggle-row {
+
+  background: #1e293b;
+
+}
+
+
+
+body.dark .toggle-row span {
+
+  color: #e5e7eb;
+
+}
+
+
+
+/* WORKSPACE BOX */
+
+
+body.dark .workspace-box {
+
+  background: #1e293b;
+
+  color: #f8fafc;
+
+}
+
+
+
+body.dark .workspace-box p {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* BUTTONS */
+
+
+body.dark .secondary-btn {
+
+  background: #334155;
+
+  color: #f8fafc;
+
+}
+
+
+
+body.dark .secondary-btn:hover {
+
+  background: #475569;
+
+}
+
+
+
+/* DANGER */
+
+
+body.dark .danger-card {
+
+  border-color: #7f1d1d;
+
+}
+
+
+
+body.dark .danger-card h2 {
+
+  color: #f87171;
+
+}
+
+
+
+/* PASSWORD MODAL */
+
+
+body.dark .invite-modal {
+
+  background: #111827;
+
+  color: #f8fafc;
+
+}
+
+
+
+body.dark .invite-modal input {
+
+  background: #1e293b;
+
+  color: white;
+
+  border-color: #475569;
+
+}
+
+
+
+body.dark .close-btn {
+
+  color: white;
 
 }
