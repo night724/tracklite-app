@@ -83,14 +83,6 @@ function ProjectMembers() {
                     + Invite Member
                 </button>
 
-                <Link
-                    to={`/projects/${projectId}`}
-                    className="secondary-btn"
-                >
-                    ← Back
-                </Link>
-
-
             </div>
 
 

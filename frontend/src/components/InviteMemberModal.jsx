@@ -38,13 +38,11 @@ function InviteMemberModal({
             setMessage(
                 "Invitation sent successfully"
             );
-
-
             setEmail("");
-
             refresh();
-
-
+            setTimeout(() => {
+                closeModal();
+            }, 1500);
         }
         catch (error) {
 

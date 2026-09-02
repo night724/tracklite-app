@@ -22,10 +22,6 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS organizations CASCADE;
 
 
--- ============================================
--- ORGANIZATIONS
--- ============================================
-
 CREATE TABLE organizations (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -221,7 +217,7 @@ CREATE TABLE tasks (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
-    project_id UUID NOT NULL,
+    workspace_id UUID NOT NULL,
 
 
     title VARCHAR(255) NOT NULL,
@@ -482,8 +478,25 @@ CREATE TABLE notifications (
         ON DELETE CASCADE
 );
 
+CREATE TABLE workspace_invitations (
 
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
+    workspace_id UUID NOT NULL,
+
+    inviter_id UUID NOT NULL,
+
+    invited_user_id UUID NOT NULL,
+
+    role VARCHAR(50) DEFAULT 'MEMBER',
+
+    status VARCHAR(20) DEFAULT 'PENDING',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+ALTER TABLE notifications
+ADD COLUMN reference_id UUID;
 -- ============================================
 -- INDEXES
 -- ============================================
