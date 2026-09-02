@@ -3,102 +3,81 @@ import { useEffect, useState } from "react";
 import api from "../api/client";
 import CreateTaskModal from "../components/CreateTaskModal";
 
+
 function ProjectDetail() {
 
     const { projectId } = useParams();
+
     const [project, setProject] = useState(null);
-    const [showModal, setShowModal] = useState(false);
     const [activity, setActivity] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+
+
 
     useEffect(() => {
         loadProject();
     }, [projectId]);
+
+
+
     async function loadProject() {
 
         try {
 
-            const projectRes =
+            const res =
                 await api.get(
                     `/projects/${projectId}`
                 );
 
-            setProject(projectRes.data);
+            setProject(res.data);
 
 
-            try {
-
-                const activityRes =
-                    await api.get(
-                        `/activity/project/${projectId}`
-                    );
-
-                setActivity(activityRes.data);
-
-            }
-            catch (activityError) {
-
-                console.log(
-                    "Activity loading failed",
-                    activityError
+            const activityRes =
+                await api.get(
+                    `/activity/project/${projectId}`
                 );
 
-                setActivity([]);
+            setActivity(activityRes.data);
 
-            }
 
         }
         catch (error) {
 
-            console.log(
-                "Project loading failed",
-                error
-            );
+            console.log(error);
 
         }
 
     }
-    if (!project) {
-
-        return (
-
-            <div className="loading-page">
-
-                Loading project...
-
-            </div>
-
-        );
-
-    }
 
 
+
+    if (!project)
+        return <div>Loading...</div>;
+
+    const progress =
+        project.taskCount > 0
+            ? Math.round(
+                (Number(project.completedTasks) /
+                    Number(project.taskCount)) * 100
+            )
+            : 0;
 
     return (
 
-        <div className="project-detail-page">
-
-            <div className="project-topbar">
-
-                <Link
-                    to="/dashboard"
-                    className="back-link"
-                >
-                    ← Dashboard
-                </Link>
-
-            </div>
-
-            <div className="project-header-card">
+        <div className="project-page">
 
 
-                <div className="project-header-left">
+            {/* HEADER */}
 
-                    <div className="big-project-icon">
+            <div className="project-hero">
 
+
+                <div className="project-title-area">
+
+
+                    <div className="project-logo">
                         📁
-
                     </div>
-
 
 
                     <div>
@@ -111,7 +90,7 @@ function ProjectDetail() {
                         <p>
                             {
                                 project.description ||
-                                "No project description"
+                                "No description"
                             }
                         </p>
 
@@ -123,80 +102,59 @@ function ProjectDetail() {
 
 
 
+                <div className="hero-actions">
 
-                <span className="project-status-large">
 
-                    {project.status || "ACTIVE"}
+                    <span className="status-badge">
+                        {project.status || "ACTIVE"}
+                    </span>
 
-                </span>
+                    <button
+                        className="primary-btn"
+                        onClick={() => setShowModal(true)}
+                    >
+                        + Add Task
+                    </button>
+
+
+                </div>
 
 
             </div>
 
 
-
-
-
-
-            {/* Actions */}
-
-            <div className="project-menu">
-
-                <button
-                    className="primary-btn"
-                    onClick={() => setShowModal(true)}
-                >
-                    + Add Task
-                </button>
-            </div>
-
-
-
-
-
-
-
-            {/* Statistics */}
-
-
-            <div className="project-stat-grid">
+            <div className="project-overview">
 
 
                 <Link
                     to={`/projects/${project.id}/tasks`}
-                    className="project-stat-card"
+                    className="overview-card"
                 >
 
-                    <span>
-                        📋
-                    </span>
+                    <span>📋</span>
 
-                    <h2>
+                    <strong>
                         {project.taskCount || 0}
-                    </h2>
+                    </strong>
 
                     <p>
-                        Total Tasks
+                        Tasks
                     </p>
 
                 </Link>
 
 
 
-
-
                 <Link
                     to={`/projects/${project.id}/issues`}
-                    className="project-stat-card"
+                    className="overview-card"
                 >
 
-                    <span>
-                        🐞
-                    </span>
+                    <span>🐞</span>
 
-                    <h2>
+                    <strong>
                         {project.issueCount || 0}
-                    </h2>
+                    </strong>
 
                     <p>
                         Issues
@@ -206,20 +164,16 @@ function ProjectDetail() {
 
 
 
-
-
                 <Link
                     to={`/projects/${project.id}/members`}
-                    className="project-stat-card"
+                    className="overview-card"
                 >
 
-                    <span>
-                        👥
-                    </span>
+                    <span>👥</span>
 
-                    <h2>
+                    <strong>
                         {project.memberCount || 0}
-                    </h2>
+                    </strong>
 
                     <p>
                         Members
@@ -229,86 +183,158 @@ function ProjectDetail() {
 
 
 
+
+                <Link
+
+                    to={`/projects/${project.id}/tasks?status=DONE`}
+
+                    className="overview-card"
+
+                >
+                    <span>
+                        📈
+                    </span>
+                    <strong>
+                        {progress}%
+                    </strong>
+                    <p>
+                        Progress
+                    </p>
+                    <div className="mini-progress">
+
+                        <div
+                            style={{
+                                width: `${progress}%`
+                            }}
+                        />
+                    </div>
+                </Link>
+
+
             </div>
 
 
+            {/* MAIN */}
+
+
+            <div className="project-content">
 
 
 
+                <div className="activity-card">
+
+
+                    <h2>
+                        Recent Activity
+                    </h2>
 
 
 
-            {/* Content */}
+                    {
+                        activity.length === 0 ?
 
+                            <div className="empty-activity">
 
-            <div className="project-main-grid">
+                                <span>
+                                    💤
+                                </span>
 
-                <div className="project-panel">
+                                <h3>
+                                    No activity yet
+                                </h3>
 
-                    <div className="content-card">
-
-                        <h2>
-                            Recent Activity
-                        </h2>
-                        {
-                            activity.length === 0 ? (
                                 <p>
-                                    No recent activity
+                                    Project actions will appear here.
                                 </p>
 
-                            ) : (
-                                activity.map(item => (
-                                    <div
-                                        className="activity-item"
-                                        key={item.id}
-                                    >
-                                        <span>
-                                            ⚡
-                                        </span>
+                            </div>
 
-                                        <div>
-                                            <strong>
-                                                {item.name || "User"}
-                                            </strong>
+                            :
 
-                                            <p>
-                                                {item.action}
-                                            </p>
-                                            <small>
-                                                {
-                                                    new Date(
-                                                        item.created_at
-                                                    )
-                                                        .toLocaleString()
-                                                }
-                                            </small>
-                                        </div>
+                            activity.map(item => (
+
+                                <div
+                                    className="activity-row"
+                                    key={item.id}
+                                >
+
+
+                                    <div>
+                                        ⚡
                                     </div>
-                                ))
-                            )
-                        }
 
-                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {item.name || "User"}
+                                        </strong>
+
+
+                                        <p>
+                                            {item.action}
+                                        </p>
+
+
+                                        <small>
+
+                                            {
+                                                new Date(
+                                                    item.created_at
+                                                )
+                                                    .toLocaleString()
+
+                                            }
+
+                                        </small>
+
+
+                                    </div>
+
+
+
+                                </div>
+
+
+                            ))
+
+                    }
+
+
 
                 </div>
 
-                <div className="project-panel">
+
+
+
+
+                <div className="info-card">
+
+
                     <h2>
-                        Project Details
+                        Project Information
                     </h2>
 
-                    <div className="detail-row">
+
+
+                    <div className="info-row">
+
                         <span>
                             Status
                         </span>
-                        <strong className="status-text">
-                            {
-                                project.status || "ACTIVE"
-                            }
+
+                        <strong>
+                            {project.status}
                         </strong>
+
+
                     </div>
 
-                    <div className="detail-row">
+
+
+
+                    <div className="info-row">
+
                         <span>
                             Created
                         </span>
@@ -324,54 +350,34 @@ function ProjectDetail() {
 
                     </div>
 
-                    <div className="detail-row">
+                    <div className="info-row">
+
                         <span>
                             Project ID
                         </span>
+
                         <strong>
                             {
-                                project.id.slice(0, 8)
+                                project.id.substring(0, 8)
                             }
                         </strong>
-
                     </div>
-
-
                 </div>
-
-
-
             </div>
-
-
-
-
-
 
             {
                 showModal &&
-
                 <CreateTaskModal
-
                     projectId={project.id}
-
-                    closeModal={
-                        () => setShowModal(false)
+                    closeModal={() =>
+                        setShowModal(false)
                     }
-
                     refresh={loadProject}
-
                 />
-
             }
 
-
-
         </div>
-
-    );
-
+    )
 }
-
 
 export default ProjectDetail;

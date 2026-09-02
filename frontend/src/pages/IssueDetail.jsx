@@ -6,10 +6,9 @@ function IssueDetail() {
     const { id } = useParams();
     const [issue, setIssue] = useState(null);
     const [comment, setComment] = useState("");
-
     useEffect(() => {
         loadIssue();
-    }, []);
+    }, [id]);
 
     async function loadIssue() {
         try {
@@ -60,28 +59,33 @@ function IssueDetail() {
     }
 
     return (
-        <div className="issue-detail">
-            
-            <div className="issue-detail-header">
-                
-                <div>
-                    
-                    <div className="issue-key-large">
 
+        <div className="issue-detail-page">
+
+
+            {/* HEADER */}
+
+            <div className="issue-header-card">
+
+
+                <div className="issue-main-title">
+
+
+                    <span className="issue-number">
                         {issue.issue_key}
+                    </span>
 
-                    </div>
 
                     <h1>
                         {issue.title}
                     </h1>
+
+
                     <p>
                         {
                             issue.description ||
                             "No description"
-
                         }
-
                     </p>
 
 
@@ -89,28 +93,23 @@ function IssueDetail() {
 
 
 
+                <div className="issue-badge-area">
 
-                <div className="issue-badges">
 
-
-                    <span className="priority-tag">
-
+                    <span
+                        className={`priority-badge ${issue.priority?.toLowerCase()}`}
+                    >
                         {issue.priority}
-
                     </span>
 
 
 
-                    <span className="status-tag">
-
+                    <span className="status-badge">
                         {issue.status}
-
                     </span>
-
 
 
                 </div>
-
 
 
             </div>
@@ -119,18 +118,18 @@ function IssueDetail() {
 
 
 
+            <div className="issue-layout">
 
 
 
-
-            <div className="issue-detail-grid">
-
+                {/* LEFT */}
 
 
-                <div>
+                <div className="issue-left">
 
 
-                    <div className="detail-box">
+
+                    <div className="issue-card">
 
 
                         <h2>
@@ -139,75 +138,274 @@ function IssueDetail() {
 
 
                         <p>
-
                             {
                                 issue.description ||
                                 "No description available"
-
                             }
-
                         </p>
 
 
                     </div>
 
-                    <div className="detail-box">
-                        <h2>
-                            Comments
-                        </h2>
 
-                        {
-                            issue.comments?.map(comment => (
 
-                                <div
-                                    className="comment"
-                                    key={comment.id}
-                                >
-                                    <strong>
-                                        {comment.name || "User"}
-                                    </strong>
-                                    <p>
-                                        {comment.body}
-                                    </p>
-                                </div>
-                            ))
-                        }
 
-                        <div className="comment-input">
+
+                    <div className="issue-card comments-section">
+
+                        <div className="comments-header">
+
+                            <h2>
+                                Comments
+                            </h2>
+
+                            <span>
+                                {issue.comments?.length || 0}
+                            </span>
+
+                        </div>
+
+
+
+                        <div className="comments-list">
+
+
+                            {
+                                issue.comments?.length === 0 ?
+
+                                    (
+                                        <div className="empty-comments">
+
+                                            💬
+
+                                            <p>
+                                                No comments yet
+                                            </p>
+
+                                            <small>
+                                                Start a conversation about this issue
+                                            </small>
+
+                                        </div>
+                                    )
+
+                                    :
+
+                                    issue.comments.map(comment => (
+
+                                        <div
+                                            className="comment-item"
+                                            key={comment.id}
+                                        >
+
+
+                                            <div className="comment-avatar">
+
+                                                {
+                                                    comment.name
+                                                        ?.charAt(0)
+                                                        .toUpperCase()
+                                                }
+
+                                            </div>
+
+
+
+                                            <div className="comment-body">
+
+
+                                                <div className="comment-top">
+
+
+                                                    <strong>
+
+                                                        {
+                                                            comment.name ||
+                                                            "User"
+                                                        }
+
+                                                    </strong>
+
+
+                                                    <small>
+
+                                                        Recently
+
+                                                    </small>
+
+
+                                                </div>
+
+
+
+                                                <p>
+
+                                                    {comment.body}
+
+                                                </p>
+
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                    ))
+
+                            }
+
+
+                        </div>
+
+
+
+
+                        <div className="comment-box">
+
+
                             <textarea
+
                                 placeholder="Write a comment..."
+
                                 value={comment}
-                                onChange={e => setComment(e.target.value)}
+
+                                onChange={
+                                    e => setComment(e.target.value)
+                                }
+
                             />
 
+
+
                             <button
-                                className="primary-btn"
+
+                                className="comment-send-btn"
+
                                 onClick={addComment}
+
                             >
+
                                 Send
+
                             </button>
+
+
                         </div>
+
+
                     </div>
+
+
+
                 </div>
 
-                <div>
-                    <div className="detail-box">
+
+
+
+
+
+                {/* RIGHT */}
+
+
+                <div className="issue-right">
+
+
+                    <div className="issue-card">
+
+
+                        <h2>
+                            Details
+                        </h2>
+
+
+
+                        <div className="detail-line">
+
+                            <span>
+                                Status
+                            </span>
+
+                            <strong>
+                                {issue.status}
+                            </strong>
+
+                        </div>
+
+
+
+
+                        <div className="detail-line">
+
+                            <span>
+                                Priority
+                            </span>
+
+                            <strong>
+                                {issue.priority}
+                            </strong>
+
+                        </div>
+
+
+
+
+                        <div className="detail-line">
+
+                            <span>
+                                Type
+                            </span>
+
+                            <strong>
+                                {issue.type || "Issue"}
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+                    <div className="issue-card">
+
+
                         <h2>
                             Activity
                         </h2>
-                        <div className="activity-row">
+
+
+
+                        <div className="activity-item">
                             ✓ Issue created
                         </div>
-                        <div className="activity-row">
+
+
+                        <div className="activity-item">
                             ⚡ Status updated
                         </div>
-                        <div className="activity-row">
+
+
+                        <div className="activity-item">
                             💬 Comment added
                         </div>
+
+
+
                     </div>
+
+
                 </div>
+
+
+
             </div>
+
+
         </div>
+
     );
 }
 

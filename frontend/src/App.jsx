@@ -70,51 +70,51 @@ function App() {
             path="/settings"
             element={<Settings />}
           />
+          <Route
+            path="/workspace/:workspaceId/projects"
+            element={<Projects />}
+          />
+          <Route
+            path="/projects/:projectId"
+            element={<ProjectDetail />}
+          />
+          <Route
+            path="/projects/:projectId/members"
+            element={<ProjectMembers />}
+          />
+          <Route
+            path="/projects/:projectId/tasks"
+            element={<Tasks />}
+          />
+          <Route
+            path="/workspace/:workspaceId/tasks"
+            element={<Tasks />}
+          />
+          <Route
+            path="/tasks/:id"
+            element={<TaskDetail />}
+          />
+          <Route
+            path="/projects/:projectId/issues"
+            element={<Issues />}
+          />
+          <Route
+            path="/workspace/:workspaceId/issues"
+            element={<Issues />}
+          />
+          <Route
+            path="/issues/:id"
+            element={<IssueDetail />}
+          />
+          <Route
+            path="/workspace/:workspaceId/completed"
+            element={<Completed />}
+          />
+          <Route
+            path="*"
+            element={<Navigate to="/dashboard" />}
+          />
         </Route>
-        <Route
-          path="/workspace/:workspaceId/projects"
-          element={<Projects />}
-        />
-        <Route
-          path="/projects/:projectId"
-          element={<ProjectDetail />}
-        />
-        <Route
-          path="/projects/:projectId/members"
-          element={<ProjectMembers />}
-        />
-        <Route
-          path="/projects/:projectId/tasks"
-          element={<Tasks />}
-        />
-        <Route
-          path="/workspace/:workspaceId/tasks"
-          element={<Tasks />}
-        />
-        <Route
-          path="/tasks/:id"
-          element={<TaskDetail />}
-        />
-        <Route
-          path="/projects/:projectId/issues"
-          element={<Issues />}
-        />
-        <Route
-          path="/workspace/:workspaceId/issues"
-          element={<Issues />}
-        />
-        <Route
-          path="/issues/:id"
-          element={<IssueDetail />}
-        />
-        <Route
-          path="/workspace/:workspaceId/completed"
-          element={<Completed />}
-        />
-        <Route
-          path="*"
-          element={<Navigate to="/dashboard" />}
-        />
       </Routes>
     </BrowserRouter>
   );

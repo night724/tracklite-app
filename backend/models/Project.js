@@ -2,48 +2,117 @@ const db = require("../config/database");
 
 class Project {
     static async getAll(workspaceId) {
+
         const result =
             await db.query(
                 `
-                SELECT
-                    id,
-                    name,
-                    description,
-                    status,
-                    created_at
-                FROM projects
-                WHERE workspace_id=$1
-                ORDER BY created_at DESC
-                `,
+            SELECT
+
+                p.id,
+                p.name,
+                p.description,
+                p.status,
+                p.created_at,
+
+
+                (
+                    SELECT COUNT(*)
+                    FROM tasks t
+                    WHERE t.project_id = p.id
+                ) AS "taskCount",
+
+
+
+                (
+                    SELECT COUNT(*)
+                    FROM tasks t
+                    WHERE 
+                        t.project_id = p.id
+                        AND t.status='DONE'
+                ) AS "completedTasks",
+
+
+
+                (
+                    SELECT COUNT(*)
+                    FROM project_members pm
+                    WHERE pm.project_id = p.id
+                ) AS "memberCount",
+
+                (
+                    SELECT COUNT(*)
+                    FROM issues i
+                    INNER JOIN tasks t2
+                    ON i.task_id=t2.id
+                    WHERE t2.project_id=p.id
+                ) AS "issueCount"
+
+
+            FROM projects p
+
+            WHERE p.workspace_id=$1
+
+            ORDER BY p.created_at DESC
+            `,
                 [
                     workspaceId
                 ]
             );
-        return result.rows;
+        return result.rows.map(project => {
+            const totalTasks =
+                Number(project.taskCount);
+            const completedTasks =
+                Number(project.completedTasks);
+
+            return {
+                ...project,
+                progress:
+                    totalTasks === 0
+                        ? 0
+                        :
+                        Math.round(
+                            (completedTasks / totalTasks) * 100
+                        )
+            };
+        });
     }
     static async getById(id) {
         const result = await db.query(
             `
         SELECT
             p.*,
+
             (
                 SELECT COUNT(*)
                 FROM tasks t
                 WHERE t.project_id = p.id
             ) AS "taskCount",
+
+
+            (
+                SELECT COUNT(*)
+                FROM tasks t
+                WHERE 
+                    t.project_id = p.id
+                    AND t.status='DONE'
+            ) AS "completedTasks",
+
+
             (
                 SELECT COUNT(*)
                 FROM project_members pm
                 WHERE pm.project_id = p.id
             ) AS "memberCount",
+
             (
                 SELECT COUNT(*)
                 FROM issues i
                 INNER JOIN tasks t2
-                ON i.task_id = t2.id
-                WHERE t2.project_id = p.id
+                ON i.task_id=t2.id
+                WHERE t2.project_id=p.id
             ) AS "issueCount"
         FROM projects p
+
         WHERE p.id=$1
         `,
             [
@@ -51,6 +120,7 @@ class Project {
             ]
         );
         return result.rows[0];
+
     }
 
     static async create(data) {

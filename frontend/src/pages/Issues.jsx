@@ -61,14 +61,6 @@ function Issues() {
     return (
         <div className="issue-page">
             <div className="project-topbar">
-
-                <Link
-                    to="/workspace"
-                    className="back-link"
-                >
-                    ← Dashboard
-                </Link>
-
             </div>
             <div className="issue-header">
                 <div>
@@ -80,12 +72,15 @@ function Issues() {
                     </p>
                 </div>
 
-                <button
-                    className="primary-btn"
-                    onClick={() => setShowModal(true)}
-                >
-                    + New Issue
-                </button>
+                {
+                    projectId &&
+                    <button
+                        className="primary-btn"
+                        onClick={() => setShowModal(true)}
+                    >
+                        + New Issue
+                    </button>
+                }
 
             </div>
 
@@ -139,54 +134,75 @@ function Issues() {
                 </select>
             </div>
 
-            <div className="issues-container">
+            <div className="issues-list">
+
                 {
                     filteredIssues.map(issue => (
+
                         <Link
                             key={issue.id}
                             to={`/issues/${issue.id}`}
-                            className="issue-item"
+                            className="issue-card"
                         >
-                            <div className="issue-key">
-                                {issue.issue_key}
-                            </div>
 
-                            <div className="issue-content">
-                                <h3>
-                                    {issue.title}
-                                </h3>
-                                <p>
-                                    {
-                                        issue.description ||
-                                        "No description"
+
+                            <div className="issue-card-top">
+
+
+                                <span className="issue-key">
+                                    {issue.issue_key}
+                                </span>
+
+
+                                <span
+                                    className={
+                                        `priority ${issue.priority?.toLowerCase()}`
                                     }
-                                </p>
+                                >
+                                    {issue.priority}
+                                </span>
 
-                                <div className="issue-tags">
-                                    <span className="type-tag">
-                                        🐞 {issue.type || "Issue"}
-                                    </span>
-
-                                    <span className="priority-tag">
-                                        {issue.priority}
-                                    </span>
-
-                                    <span className="status-tag">
-                                        {issue.status}
-                                    </span>
-                                </div>
 
                             </div>
 
-                            <div className="issue-time">
-                                Updated
-                                <br />
-                                Recently
+
+
+                            <h3>
+                                {issue.title}
+                            </h3>
+
+
+
+                            <p>
+                                {
+                                    issue.description ||
+                                    "No description provided"
+                                }
+                            </p>
+
+
+
+                            <div className="issue-footer">
+
+
+                                <span>
+                                    🐞 {issue.type || "Issue"}
+                                </span>
+
+
+                                <span className="status">
+                                    {issue.status}
+                                </span>
+
+
                             </div>
+
 
                         </Link>
+
                     ))
                 }
+
             </div>
             {
                 showModal && (

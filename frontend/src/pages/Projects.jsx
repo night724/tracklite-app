@@ -55,7 +55,6 @@ function Projects() {
 
         <div className="projects-page">
 
-
             <div className="projects-header">
 
                 <div>

@@ -37,16 +37,6 @@ function TaskDetail() {
     return (
         <div className="task-detail">
 
-            <div className="project-topbar">
-
-                <Link
-                    to="/workspace"
-                    className="back-link"
-                >
-                    ← Dashboard
-                </Link>
-
-            </div>
             <div className="task-header">
                 <div>
                     <h1>
@@ -120,39 +110,78 @@ function TaskDetail() {
                         )
                         :
                         (
-                            <div className="issues-container">
+                            <div className="issue-list">
+
                                 {
                                     issues.map(issue => (
+
                                         <Link
                                             key={issue.id}
                                             to={`/issues/${issue.id}`}
-                                            className="issue-item"
+                                            className="issue-card"
                                         >
-                                            <div className="issue-key">
-                                                {issue.issue_key}
-                                            </div>
-                                            <div className="issue-content">
-                                                <h3>
-                                                    {issue.title}
-                                                </h3>
-                                                <p>
-                                                    {
-                                                        issue.description ||
-                                                        "No description"
-                                                    }
-                                                </p>
-                                                <div className="issue-tags">
-                                                    <span className="priority-tag">
-                                                        {issue.priority}
-                                                    </span>
-                                                    <span className="status-tag">
-                                                        {issue.status}
-                                                    </span>
+
+
+                                            <div className="issue-card-header">
+
+
+                                                <div className="issue-id">
+                                                    🐞 {issue.issue_key}
                                                 </div>
+
+
+                                                <span
+                                                    className={
+                                                        `priority ${issue.priority?.toLowerCase()}`
+                                                    }
+                                                >
+                                                    {issue.priority}
+                                                </span>
+
+
                                             </div>
+
+
+
+                                            <h3>
+                                                {issue.title}
+                                            </h3>
+
+
+
+                                            <p>
+                                                {
+                                                    issue.description ||
+                                                    "No description"
+                                                }
+                                            </p>
+
+
+
+
+                                            <div className="issue-card-footer">
+
+
+                                                <span>
+                                                    👤 {task.created_by || "User"}
+                                                </span>
+
+
+                                                <span className="issue-status">
+                                                    {issue.status}
+                                                </span>
+
+
+                                            </div>
+
+
                                         </Link>
+
+
                                     ))
+
                                 }
+
                             </div>
                         )
                 }

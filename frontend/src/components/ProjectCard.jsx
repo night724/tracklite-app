@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 
 
-function ProjectCard({project}) {
+function ProjectCard({ project }) {
+
+
+    const progress =
+        project.progress || 0;
 
 
     return (
@@ -9,25 +13,46 @@ function ProjectCard({project}) {
         <div className="project-card">
 
 
-            <div className="project-card-top">
+            {/* HEADER */}
+
+            <div className="project-card-header">
 
 
-                <div className="project-avatar">
+                <div className="project-icon">
 
                     {
                         project.name
-                        .charAt(0)
-                        .toUpperCase()
+                            ?.charAt(0)
+                            .toUpperCase()
                     }
 
                 </div>
 
 
-                <span className="project-status">
 
-                    {project.status || "ACTIVE"}
+                <div className="project-info">
 
-                </span>
+                    <h2>
+                        {project.name}
+                    </h2>
+
+
+                    <span
+                        className={
+                            `status-badge ${project.status?.toLowerCase()
+                            }`
+                        }
+                    >
+
+                        {
+                            project.status ||
+                            "ACTIVE"
+                        }
+
+                    </span>
+
+
+                </div>
 
 
             </div>
@@ -35,12 +60,8 @@ function ProjectCard({project}) {
 
 
 
-            <h2>
 
-                {project.name}
-
-            </h2>
-
+            {/* DESCRIPTION */}
 
 
             <p className="project-description">
@@ -55,52 +76,111 @@ function ProjectCard({project}) {
 
 
 
-            <div className="project-stats">
 
 
-                <div>
+
+            {/* STATS */}
+
+
+            <div className="project-stat-container">
+
+
+                <div className="project-stat">
+
 
                     <strong>
+                        {
+                            project.taskCount || 0
+                        }
+                    </strong>
+
+
+                    <span>
                         Tasks
-                    </strong>
-
-                    <span>
-                        {project.task_count || 0}
                     </span>
+
 
                 </div>
 
 
 
-                <div>
+
+
+                <div className="project-stat">
+
 
                     <strong>
-                        Members
+                        {
+                            project.memberCount || 0
+                        }
                     </strong>
 
+
                     <span>
-                        {project.member_count || 0}
+                        Members
                     </span>
+
 
                 </div>
 
 
+
+
+
+                <div className="project-stat">
+
+
+                    <strong>
+                        {
+                            project.issueCount || 0
+                        }
+                    </strong>
+                    <span>
+                        Issues
+                    </span>
+                </div>
             </div>
 
+            <div className="project-progress">
+                <div className="progress-top">
+                    <span>
+                        Progress
+                    </span>
+                    <strong>
+                        {progress}% Complete
+                    </strong>
+                </div>
 
+                <div className="progress-track">
+                    <div
+                        className="progress-value"
 
+                        style={{
+                            width: `${progress}%`
+                        }}
+                    />
+                </div>
+                <p className="progress-text">
+                    {project.completedTasks || 0}
+                    /
+                    {project.taskCount || 0}
+                    tasks completed
+                </p>
+
+            </div>
 
             <Link
 
                 to={`/projects/${project.id}`}
 
-                className="open-project"
+                className="project-action"
 
             >
 
                 Open Project →
 
             </Link>
+
 
 
 

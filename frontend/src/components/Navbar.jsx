@@ -1,17 +1,30 @@
 import { useAuth } from "../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 
 function Navbar() {
-
 
     const { user, logout } = useAuth();
 
     const navigate = useNavigate();
 
-    const [open, setOpen] =
-        useState(false);
+    const location = useLocation();
+
+    const [open, setOpen] = useState(false);
+
+
+
+    const showBackButton =
+        location.pathname !== "/dashboard";
+
+
+
+    function goBack() {
+
+        navigate(-1);
+
+    }
 
 
 
@@ -20,11 +33,40 @@ function Navbar() {
         <header className="navbar">
 
 
+
+            {/* LEFT SIDE */}
+
             <div className="navbar-left">
 
-                <h3>
-                    Dashboard
-                </h3>
+
+                {
+                    showBackButton &&
+
+                    <button
+                        className="back-button"
+                        onClick={goBack}
+                    >
+                        ← Back
+                    </button>
+
+                }
+
+
+
+                <div className="brand-area">
+
+                    <h2>
+                        TrackLite
+                    </h2>
+
+
+                    <span>
+                        Workspace
+                    </span>
+
+                </div>
+
+
 
             </div>
 
@@ -32,27 +74,41 @@ function Navbar() {
 
 
 
+
+
+            {/* RIGHT SIDE */}
+
+
             <div className="navbar-right">
 
 
+
                 <button
-                    className="nav-icon-btn"
+                    className="notification-btn"
+                    onClick={() =>
+                        navigate("/inbox")
+                    }
                 >
+
                     🔔
+
                 </button>
 
 
 
 
+
+
                 <div
-                    className="profile-area"
+                    className="user-menu"
                     onClick={() =>
                         setOpen(!open)
                     }
                 >
 
 
-                    <div className="avatar-small">
+
+                    <div className="user-avatar">
 
                         {
                             user?.name
@@ -64,22 +120,25 @@ function Navbar() {
 
 
 
-                    <div className="profile-text">
+
+                    <div className="user-info">
+
 
                         <strong>
                             {
-                                user?.name ||
-                                "User"
+                                user?.name || "User"
                             }
                         </strong>
 
 
                         <small>
-                            Online
+                            Member
                         </small>
 
 
                     </div>
+
+
 
 
                     <span>
@@ -94,10 +153,13 @@ function Navbar() {
 
 
 
+
+
                 {
                     open &&
 
-                    <div className="profile-dropdown">
+
+                    <div className="user-dropdown">
 
 
                         <button
@@ -105,19 +167,26 @@ function Navbar() {
                                 navigate("/settings")
                             }
                         >
+
                             ⚙ Settings
+
                         </button>
+
 
 
 
                         <button
                             onClick={logout}
                         >
+
                             🚪 Logout
+
                         </button>
 
 
+
                     </div>
+
 
                 }
 
