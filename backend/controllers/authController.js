@@ -5,7 +5,10 @@ const User = require("../models/User");
 const db = require("../config/database");
 
 
+// =======================
 // REGISTER
+// =======================
+
 exports.register = async (req, res) => {
 
     try {
@@ -17,17 +20,21 @@ exports.register = async (req, res) => {
         } = req.body;
 
 
+
+        // Check existing user
+
         const existing =
             await User.findByEmail(email);
 
 
         if (existing) {
 
-            return res.status(400)
-                .json({
-                    message:
-                        "Email already exists"
-                });
+            return res.status(400).json({
+
+                message:
+                    "Email already exists"
+
+            });
 
         }
 
@@ -41,31 +48,83 @@ exports.register = async (req, res) => {
 
 
 
-        // 1. Create User
+
+        /*
+            1. CREATE ORGANIZATION
+        */
+
+
+        const organizationId = uuidv4();
+
+
+        await db.query(
+
+            `
+            INSERT INTO organizations
+            (
+                id,
+                name
+            )
+
+            VALUES
+            (
+                $1,
+                $2
+            )
+            `,
+
+            [
+
+                organizationId,
+
+                `${name}'s Organization`
+
+            ]
+
+        );
+
+
+
+
+
+
+
+        /*
+            2. CREATE USER
+        */
+
 
         const userId = uuidv4();
 
 
-        const user =
-            await User.create({
 
-                id: userId,
+        await User.create({
 
-                organization_id: null,
+            id: userId,
 
-                name,
+            organization_id: organizationId,
 
-                email,
+            name,
 
-                password: hashedPassword,
+            email,
 
-                role: "MEMBER"
+            password: hashedPassword,
 
-            });
+            role: "OWNER"
+
+        });
 
 
 
-        // 2. Create Workspace
+
+
+
+
+
+        /*
+            3. CREATE WORKSPACE
+        */
+
 
         const workspaceId = uuidv4();
 
@@ -96,7 +155,7 @@ exports.register = async (req, res) => {
 
                 workspaceId,
 
-                null,
+                organizationId,
 
                 `${name}'s Workspace`,
 
@@ -109,7 +168,14 @@ exports.register = async (req, res) => {
 
 
 
-        // 3. Add user into workspace_members
+
+
+
+
+
+        /*
+            4. ADD USER TO WORKSPACE
+        */
 
 
         await db.query(
@@ -117,23 +183,31 @@ exports.register = async (req, res) => {
             `
             INSERT INTO workspace_members
             (
+                id,
                 workspace_id,
-                user_id
+                user_id,
+                role
             )
 
             VALUES
             (
                 $1,
-                $2
+                $2,
+                $3,
+                $4
             )
 
             `,
 
             [
 
+                uuidv4(),
+
                 workspaceId,
 
-                userId
+                userId,
+
+                "OWNER"
 
             ]
 
@@ -143,29 +217,33 @@ exports.register = async (req, res) => {
 
 
 
-        res.status(201)
-            .json({
 
-                message:
-                    "User created",
 
-                user: {
 
-                    id: userId,
+        res.status(201).json({
 
-                    name,
+            message:
+                "User created",
 
-                    email,
+            user: {
 
-                    workspaceId
+                id: userId,
 
-                }
+                name,
 
-            });
+                email,
+
+                role: "OWNER",
+
+                workspaceId
+
+            }
+
+        });
+
 
 
     }
-
 
     catch (error) {
 
@@ -176,13 +254,11 @@ exports.register = async (req, res) => {
         );
 
 
-        res.status(500)
-            .json({
+        res.status(500).json({
 
-                message:
-                    error.message
+            message: error.message
 
-            });
+        });
 
 
     }
@@ -193,9 +269,10 @@ exports.register = async (req, res) => {
 
 
 
-
-
+// =======================
 // LOGIN
+// =======================
+
 
 exports.login = async (req, res) => {
 
@@ -218,15 +295,14 @@ exports.login = async (req, res) => {
 
         if (!user) {
 
-            return res.status(404)
-                .json({
+            return res.status(404).json({
 
-                    message:
-                        "User not found"
+                message: "User not found"
 
-                });
+            });
 
         }
+
 
 
 
@@ -241,41 +317,37 @@ exports.login = async (req, res) => {
 
         if (!valid) {
 
-            return res.status(401)
-                .json({
+            return res.status(401).json({
 
-                    message:
-                        "Wrong password"
+                message: "Wrong password"
 
-                });
+            });
 
         }
 
 
 
 
-        // get workspace
 
         const workspace =
             await db.query(
 
                 `
-            SELECT
-            workspace_id
+                SELECT workspace_id
 
-            FROM workspace_members
+                FROM workspace_members
 
-            WHERE user_id=$1
+                WHERE user_id=$1
 
-            LIMIT 1
-
-            `,
+                LIMIT 1
+                `,
 
                 [
                     user.id
                 ]
 
             );
+
 
 
 
@@ -315,7 +387,6 @@ exports.login = async (req, res) => {
 
             user: {
 
-
                 id: user.id,
 
                 name: user.name,
@@ -323,7 +394,6 @@ exports.login = async (req, res) => {
                 email: user.email,
 
                 role: user.role,
-
 
                 workspaceId
 
@@ -336,20 +406,20 @@ exports.login = async (req, res) => {
 
     }
 
-
     catch (error) {
 
 
-        console.log(error);
+        console.log(
+            "LOGIN ERROR:",
+            error.message
+        );
 
 
-        res.status(500)
-            .json({
+        res.status(500).json({
 
-                message:
-                    "Login failed"
+            message: "Login failed"
 
-            });
+        });
 
 
     }
@@ -357,17 +427,26 @@ exports.login = async (req, res) => {
 
 };
 
-// CURRENT USER
+
+
 exports.me = async (req, res) => {
+
+
     try {
+
+
         const user =
-            await User.findById(req.user.id);
+            await User.findById(
+                req.user.id
+            );
+
         if (!user) {
-            return res.status(404)
-                .json({
-                    message: "User not found"
-                });
+            return res.status(404).json({
+                message: "User not found"
+            });
+
         }
+
         const workspace =
             await db.query(
                 `
@@ -375,13 +454,16 @@ exports.me = async (req, res) => {
                 FROM workspace_members
                 WHERE user_id=$1
                 LIMIT 1
+
                 `,
                 [
                     user.id
                 ]
             );
+
         const workspaceId =
             workspace.rows[0]?.workspace_id || null;
+
         res.json({
             id: user.id,
             name: user.name,
@@ -391,11 +473,11 @@ exports.me = async (req, res) => {
             workspaceId
         });
     }
+
     catch (error) {
         console.log(error);
-        res.status(500)
-            .json({
-                message: "Cannot get user"
-            });
+        res.status(500).json({
+            message: "Cannot get user"
+        });
     }
 };

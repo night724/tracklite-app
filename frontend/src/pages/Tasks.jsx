@@ -91,7 +91,13 @@ function Tasks() {
 
     ];
 
-
+    const visibleColumns =
+        statusFilter
+            ? columns.filter(
+                column =>
+                    column.status === statusFilter
+            )
+            : columns;
 
 
     return (
@@ -166,7 +172,7 @@ function Tasks() {
 
 
                 {
-                    columns.map(column => (
+                    visibleColumns.map(column => (
 
 
                         <div
@@ -189,7 +195,8 @@ function Tasks() {
                                     {
                                         tasks.filter(
                                             t =>
-                                                t.status === column.status
+                                                t.status === column.status &&
+                                                (!statusFilter || t.status === statusFilter)
                                         ).length
                                     }
 
@@ -208,18 +215,28 @@ function Tasks() {
 
                                 tasks
 
-                                    .filter(
-                                        task =>
+                                    .filter(task => {
 
-                                            task.status === column.status &&
-
+                                        const searchMatch =
                                             task.title
                                                 .toLowerCase()
                                                 .includes(
                                                     search.toLowerCase()
-                                                )
+                                                );
 
-                                    )
+
+                                        const statusMatch =
+                                            !statusFilter ||
+                                            task.status === statusFilter;
+
+
+                                        return (
+                                            task.status === column.status &&
+                                            searchMatch &&
+                                            statusMatch
+                                        );
+
+                                    })
 
                                     .map(task => (
 
