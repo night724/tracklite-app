@@ -2,51 +2,139 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 function Sidebar() {
-    const { logout, user } = useAuth();
+
+    const { user } = useAuth();
+
     const workspaceId = user?.workspaceId;
 
+
+    const menu = [
+
+        {
+            name: "Inbox",
+            icon: "📥",
+            path: "/inbox"
+        },
+
+        {
+            name: "Dashboard",
+            icon: "📊",
+            path: "/dashboard"
+        },
+
+        {
+            name: "Projects",
+            icon: "📁",
+            path: `/workspace/${workspaceId}/projects`
+        },
+
+        {
+            name: "My Team",
+            icon: "👥",
+            path: "/team"
+        },
+
+        {
+            name: "Settings",
+            icon: "⚙",
+            path: "/settings"
+        }
+
+    ];
+
+
+
     return (
+
         <aside className="sidebar">
-            <h2 className="logo">TrackLite</h2>
 
-            <nav>
-                <NavLink
-                    to="/inbox"
-                    className={({ isActive }) => (isActive ? 'active' : '')}
-                >
-                    📥 Inbox
-                </NavLink>
 
-                <NavLink
-                    to="/dashboard"
-                    className={({ isActive }) => (isActive ? 'active' : '')}
-                >
-                    📊 Dashboard
-                </NavLink>
+            <div className="sidebar-brand">
 
-                <NavLink
-                    to={`/workspace/${workspaceId}/projects`}
-                    className={({ isActive }) => (isActive ? 'active' : '')}
-                >
-                    📁 Project
-                </NavLink>
 
-                <NavLink
-                    to="/team"
-                    className={({ isActive }) => (isActive ? 'active' : '')}
-                >
-                    👥 My Team
-                </NavLink>
+                <div className="sidebar-logo">
+                    T
+                </div>
 
-                <NavLink
-                    to="/settings"
-                    className={({ isActive }) => (isActive ? 'active' : '')}
-                >
-                    ⚙ Settings
-                </NavLink>
+
+                <div>
+                    <h2>
+                        TrackLite
+                    </h2>
+
+                    <span>
+                        Workspace
+                    </span>
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <nav className="sidebar-menu">
+
+
+                {
+                    menu.map((item) => (
+
+                        <NavLink
+
+                            key={item.name}
+
+                            to={item.path}
+
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "sidebar-link active"
+                                    : "sidebar-link"
+                            }
+
+                        >
+
+                            <span className="menu-icon">
+                                {item.icon}
+                            </span>
+
+
+                            <span>
+                                {item.name}
+                            </span>
+
+
+                        </NavLink>
+
+                    ))
+                }
+
+
             </nav>
+
+
+
+
+            <div className="workspace-card">
+
+
+                <small>
+                    Current Workspace
+                </small>
+
+
+                <strong>
+                    TrackLite Team
+                </strong>
+
+
+            </div>
+
+
         </aside>
+
     );
 }
+
 
 export default Sidebar;
