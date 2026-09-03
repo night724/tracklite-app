@@ -5224,7 +5224,7 @@ body.dark .close-btn {
     color: #7c3aed;
 }
 
-.content > * {
+.content>* {
     animation: fadeIn 0.35s ease;
 }
 
@@ -5352,4 +5352,420 @@ body.dark .task-card.low .task-priority {
     background: #052e16;
 
     color: #86efac;
+}
+
+/* =========================
+   PROJECT MEMBERS DARK UI
+========================= */
+
+body.dark .members-page {
+    background: #0f172a;
+    color: #e5e7eb;
+}
+
+
+/* Header */
+
+body.dark .page-header h1 {
+    color: #f8fafc;
+}
+
+body.dark .page-header p {
+    color: #94a3b8;
+}
+
+
+/* Invite button */
+
+body.dark .primary-btn {
+    background: linear-gradient(135deg,
+            #6366f1,
+            #8b5cf6);
+
+    color: white;
+
+    border: none;
+
+    box-shadow:
+        0 10px 25px rgba(99, 102, 241, 0.25);
+}
+
+
+body.dark .primary-btn:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 15px 30px rgba(99, 102, 241, 0.35);
+}
+
+
+/* Member cards */
+
+body.dark .member-card {
+
+    background:
+        linear-gradient(145deg,
+            #172033,
+            #111827);
+
+
+    border: 1px solid #263248;
+
+    border-radius: 18px;
+
+    padding: 28px;
+
+
+    transition: .25s;
+}
+
+
+body.dark .member-card:hover {
+
+    border-color: #6366f1;
+
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, .35);
+}
+
+
+
+/* Avatar */
+
+body.dark .member-avatar {
+
+    background:
+        linear-gradient(135deg,
+            #2563eb,
+            #4f46e5);
+
+
+    color: white;
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, .35);
+}
+
+
+
+/* Name */
+
+body.dark .member-card h3 {
+
+    color: #f8fafc;
+
+}
+
+
+
+/* Email */
+
+body.dark .member-card p {
+
+    color: #94a3b8;
+
+}
+
+
+
+/* Role badge */
+
+body.dark .role-badge {
+
+    background: #1e293b;
+
+    color: #cbd5e1;
+
+    border: 1px solid #334155;
+
+}
+
+
+body.dark .role-badge.admin {
+
+    background: #312e81;
+
+    color: #ddd6fe;
+
+    border-color: #4f46e5;
+
+}
+
+/* =========================
+   DASHBOARD DARK MODE
+========================= */
+
+
+body.dark .dashboard-container {
+
+    color: #e5e7eb;
+
+}
+
+
+
+/* HEADER */
+
+body.dark .dashboard-header h1 {
+
+    color: #f8fafc;
+
+}
+
+
+body.dark .dashboard-header p {
+
+    color: #94a3b8;
+
+}
+
+
+
+/* =========================
+   STAT CARDS
+========================= */
+
+
+body.dark .stat-card {
+
+    background:
+        linear-gradient(145deg,
+            #172033,
+            #111827);
+
+
+    border: 1px solid #263248;
+
+    border-radius: 18px;
+
+    color: #f8fafc;
+
+
+    transition: .25s;
+
+}
+
+
+
+body.dark .stat-card:hover {
+
+    transform: translateY(-5px);
+
+    border-color: #6366f1;
+
+
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, .35);
+
+}
+
+
+
+body.dark .stat-card h2 {
+
+    color: #ffffff;
+
+}
+
+
+body.dark .stat-card p {
+
+    color: #94a3b8;
+
+}
+
+
+
+/* =========================
+   DASHBOARD PANELS
+========================= */
+
+
+body.dark .dashboard-panel {
+
+
+    background:
+        linear-gradient(145deg,
+            #172033,
+            #111827);
+
+
+    border: 1px solid #263248;
+
+
+    border-radius: 20px;
+
+
+}
+
+
+
+body.dark .panel-header h2 {
+
+    color: #f8fafc;
+
+}
+
+
+body.dark .panel-header a {
+
+    color: #818cf8;
+
+}
+
+
+
+/* =========================
+   RECENT PROJECT/TASK CARD
+========================= */
+
+
+body.dark .recent-card {
+
+
+    background: #1e293b;
+
+
+    border: 1px solid #334155;
+
+
+    color: #e5e7eb;
+
+
+}
+
+
+
+body.dark .recent-card:hover {
+
+
+    background: #243044;
+
+
+    border-color: #6366f1;
+
+
+}
+
+
+
+body.dark .recent-info h3 {
+
+
+    color: #f8fafc;
+
+}
+
+
+
+body.dark .recent-info p {
+
+
+    color: #94a3b8;
+
+}
+
+
+
+/* ICON BOX */
+
+body.dark .recent-icon {
+
+
+    background: #312e81;
+
+
+    border-radius: 12px;
+
+
+}
+
+
+
+/* ARROW */
+
+body.dark .arrow {
+
+
+    color: #818cf8;
+
+}
+
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+
+body.dark .empty-state {
+
+
+    color: #94a3b8;
+
+}
+
+
+body.dark .empty-state p {
+
+
+    color: #94a3b8;
+
+}
+
+.project-team-status {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+}
+
+
+.project-team-status div {
+
+    flex: 1;
+
+    background: #172033;
+
+    border: 1px solid #334155;
+
+    border-radius: 12px;
+
+    padding: 12px;
+
+    text-align: center;
+
+}
+
+
+.project-team-status span {
+
+    font-size: 18px;
+
+}
+
+
+.project-team-status strong {
+
+    display: block;
+
+    margin-top: 5px;
+
+    color: #f8fafc;
+
+    font-size: 18px;
+
+}
+
+
+.project-team-status small {
+
+    color: #94a3b8;
+
 }

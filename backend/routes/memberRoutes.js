@@ -38,22 +38,46 @@ router.get('/workspace/:workspaceId', auth, async (req, res) => {
 router.get('/project/:projectId', auth, async (req, res) => {
     try {
         const result = await db.query(
-            `
-                    SELECT
-                        pm.id,
-                        pm.role,
-                        u.id AS user_id,
-                        u.name,
-                        u.email
+            `SELECT
+                pm.id,
+                u.id AS user_id,
+                u.name,
+                u.email,
+                pm.role,
 
-                    FROM project_members pm
+                COUNT(t.id) AS total_tasks,
 
-                    JOIN users u
-                    ON pm.user_id=u.id
+                COUNT(
+                    CASE 
+                        WHEN t.status='DONE' 
+                        THEN 1 
+                    END
+                ) AS completed_tasks,
 
-                    WHERE pm.project_id=$1
+                COUNT(
+                    CASE 
+                        WHEN t.status='IN_PROGRESS'
+                        THEN 1
+                    END
+                ) AS progress_tasks
 
-                    ORDER BY u.name
+            FROM project_members pm
+
+            JOIN users u
+            ON pm.user_id = u.id
+
+            LEFT JOIN tasks t
+            ON t.assigned_to = u.id
+            AND t.project_id = pm.project_id
+
+            WHERE pm.project_id=$1
+
+            GROUP BY
+                pm.id,
+                u.id,
+                u.name,
+                u.email,
+                pm.role;
                     `,
             [req.params.projectId],
         );

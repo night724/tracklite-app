@@ -61,7 +61,11 @@ function ProjectMembers() {
 
                             <p>{member.email}</p>
 
-                            <span>{member.role}</span>
+                            <span
+                                className={`role-badge ${member.role.toLowerCase()}`}
+                            >
+                                {member.role}
+                            </span>
                         </div>
                     </div>
                 ))}
