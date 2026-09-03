@@ -6,24 +6,13 @@ function CreateTaskModal({ projectId, workspaceId, closeModal, refresh }) {
         loadMembers();
     }, [projectId]);
     async function loadMembers() {
-
         try {
-
-            const res = await api.get(
-                `/members/project/${projectId}`
-            );
+            const res = await api.get(`/members/project/${projectId}`);
 
             setMembers(res.data);
-
         } catch (error) {
-
-            console.log(
-                "LOAD MEMBERS ERROR:",
-                error
-            );
-
+            console.log('LOAD MEMBERS ERROR:', error);
         }
-
     }
     const [form, setForm] = useState({
         title: '',

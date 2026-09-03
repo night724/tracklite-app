@@ -109,77 +109,223 @@ a {
     min-height: 100vh;
 }
 
+/* =========================
+   SIDEBAR
+========================= */
+
+
 .sidebar {
-    width: 250px;
 
-    background: linear-gradient(180deg, #111827, #312e81);
 
-    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
+    width: 260px;
 
-    color: white;
+    height: 100vh;
+
+    background: white;
+
+    border-right: 1px solid #e5e7eb;
 
     padding: 25px 18px;
+
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
 
     display: flex;
 
     flex-direction: column;
+
 }
 
-.logo {
-    font-size: 24px;
 
-    margin-bottom: 35px;
-}
 
-.sidebar nav a {
+
+
+/* BRAND */
+
+
+.sidebar-brand {
+
+
     display: flex;
+
     align-items: center;
 
-    padding: 12px 16px;
+    gap: 12px;
 
-    margin-bottom: 8px;
+    margin-bottom: 35px;
 
-    border-radius: 12px;
-
-    color: #555;
-
-    text-decoration: none;
-
-    transition: 0.2s;
 }
 
-.sidebar nav a:hover {
-    background: #f2f4ff;
-}
 
-.sidebar nav a.active {
-    background: rgba(255, 255, 255, 0.15);
 
-    backdrop-filter: blur(10px);
+.sidebar-logo {
 
-    border-left: 4px solid #818cf8;
 
-    color: white;
+    width: 45px;
 
-    font-weight: 600;
-}
+    height: 45px;
 
-.sidebar a.active {
+    border-radius: 14px;
+
     background: #2563eb;
 
     color: white;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 24px;
+
+    font-weight: bold;
+
 }
 
-.logout-btn {
+
+
+.sidebar-brand h2 {
+
+
+    margin: 0;
+
+    font-size: 21px;
+
+}
+
+
+
+.sidebar-brand span {
+
+
+    font-size: 12px;
+
+    color: #64748b;
+
+}
+
+
+
+
+
+/* MENU */
+
+
+.sidebar-menu {
+
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+
+
+.sidebar-link {
+
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 13px 15px;
+
+    border-radius: 14px;
+
+    text-decoration: none;
+
+    color: #475569;
+
+    font-size: 15px;
+
+    transition: .2s;
+
+}
+
+
+
+.sidebar-link:hover {
+
+
+    background: #f1f5f9;
+
+    color: #2563eb;
+
+}
+
+
+
+.sidebar-link.active {
+
+    background: rgba(37, 99, 235, 0.18);
+
+    color: #60a5fa;
+
+    border: 1px solid rgba(96, 165, 250, .25);
+
+}
+
+
+
+.menu-icon {
+
+
+    font-size: 20px;
+
+}
+
+
+
+
+
+
+/* WORKSPACE CARD */
+
+
+.workspace-card {
+
+
     margin-top: auto;
 
-    padding: 12px;
+    background: #f8fafc;
 
-    border: none;
+    border-radius: 16px;
 
-    border-radius: 10px;
+    padding: 16px;
 
-    cursor: pointer;
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+}
+
+
+
+.workspace-card small {
+
+
+    color: #64748b;
+
+}
+
+
+
+.workspace-card strong {
+
+
+    font-size: 14px;
+
 }
 
 /* =========================
@@ -194,6 +340,10 @@ a {
     flex-direction: column;
 }
 
+/* =========================
+   NAVBAR
+========================= */
+
 .navbar {
     height: 70px;
 
@@ -207,7 +357,7 @@ a {
 
     justify-content: space-between;
 
-    padding: 0 28px;
+    padding: 0 30px;
 
     position: sticky;
 
@@ -216,8 +366,228 @@ a {
     z-index: 100;
 }
 
-.content {
-    padding: 30px;
+/* LEFT */
+
+.navbar-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.back-button {
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 12px;
+
+    border: none;
+
+    background: #f1f5f9;
+
+    cursor: pointer;
+
+    font-size: 20px;
+
+    transition: 0.2s;
+}
+
+.back-button:hover {
+    background: #e2e8f0;
+}
+
+.brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.brand-logo {
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 12px;
+
+    background: #2563eb;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 22px;
+
+    font-weight: bold;
+}
+
+.brand h2 {
+    margin: 0;
+
+    font-size: 20px;
+}
+
+.brand span {
+    font-size: 12px;
+
+    color: #64748b;
+}
+
+/* RIGHT */
+
+.navbar-right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+.notification-btn {
+    position: relative;
+
+    width: 42px;
+
+    height: 42px;
+
+    border: none;
+
+    background: #f8fafc;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    font-size: 20px;
+}
+
+.notification-btn:hover {
+    background: #e2e8f0;
+}
+
+.notification-dot {
+    position: absolute;
+
+    width: 9px;
+
+    height: 9px;
+
+    background: red;
+
+    border-radius: 50%;
+
+    top: 8px;
+
+    right: 9px;
+}
+
+/* PROFILE */
+
+.profile {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 8px 12px;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.profile:hover {
+    background: #f8fafc;
+}
+
+.avatar {
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: bold;
+}
+
+.profile-info {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.profile-info strong {
+    font-size: 14px;
+}
+
+.profile-info small {
+    color: #64748b;
+}
+
+.arrow {
+    color: #64748b;
+}
+
+/* DROPDOWN */
+
+.dropdown {
+    position: absolute;
+
+    right: 30px;
+
+    top: 65px;
+
+    width: 180px;
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 10px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.dropdown button {
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    background: none;
+
+    text-align: left;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.dropdown button:hover {
+    background: #f1f5f9;
 }
 
 /* =========================
@@ -5363,7 +5733,6 @@ body.dark .members-page {
     color: #e5e7eb;
 }
 
-
 /* Header */
 
 body.dark .page-header h1 {
@@ -5374,41 +5743,28 @@ body.dark .page-header p {
     color: #94a3b8;
 }
 
-
 /* Invite button */
 
 body.dark .primary-btn {
-    background: linear-gradient(135deg,
-            #6366f1,
-            #8b5cf6);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
 
     color: white;
 
     border: none;
 
-    box-shadow:
-        0 10px 25px rgba(99, 102, 241, 0.25);
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25);
 }
-
 
 body.dark .primary-btn:hover {
-
     transform: translateY(-2px);
 
-    box-shadow:
-        0 15px 30px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.35);
 }
-
 
 /* Member cards */
 
 body.dark .member-card {
-
-    background:
-        linear-gradient(145deg,
-            #172033,
-            #111827);
-
+    background: linear-gradient(145deg, #172033, #111827);
 
     border: 1px solid #263248;
 
@@ -5416,126 +5772,81 @@ body.dark .member-card {
 
     padding: 28px;
 
-
-    transition: .25s;
+    transition: 0.25s;
 }
 
-
 body.dark .member-card:hover {
-
     border-color: #6366f1;
 
     transform: translateY(-5px);
 
-    box-shadow:
-        0 20px 40px rgba(0, 0, 0, .35);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
 }
-
-
 
 /* Avatar */
 
 body.dark .member-avatar {
-
-    background:
-        linear-gradient(135deg,
-            #2563eb,
-            #4f46e5);
-
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
 
     color: white;
 
-    box-shadow:
-        0 8px 20px rgba(37, 99, 235, .35);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
 }
-
-
 
 /* Name */
 
 body.dark .member-card h3 {
-
     color: #f8fafc;
-
 }
-
-
 
 /* Email */
 
 body.dark .member-card p {
-
     color: #94a3b8;
-
 }
-
-
 
 /* Role badge */
 
 body.dark .role-badge {
-
     background: #1e293b;
 
     color: #cbd5e1;
 
     border: 1px solid #334155;
-
 }
 
-
 body.dark .role-badge.admin {
-
     background: #312e81;
 
     color: #ddd6fe;
 
     border-color: #4f46e5;
-
 }
 
 /* =========================
    DASHBOARD DARK MODE
 ========================= */
 
-
 body.dark .dashboard-container {
-
     color: #e5e7eb;
-
 }
-
-
 
 /* HEADER */
 
 body.dark .dashboard-header h1 {
-
     color: #f8fafc;
-
 }
-
 
 body.dark .dashboard-header p {
-
     color: #94a3b8;
-
 }
-
-
 
 /* =========================
    STAT CARDS
 ========================= */
 
-
 body.dark .stat-card {
-
-    background:
-        linear-gradient(145deg,
-            #172033,
-            #111827);
-
+    background: linear-gradient(145deg, #172033, #111827);
 
     border: 1px solid #263248;
 
@@ -5543,192 +5854,106 @@ body.dark .stat-card {
 
     color: #f8fafc;
 
-
-    transition: .25s;
-
+    transition: 0.25s;
 }
 
-
-
 body.dark .stat-card:hover {
-
     transform: translateY(-5px);
 
     border-color: #6366f1;
 
-
-    box-shadow:
-        0 20px 40px rgba(0, 0, 0, .35);
-
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
 }
-
-
 
 body.dark .stat-card h2 {
-
     color: #ffffff;
-
 }
-
 
 body.dark .stat-card p {
-
     color: #94a3b8;
-
 }
-
-
 
 /* =========================
    DASHBOARD PANELS
 ========================= */
 
-
 body.dark .dashboard-panel {
-
-
-    background:
-        linear-gradient(145deg,
-            #172033,
-            #111827);
-
+    background: linear-gradient(145deg, #172033, #111827);
 
     border: 1px solid #263248;
 
-
     border-radius: 20px;
-
-
 }
-
-
 
 body.dark .panel-header h2 {
-
     color: #f8fafc;
-
 }
-
 
 body.dark .panel-header a {
-
     color: #818cf8;
-
 }
-
-
 
 /* =========================
    RECENT PROJECT/TASK CARD
 ========================= */
 
-
 body.dark .recent-card {
-
-
     background: #1e293b;
-
 
     border: 1px solid #334155;
 
-
     color: #e5e7eb;
-
-
 }
-
-
 
 body.dark .recent-card:hover {
-
-
     background: #243044;
 
-
     border-color: #6366f1;
-
-
 }
-
-
 
 body.dark .recent-info h3 {
-
-
     color: #f8fafc;
-
 }
-
-
 
 body.dark .recent-info p {
-
-
     color: #94a3b8;
-
 }
-
-
 
 /* ICON BOX */
 
 body.dark .recent-icon {
-
-
     background: #312e81;
 
-
     border-radius: 12px;
-
-
 }
-
-
 
 /* ARROW */
 
 body.dark .arrow {
-
-
     color: #818cf8;
-
 }
-
-
 
 /* =========================
    EMPTY STATE
 ========================= */
 
-
 body.dark .empty-state {
-
-
     color: #94a3b8;
-
 }
 
-
 body.dark .empty-state p {
-
-
     color: #94a3b8;
-
 }
 
 .project-team-status {
-
     display: flex;
 
     gap: 12px;
 
     margin-top: 20px;
-
 }
 
-
 .project-team-status div {
-
     flex: 1;
 
     background: #172033;
@@ -5740,19 +5965,13 @@ body.dark .empty-state p {
     padding: 12px;
 
     text-align: center;
-
 }
-
 
 .project-team-status span {
-
     font-size: 18px;
-
 }
 
-
 .project-team-status strong {
-
     display: block;
 
     margin-top: 5px;
@@ -5760,12 +5979,484 @@ body.dark .empty-state p {
     color: #f8fafc;
 
     font-size: 18px;
+}
+
+.project-team-status small {
+    color: #94a3b8;
+}
+
+/* =========================
+   DARK MODE NAVBAR
+========================= */
+
+body.dark .navbar {
+    background: #111827;
+
+    border-bottom: 1px solid #1f2937;
+}
+
+body.dark .brand h2 {
+    color: #f9fafb;
+}
+
+body.dark .brand span {
+    color: #94a3b8;
+}
+
+/* BACK BUTTON */
+
+body.dark .back-button {
+    background: #1f2937;
+
+    color: #e5e7eb;
+}
+
+body.dark .back-button:hover {
+    background: #334155;
+}
+
+/* NOTIFICATION */
+
+body.dark .notification-btn {
+    background: #1f2937;
+
+    color: #f8fafc;
+}
+
+body.dark .notification-btn:hover {
+    background: #334155;
+}
+
+/* PROFILE */
+
+body.dark .profile:hover {
+    background: #1f2937;
+}
+
+body.dark .profile-info strong {
+    color: #f9fafb;
+}
+
+body.dark .profile-info small {
+    color: #94a3b8;
+}
+
+body.dark .arrow {
+    color: #94a3b8;
+}
+
+/* DROPDOWN */
+
+body.dark .dropdown {
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+body.dark .dropdown button {
+    color: #e5e7eb;
+}
+
+body.dark .dropdown button:hover {
+    background: #334155;
+}
+
+/* AVATAR */
+
+body.dark .avatar {
+    background: #3b82f6;
+
+    color: white;
+}
+
+/* LOGO */
+
+body.dark .brand-logo {
+    background: #2563eb;
+}
+
+body.dark {
+    background: #0f172a;
+
+    color: #e5e7eb;
+}
+
+body.dark .dashboard-panel,
+body.dark .card,
+body.dark .project-card,
+body.dark .stat-card {
+    background: #111827;
+
+    border: 1px solid #1f2937;
+
+    color: #e5e7eb;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+    background: #1e293b;
+
+    color: #f8fafc;
+
+    border: 1px solid #334155;
+}
+
+body.dark input::placeholder {
+    color: #94a3b8;
+}
+
+/* =========================
+   DARK SIDEBAR
+========================= */
+
+
+body.dark .sidebar {
+
+
+    background: #111827;
+
+    border-color: #1f2937;
 
 }
 
 
-.project-team-status small {
+
+body.dark .sidebar-brand h2 {
+
+
+    color: #f8fafc;
+
+}
+
+
+
+body.dark .sidebar-brand span {
+
 
     color: #94a3b8;
+
+}
+
+
+
+body.dark .sidebar-link {
+
+
+    color: #cbd5e1;
+
+}
+
+
+
+body.dark .sidebar-link:hover {
+
+
+    background: #1e293b;
+
+}
+
+
+
+body.dark .sidebar-link.active {
+
+
+    background: #2563eb;
+
+    color: white;
+
+}
+
+
+
+body.dark .workspace-card {
+
+
+    background: #1e293b;
+
+}
+
+
+
+body.dark .workspace-card small {
+
+
+    color: #94a3b8;
+
+}
+
+
+
+body.dark .workspace-card strong {
+
+
+    color: #f8fafc;
+
+}
+
+.main {
+
+    margin-left: 260px;
+
+    width: calc(100% - 260px);
+
+}
+
+
+
+.content-area {
+
+    padding: 30px;
+
+}
+
+/* =========================
+   TRACKLITE DARK MODE
+========================= */
+
+
+/* GLOBAL */
+
+body.dark {
+
+    background: #0b1220;
+
+    color: #e5e7eb;
+
+}
+
+
+
+
+
+/* SIDEBAR */
+
+body.dark .sidebar {
+
+    background: #0f172a;
+
+    border-right: 1px solid #1e293b;
+
+}
+
+
+
+
+
+
+/* LOGO */
+
+body.dark .sidebar-logo {
+
+    background: #3b82f6;
+
+}
+
+
+
+
+
+
+body.dark .sidebar-brand h2 {
+
+    color: #f8fafc;
+
+}
+
+
+body.dark .sidebar-brand span {
+
+    color: #64748b;
+
+}
+
+
+
+
+
+
+
+/* MENU LINKS */
+
+
+body.dark .sidebar-link {
+
+    color: #94a3b8;
+
+}
+
+
+
+body.dark .sidebar-link:hover {
+
+
+    background: #1e293b;
+
+    color: #f8fafc;
+
+}
+
+
+
+
+
+/* ACTIVE */
+
+
+body.dark .sidebar-link.active {
+
+
+    background: #2563eb;
+
+    color: white;
+
+    box-shadow: 0 8px 20px rgba(37, 99, 235, .25);
+
+}
+
+
+
+
+
+
+
+/* WORKSPACE CARD */
+
+
+body.dark .workspace-card {
+
+
+    background: #111827;
+
+    border: 1px solid #1f2937;
+
+}
+
+
+
+body.dark .workspace-card small {
+
+
+    color: #64748b;
+
+}
+
+
+
+body.dark .workspace-card strong {
+
+
+    color: #f1f5f9;
+
+}
+
+
+
+
+
+
+
+/* NAVBAR */
+
+
+body.dark .navbar {
+
+
+    background: #0f172a;
+
+    border-bottom: 1px solid #1e293b;
+
+}
+
+
+
+
+
+body.dark .notification-btn {
+
+
+    background: #1e293b;
+
+    color: #e5e7eb;
+
+}
+
+
+
+body.dark .notification-btn:hover {
+
+
+    background: #334155;
+
+}
+
+
+
+
+
+
+
+/* PROFILE */
+
+
+body.dark .profile:hover {
+
+
+    background: #1e293b;
+
+}
+
+
+
+body.dark .profile-info strong {
+
+
+    color: #f8fafc;
+
+}
+
+
+body.dark .profile-info small {
+
+
+    color: #94a3b8;
+
+}
+
+
+
+
+
+
+
+/* DROPDOWN */
+
+
+body.dark .dropdown {
+
+
+    background: #111827;
+
+    border: 1px solid #334155;
+
+}
+
+
+
+body.dark .dropdown button {
+
+
+    color: #e5e7eb;
+
+}
+
+
+
+body.dark .dropdown button:hover {
+
+
+    background: #1e293b;
 
 }

@@ -8,7 +8,7 @@ function AppLayout() {
             <Sidebar />
             <div className="main">
                 <Navbar />
-                <section className="content">
+                <section className="content-area">
                     <Outlet />
                 </section>
             </div>

@@ -19,23 +19,27 @@ function Navbar() {
 
     return (
         <header className="navbar">
-            {/* LEFT SIDE */}
+            {/* LEFT */}
 
             <div className="navbar-left">
                 {showBackButton && (
                     <button className="back-button" onClick={goBack}>
-                        ← Back
+                        ←
                     </button>
                 )}
 
-                <div className="brand-area">
-                    <h2>TrackLite</h2>
+                <div className="brand">
+                    <div className="brand-logo">T</div>
 
-                    <span>Workspace</span>
+                    <div>
+                        <h2>TrackLite</h2>
+
+                        <span>Project Workspace</span>
+                    </div>
                 </div>
             </div>
 
-            {/* RIGHT SIDE */}
+            {/* RIGHT */}
 
             <div className="navbar-right">
                 <button
@@ -43,24 +47,25 @@ function Navbar() {
                     onClick={() => navigate('/inbox')}
                 >
                     🔔
+                    <span className="notification-dot"></span>
                 </button>
 
-                <div className="user-menu" onClick={() => setOpen(!open)}>
-                    <div className="user-avatar">
+                <div className="profile" onClick={() => setOpen(!open)}>
+                    <div className="avatar">
                         {user?.name?.charAt(0).toUpperCase()}
                     </div>
 
-                    <div className="user-info">
+                    <div className="profile-info">
                         <strong>{user?.name || 'User'}</strong>
 
                         <small>Member</small>
                     </div>
 
-                    <span>▾</span>
+                    <span className="arrow">▾</span>
                 </div>
 
                 {open && (
-                    <div className="user-dropdown">
+                    <div className="dropdown">
                         <button onClick={() => navigate('/settings')}>
                             ⚙ Settings
                         </button>
