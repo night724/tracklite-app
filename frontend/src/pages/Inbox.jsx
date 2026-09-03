@@ -56,7 +56,7 @@ function Inbox() {
                         Inbox
                     </h1>
                     <p>
-                        Your notifications and updates
+                        Your notifications and update
                     </p>
                 </div>
             </div>
