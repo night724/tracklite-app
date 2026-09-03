@@ -1,4 +1,4 @@
-const db = require("../config/database");
+const db = require('../config/database');
 
 class User {
     static async findByEmail(email) {
@@ -15,7 +15,7 @@ class User {
         WHERE u.email=$1
         LIMIT 1
         `,
-            [email]
+            [email],
         );
         return result.rows[0];
     }
@@ -37,24 +37,15 @@ class User {
         WHERE u.id = $1
         LIMIT 1
         `,
-            [id]
+            [id],
         );
 
         return result.rows[0];
     }
     static async create(user) {
-        const {
-            id,
-            organization_id,
-            name,
-            email,
-            password,
-            role
-
-        } = user;
-        const result =
-            await db.query(
-                `
+        const { id, organization_id, name, email, password, role } = user;
+        const result = await db.query(
+            `
             INSERT INTO users
             (
                 id,
@@ -73,19 +64,10 @@ class User {
             RETURNING *
             `,
 
-                [
-                    id,
-                    organization_id,
-                    name,
-                    email,
-                    password,
-                    role
-                ]
-
-            );
+            [id, organization_id, name, email, password, role],
+        );
 
         return result.rows[0];
-
     }
 }
 

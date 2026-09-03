@@ -7,6 +7,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 
 -- Clean old tables
+DROP TABLE IF EXISTS workspace_invitations CASCADE;
 DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS activity_logs CASCADE;
 DROP TABLE IF EXISTS comments CASCADE;
@@ -20,7 +21,6 @@ DROP TABLE IF EXISTS workspace_members CASCADE;
 DROP TABLE IF EXISTS workspaces CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS organizations CASCADE;
-DROP TABLE IF EXISTS workspace_invitations CASCADE;
 
 CREATE TABLE organizations (
 
@@ -135,7 +135,7 @@ CREATE TABLE workspace_members (
 CREATE TABLE projects (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-
+    project_key VARCHAR(10) UNIQUE NOT NULL,
     workspace_id UUID NOT NULL,
 
     name VARCHAR(200) NOT NULL,
@@ -190,6 +190,7 @@ CREATE TABLE project_members (
         CHECK(role IN
         (
             'OWNER',
+            'ADMIN',
             'MEMBER'
         )),
 
@@ -295,7 +296,7 @@ CREATE TABLE issues (
     task_id UUID NOT NULL,
 
 
-    issue_key VARCHAR(30) UNIQUE,
+    issue_key VARCHAR(30) UNIQUE NOT NULL,
 
 
     title VARCHAR(255) NOT NULL,
@@ -357,20 +358,24 @@ CREATE TABLE issues (
 -- ============================================
 -- COMMENTS
 -- ============================================
-
 CREATE TABLE comments (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
-    issue_id UUID NOT NULL,
+    task_id UUID,
+
+    issue_id UUID,
 
     user_id UUID NOT NULL,
 
-
     body TEXT NOT NULL,
 
-
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(task_id)
+        REFERENCES tasks(id)
+        ON DELETE CASCADE,
 
 
     FOREIGN KEY(issue_id)
@@ -382,7 +387,6 @@ CREATE TABLE comments (
         REFERENCES users(id)
         ON DELETE CASCADE
 );
-
 
 -- ============================================
 -- ACTIVITY LOGS
@@ -480,9 +484,6 @@ CREATE TABLE issue_labels (
 -- NOTIFICATIONS
 -- ============================================
 
--- ============================================
--- NOTIFICATIONS
--- ============================================
 
 CREATE TABLE notifications (
 
@@ -524,7 +525,6 @@ CREATE TABLE notifications (
         REFERENCES users(id)
         ON DELETE CASCADE,
 
-
     FOREIGN KEY(sender_id)
         REFERENCES users(id)
         ON DELETE SET NULL
@@ -538,7 +538,7 @@ CREATE TABLE workspace_invitations (
 
     inviter_id UUID NOT NULL,
 
-    invited_user_id UUID NOT NULL,
+    email VARCHAR(150) NOT NULL,
 
     role VARCHAR(50)
         DEFAULT 'MEMBER',
@@ -564,12 +564,7 @@ CREATE TABLE workspace_invitations (
         ON DELETE CASCADE,
 
 
-    FOREIGN KEY(invited_user_id)
-        REFERENCES users(id)
-        ON DELETE CASCADE,
-
-
-    UNIQUE(workspace_id, invited_user_id)
+    UNIQUE(workspace_id,email)
 
 );
 -- ============================================
@@ -596,8 +591,8 @@ CREATE INDEX idx_notifications_user
 ON notifications(user_id);
 
 
-CREATE INDEX idx_workspace_invites_user
-ON workspace_invitations(invited_user_id);
+CREATE INDEX idx_workspace_invites_email
+ON workspace_invitations(email);
 
 
 CREATE INDEX idx_issues_task
@@ -615,3 +610,42 @@ ON activity_logs(user_id);
 
 CREATE INDEX idx_notifications_sender
 ON notifications(sender_id);
+
+CREATE INDEX idx_projects_workspace
+ON projects(workspace_id);
+
+CREATE INDEX idx_tasks_assigned
+ON tasks(assigned_to);
+
+CREATE INDEX idx_issues_status
+ON issues(status);
+
+CREATE INDEX idx_users_email
+ON users(email);
+
+CREATE OR REPLACE FUNCTION update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_projects_timestamp
+BEFORE UPDATE ON projects
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();
+
+CREATE TRIGGER update_tasks_timestamp
+BEFORE UPDATE ON tasks
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();
+
+
+CREATE TRIGGER update_issues_timestamp
+BEFORE UPDATE ON issues
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();
+
+CREATE INDEX idx_notifications_created
+ON notifications(created_at DESC);

@@ -1,86 +1,56 @@
-const db = require("../config/database");
-
+const db = require('../config/database');
 
 exports.getDashboard = async (req, res) => {
-
     try {
-
         const userId = req.user.id;
 
-
         // Get user's workspace
-        const workspace =
-            await db.query(
-                `
+        const workspace = await db.query(
+            `
                 SELECT workspace_id
                 FROM workspace_members
                 WHERE user_id=$1
                 LIMIT 1
                 `,
-                [
-                    userId
-                ]
-            );
+            [userId],
+        );
 
-
-        const workspaceId =
-            workspace.rows[0]?.workspace_id;
-
-
+        const workspaceId = workspace.rows[0]?.workspace_id;
 
         if (!workspaceId) {
-
-            return res.status(404)
-                .json({
-                    message:
-                        "Workspace not found"
-                });
-
+            return res.status(404).json({
+                message: 'Workspace not found',
+            });
         }
-
-
 
         // Total Projects
 
-        const projects =
-            await db.query(
-                `
+        const projects = await db.query(
+            `
                 SELECT COUNT(*)
                 FROM projects
                 WHERE workspace_id=$1
                 `,
-                [
-                    workspaceId
-                ]
-            );
-
-
-
+            [workspaceId],
+        );
 
         // Total Tasks
 
-        const tasks =
-            await db.query(
-                `
+        const tasks = await db.query(
+            `
                 SELECT COUNT(*)
                 FROM tasks t
                 JOIN projects p
                 ON t.project_id=p.id
                 WHERE p.workspace_id=$1
                 `,
-                [
-                    workspaceId
-                ]
-            );
-
-
-
+            [workspaceId],
+        );
 
         // Total Issues
 
-        const issues =
-            await db.query(
-                `
+        const issues = await db.query(
+            `
                 SELECT COUNT(*)
                 FROM issues i
                 JOIN tasks t
@@ -89,19 +59,13 @@ exports.getDashboard = async (req, res) => {
                 ON t.project_id=p.id
                 WHERE p.workspace_id=$1
                 `,
-                [
-                    workspaceId
-                ]
-            );
-
-
-
+            [workspaceId],
+        );
 
         // Completed Tasks
 
-        const completed =
-            await db.query(
-                `
+        const completed = await db.query(
+            `
                 SELECT COUNT(*)
                 FROM tasks t
                 JOIN projects p
@@ -109,20 +73,13 @@ exports.getDashboard = async (req, res) => {
                 WHERE p.workspace_id=$1
                 AND t.status='DONE'
                 `,
-                [
-                    workspaceId
-                ]
-            );
-
-
-
-
+            [workspaceId],
+        );
 
         // Recent Projects
 
-        const recentProjects =
-            await db.query(
-                `
+        const recentProjects = await db.query(
+            `
                 SELECT
                     id,
                     name,
@@ -133,20 +90,13 @@ exports.getDashboard = async (req, res) => {
                 ORDER BY created_at DESC
                 LIMIT 5
                 `,
-                [
-                    workspaceId
-                ]
-            );
-
-
-
-
+            [workspaceId],
+        );
 
         // Recent Tasks
 
-        const recentTasks =
-            await db.query(
-                `
+        const recentTasks = await db.query(
+            `
                 SELECT
                     t.id,
                     t.title,
@@ -159,122 +109,61 @@ exports.getDashboard = async (req, res) => {
                 ORDER BY t.created_at DESC
                 LIMIT 5
                 `,
-                [
-                    workspaceId
-                ]
-            );
-
-
-
-
-
-        res.json({
-
-            workspaceId,
-
-
-            stats: {
-
-                projects:
-                    Number(
-                        projects.rows[0].count
-                    ),
-
-
-                tasks:
-                    Number(
-                        tasks.rows[0].count
-                    ),
-
-
-                issues:
-                    Number(
-                        issues.rows[0].count
-                    ),
-
-
-                completed:
-                    Number(
-                        completed.rows[0].count
-                    )
-
-            },
-
-
-            projects:
-                recentProjects.rows,
-
-
-            tasks:
-                recentTasks.rows
-
-        });
-
-
-
-    }
-
-    catch (error) {
-
-
-        console.log(
-            "Dashboard Error:",
-            error
+            [workspaceId],
         );
 
+        res.json({
+            workspaceId,
 
-        res.status(500)
-            .json({
+            stats: {
+                projects: Number(projects.rows[0].count),
 
-                message:
-                    "Dashboard loading failed"
+                tasks: Number(tasks.rows[0].count),
 
-            });
+                issues: Number(issues.rows[0].count),
 
+                completed: Number(completed.rows[0].count),
+            },
+
+            projects: recentProjects.rows,
+
+            tasks: recentTasks.rows,
+        });
+    } catch (error) {
+        console.log('Dashboard Error:', error);
+
+        res.status(500).json({
+            message: 'Dashboard loading failed',
+        });
     }
-
 };
 
 exports.getCharts = async (req, res) => {
-
     try {
-
         const userId = req.user.id;
 
-
-        const workspace =
-            await db.query(
-                `
+        const workspace = await db.query(
+            `
                 SELECT workspace_id
                 FROM workspace_members
                 WHERE user_id=$1
                 LIMIT 1
                 `,
-                [
-                    userId
-                ]
-            );
+            [userId],
+        );
 
-
-        const workspaceId =
-            workspace.rows[0]?.workspace_id;
-
+        const workspaceId = workspace.rows[0]?.workspace_id;
 
         if (!workspaceId) {
-
             return res.status(404).json({
-                message: "Workspace not found"
+                message: 'Workspace not found',
             });
-
         }
-
-
 
         // TASK STATUS CHART
 
-        const tasks =
-            await db.query(
-                `
+        const tasks = await db.query(
+            `
                 SELECT
                     t.status AS name,
                     COUNT(*)::int AS value
@@ -289,19 +178,13 @@ exports.getCharts = async (req, res) => {
                 GROUP BY t.status
 
                 `,
-                [
-                    workspaceId
-                ]
-            );
-
-
-
+            [workspaceId],
+        );
 
         // ISSUE PRIORITY CHART
 
-        const issues =
-            await db.query(
-                `
+        const issues = await db.query(
+            `
                 SELECT
                     i.priority AS name,
                     COUNT(*)::int AS value
@@ -319,20 +202,13 @@ exports.getCharts = async (req, res) => {
                 GROUP BY i.priority
 
                 `,
-                [
-                    workspaceId
-                ]
-            );
-
-
-
-
+            [workspaceId],
+        );
 
         // PROJECT PROGRESS CHART
 
-        const projectProgress =
-            await db.query(
-                `
+        const projectProgress = await db.query(
+            `
                 SELECT
                     p.name,
 
@@ -358,39 +234,21 @@ exports.getCharts = async (req, res) => {
 
                 LIMIT 5
                 `,
-                [
-                    workspaceId
-                ]
-            );
-
+            [workspaceId],
+        );
 
         res.json({
-
             tasks: tasks.rows,
 
             issues: issues.rows,
 
-            projectProgress: projectProgress.rows
-
+            projectProgress: projectProgress.rows,
         });
-
-
-
-    }
-    catch (error) {
-
-        console.log(
-            "Chart Error:",
-            error
-        );
-
+    } catch (error) {
+        console.log('Chart Error:', error);
 
         res.status(500).json({
-
-            message: "Chart loading failed"
-
+            message: 'Chart loading failed',
         });
-
     }
-
 };

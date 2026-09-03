@@ -1,365 +1,198 @@
-import { useEffect, useState } from "react";
-import { useParams, Link, useSearchParams } from "react-router-dom";
-import api from "../api/client";
-import CreateTaskModal from "../components/CreateTaskModal";
-
+import { useEffect, useState } from 'react';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
+import api from '../api/client';
+import CreateTaskModal from '../components/CreateTaskModal';
 
 function Tasks() {
-
-
     const { projectId, workspaceId } = useParams();
 
     const [tasks, setTasks] = useState([]);
 
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState('');
 
     const [showModal, setShowModal] = useState(false);
 
     const [searchParams] = useSearchParams();
+    const [selectedProject, setSelectedProject] = useState('');
 
-    const statusFilter =
-        searchParams.get("status");
-
-
-
+    const [projects, setProjects] = useState([]);
+    const statusFilter = searchParams.get('status');
     useEffect(() => {
+        if (workspaceId) {
+            loadProjects();
+        }
+    }, [workspaceId]);
 
+    async function loadProjects() {
+        try {
+            const res = await api.get(`/projects/workspace/${workspaceId}`);
+
+            setProjects(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
         loadTasks();
-
-    }, [projectId, workspaceId, statusFilter]);
-
-
-
+    }, [projectId, workspaceId]);
 
     async function loadTasks() {
-
         try {
-
             let res;
 
-
             if (projectId) {
-
-                res =
-                    await api.get(
-                        `/tasks/project/${projectId}`
-                    );
-
+                res = await api.get(`/tasks/project/${projectId}`);
+            } else {
+                res = await api.get(`/tasks/workspace/${workspaceId}`);
             }
-            else {
-
-                res =
-                    await api.get(
-                        `/tasks/workspace/${workspaceId}`
-                    );
-
-            }
-
 
             setTasks(res.data);
-
-
-        }
-        catch (error) {
-
+        } catch (error) {
             console.log(error);
-
         }
-
     }
 
-
-
-
-
     const columns = [
-
         {
-            title: "📝 To Do",
-            status: "TODO"
+            title: '📝 To Do',
+            status: 'TODO',
         },
 
         {
-            title: "🚀 In Progress",
-            status: "IN_PROGRESS"
+            title: '🚀 In Progress',
+            status: 'IN_PROGRESS',
         },
 
         {
-            title: "✅ Completed",
-            status: "DONE"
-        }
-
+            title: '✅ Completed',
+            status: 'DONE',
+        },
     ];
 
-    const visibleColumns =
-        statusFilter
-            ? columns.filter(
-                column =>
-                    column.status === statusFilter
-            )
-            : columns;
-
+    const visibleColumns = columns;
 
     return (
-
         <div className="tasks-page">
-
-
             <div className="tasks-header">
-
-
                 <div>
+                    <h1>Project Tasks</h1>
 
-                    <h1>
-                        Tasks
-                    </h1>
-
-
-                    <p>
-                        Manage your project workflow
-                    </p>
-
+                    <p>Track progress and manage your team's work</p>
                 </div>
 
-
-
-                {
-                    projectId &&
-
+                {projectId && (
                     <button
                         className="primary-btn"
-                        onClick={() =>
-                            setShowModal(true)
-                        }
+                        onClick={() => setShowModal(true)}
                     >
-                        + New Task
+                        + Create Task
                     </button>
-
-                }
-
-
+                )}
             </div>
 
+            <div className="task-toolbar">
+                <div className="task-search">
+                    🔍
+                    <input
+                        placeholder="Search tasks..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
 
+                {workspaceId && (
+                    <select
+                        className="project-filter"
+                        value={selectedProject}
+                        onChange={(e) => setSelectedProject(e.target.value)}
+                    >
+                        <option value="">All Projects</option>
 
-
-
-            <div className="task-search">
-
-
-                🔍
-
-                <input
-
-                    placeholder="Search tasks..."
-
-                    value={search}
-
-                    onChange={
-                        e => setSearch(e.target.value)
-                    }
-
-                />
-
+                        {projects.map((project) => (
+                            <option key={project.id} value={project.id}>
+                                {project.name}
+                            </option>
+                        ))}
+                    </select>
+                )}
             </div>
-
-
-
-
-
-
             <div className="kanban-board">
-
-
-                {
-                    visibleColumns.map(column => (
-
-
-                        <div
-                            className="kanban-column"
-                            key={column.status}
-                        >
-
-
-
-                            <div className="column-title">
-
-
-                                <h3>
-                                    {column.title}
-                                </h3>
-
-
-                                <span>
-
-                                    {
-                                        tasks.filter(
-                                            t =>
-                                                t.status === column.status &&
-                                                (!statusFilter || t.status === statusFilter)
-                                        ).length
-                                    }
-
-                                </span>
-
-
-                            </div>
-
-
-
-
-
-
-
-                            {
-
-                                tasks
-
-                                    .filter(task => {
-
-                                        const searchMatch =
-                                            task.title
-                                                .toLowerCase()
-                                                .includes(
-                                                    search.toLowerCase()
-                                                );
-
-
-                                        const statusMatch =
-                                            !statusFilter ||
-                                            task.status === statusFilter;
-
-
-                                        return (
-                                            task.status === column.status &&
-                                            searchMatch &&
-                                            statusMatch
-                                        );
-
-                                    })
-
-                                    .map(task => (
-
-
-                                        <Link
-
-                                            key={task.id}
-
-                                            to={`/tasks/${task.id}`}
-
-                                            className={`task-card ${task.priority?.toLowerCase()}`}
-
-                                        >
-
-
-                                            <div className="task-card-top">
-
-
-                                                <span className="task-priority">
-
-                                                    {task.priority}
-
-                                                </span>
-
-
-                                                <span className="task-status">
-
-                                                    {task.status}
-
-                                                </span>
-
-
-                                            </div>
-
-
-
-
-                                            <h3>
-
-                                                {task.title}
-
-                                            </h3>
-
-
-
-                                            <p>
-
-                                                {
-                                                    task.description ||
-                                                    "No description"
-                                                }
-
-                                            </p>
-
-
-
-
-                                            <div className="task-card-footer">
-
-
-                                                <span>
-
-                                                    👤 Assigned
-
-                                                </span>
-
-
-                                                <span>
-
-                                                    →
-                                                </span>
-
-
-                                            </div>
-
-
-                                        </Link>
-
-
-                                    ))
-
-                            }
-
-
-
+                {visibleColumns.map((column) => (
+                    <div className="kanban-column" key={column.status}>
+                        <div className="column-title">
+                            <h3>{column.title}</h3>
+
+                            <span>
+                                {
+                                    tasks.filter(
+                                        (t) => t.status === column.status,
+                                    ).length
+                                }
+                            </span>
                         </div>
 
+                        {tasks
+                            .filter((task) => {
+                                const searchMatch = task.title
+                                    .toLowerCase()
+                                    .includes(search.toLowerCase());
 
-                    ))
-                }
+                                const projectMatch =
+                                    !selectedProject ||
+                                    task.project_id === selectedProject;
 
+                                return (
+                                    task.status === column.status &&
+                                    searchMatch &&
+                                    projectMatch
+                                );
+                            })
+                            .map((task) => (
+                                <Link
+                                    key={task.id}
+                                    to={`/tasks/${task.id}`}
+                                    className={`task-card ${task.priority?.toLowerCase()}`}
+                                >
+                                    <div className="task-card-top">
+                                        <span className="task-priority">
+                                            {task.priority}
+                                        </span>
 
+                                        <span className="task-status">
+                                            {task.status}
+                                        </span>
+                                    </div>
+
+                                    <h3>{task.title}</h3>
+
+                                    <p>
+                                        {task.description || 'No description'}
+                                    </p>
+
+                                    <div className="task-card-footer">
+                                        <span>
+                                            👤{' '}
+                                            {task.assigned_name || 'Unassigned'}
+                                        </span>
+
+                                        <span>→</span>
+                                    </div>
+                                </Link>
+                            ))}
+                    </div>
+                ))}
             </div>
 
-
-
-
-
-
-
-            {
-                showModal &&
-
+            {showModal && (
                 <CreateTaskModal
-
                     projectId={projectId}
-
-                    closeModal={() =>
-                        setShowModal(false)
-                    }
-
+                    workspaceId={workspaceId}
+                    closeModal={() => setShowModal(false)}
                     refresh={loadTasks}
-
                 />
-
-            }
-
-
+            )}
         </div>
-
     );
-
 }
-
 
 export default Tasks;

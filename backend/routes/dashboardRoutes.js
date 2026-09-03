@@ -1,31 +1,12 @@
-const express =
-    require("express");
+const express = require('express');
 
+const router = express.Router();
 
-const router =
-    express.Router();
+const authenticate = require('../middleware/auth');
 
+const controller = require('../controllers/dashboardController');
+router.get('/', authenticate, controller.getDashboard);
 
-const authenticate =
-    require("../middleware/auth");
+router.get('/charts', authenticate, controller.getCharts);
 
-
-const controller =
-    require("../controllers/dashboardController");
-router.get(
-    "/",
-    authenticate,
-    controller.getDashboard
-);
-
-
-router.get(
-    "/charts",
-    authenticate,
-    controller.getCharts
-);
-
-
-
-module.exports =
-    router;
+module.exports = router;

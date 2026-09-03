@@ -1,19 +1,13 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const db = require("../config/database");
-const auth = require("../middleware/auth");
+const db = require('../config/database');
+const auth = require('../middleware/auth');
 
-
-router.get(
-    "/project/:projectId",
-    auth,
-    async (req, res) => {
-
-        try {
-
-            const result = await db.query(
-                `
+router.get('/project/:projectId', auth, async (req, res) => {
+    try {
+        const result = await db.query(
+            `
                 SELECT
                     a.id,
                     a.action,
@@ -29,31 +23,17 @@ router.get(
 
                 ORDER BY a.created_at DESC
                 `,
-                [
-                    req.params.projectId
-                ]
-            );
+            [req.params.projectId],
+        );
 
+        res.json(result.rows);
+    } catch (error) {
+        console.log('ACTIVITY ERROR:', error.message);
 
-            res.json(result.rows);
-
-
-        }
-        catch (error) {
-
-            console.log(
-                "ACTIVITY ERROR:",
-                error.message
-            );
-
-            res.status(500).json({
-                message: error.message
-            });
-
-        }
-
+        res.status(500).json({
+            message: error.message,
+        });
     }
-);
-
+});
 
 module.exports = router;

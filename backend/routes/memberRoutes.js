@@ -1,21 +1,14 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { v4: uuidv4 } = require("uuid");
-const db = require("../config/database");
-const auth = require("../middleware/auth");
-
+const { v4: uuidv4 } = require('uuid');
+const db = require('../config/database');
+const auth = require('../middleware/auth');
 
 // Workspace Members
-router.get(
-    "/workspace/:workspaceId",
-    auth,
-    async (req, res) => {
-
-        try {
-
-            const result =
-                await db.query(
-                    `
+router.get('/workspace/:workspaceId', auth, async (req, res) => {
+    try {
+        const result = await db.query(
+            `
                 SELECT
                     wm.id,
                     wm.role,
@@ -28,233 +21,198 @@ router.get(
                 WHERE wm.workspace_id=$1
                 ORDER BY u.name
                 `,
-                    [
-                        req.params.workspaceId
-                    ]
-                );
+            [req.params.workspaceId],
+        );
 
+        res.json(result.rows);
+    } catch (error) {
+        console.log(error);
 
-            res.json(result.rows);
-
-        }
-        catch (error) {
-
-            console.log(error);
-
-            res.status(500)
-                .json({
-                    message: "Cannot load members"
-                });
-
-        }
-
+        res.status(500).json({
+            message: 'Cannot load members',
+        });
     }
-);
-
-
-
+});
 
 // Project Members
-router.get(
-    "/project/:projectId",
-    auth,
-    async (req, res) => {
+router.get('/project/:projectId', auth, async (req, res) => {
+    try {
+        const result = await db.query(
+            `SELECT
+                pm.id,
+                u.id AS user_id,
+                u.name,
+                u.email,
+                pm.role,
 
-        try {
+                COUNT(t.id) AS total_tasks,
 
-            const result =
-                await db.query(
-                    `
-                    SELECT
-                        pm.id,
-                        pm.role,
-                        u.id AS user_id,
-                        u.name,
-                        u.email
+                COUNT(
+                    CASE 
+                        WHEN t.status='DONE' 
+                        THEN 1 
+                    END
+                ) AS completed_tasks,
 
-                    FROM project_members pm
+                COUNT(
+                    CASE 
+                        WHEN t.status='IN_PROGRESS'
+                        THEN 1
+                    END
+                ) AS progress_tasks
 
-                    JOIN users u
-                    ON pm.user_id=u.id
+            FROM project_members pm
 
-                    WHERE pm.project_id=$1
+            JOIN users u
+            ON pm.user_id = u.id
 
-                    ORDER BY u.name
+            LEFT JOIN tasks t
+            ON t.assigned_to = u.id
+            AND t.project_id = pm.project_id
+
+            WHERE pm.project_id=$1
+
+            GROUP BY
+                pm.id,
+                u.id,
+                u.name,
+                u.email,
+                pm.role;
                     `,
-                    [
-                        req.params.projectId
-                    ]
-                );
+            [req.params.projectId],
+        );
 
+        res.json(result.rows);
+    } catch (error) {
+        console.log('LOAD PROJECT MEMBERS ERROR:', error.message);
 
-            res.json(result.rows);
-
-
-        }
-        catch (error) {
-
-            console.log(
-                "LOAD PROJECT MEMBERS ERROR:",
-                error.message
-            );
-
-
-            res.status(500)
-                .json({
-                    message: error.message
-                });
-
-        }
-
+        res.status(500).json({
+            message: error.message,
+        });
     }
-);
+});
 // Add member to project
-router.post(
-    "/project/:projectId",
-    auth,
-    async (req, res) => {
+router.post('/project/:projectId', auth, async (req, res) => {
+    try {
+        const { user_id, role } = req.body;
 
-        try {
+        if (!user_id) {
+            return res.status(400).json({
+                message: 'User required',
+            });
+        }
 
-            const {
+        const exists = await db.query(
+            `
+            SELECT id
+            FROM project_members
+            WHERE project_id=$1
+            AND user_id=$2
+            `,
+            [req.params.projectId, user_id],
+        );
+
+        if (exists.rows.length) {
+            return res.status(400).json({
+                message: 'User already assigned to project',
+            });
+        }
+
+        const result = await db.query(
+            `
+            INSERT INTO project_members
+            (
+                id,
+                project_id,
                 user_id,
                 role
-            } = req.body;
+            )
 
+            VALUES
+            ($1,$2,$3,$4)
 
-            const result =
-                await db.query(
-                    `
-                INSERT INTO project_members
-                (
-                    id,
-                    project_id,
-                    user_id,
-                    role
-                )
-                VALUES
-                ($1,$2,$3,$4)
+            RETURNING *
+            `,
+            [uuidv4(), req.params.projectId, user_id, role || 'MEMBER'],
+        );
 
-                RETURNING *
-                `,
-                    [
-                        uuidv4(),
-                        req.params.projectId,
-                        user_id,
-                        role || "MEMBER"
-                    ]
-                );
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.log('ADD PROJECT MEMBER ERROR:', error);
 
-
-            res.status(201)
-                .json(result.rows[0]);
-
-
-        }
-        catch (error) {
-
-            console.log("ADD MEMBER ERROR:", error);
-
-            res.status(500)
-                .json({
-                    message: error.message
-                });
-
-        }
-
+        res.status(500).json({
+            message: error.message,
+        });
     }
-);
-router.get(
-    "/users",
-    auth,
-    async (req, res) => {
-
-        try {
-
-            const result =
-                await db.query(
-                    `
+});
+router.get('/users', auth, async (req, res) => {
+    try {
+        const result = await db.query(
+            `
                 SELECT
                     id,
                     name,
                     email
                 FROM users
                 ORDER BY name
-                `
-                );
+                `,
+        );
 
-            res.json(result.rows);
+        res.json(result.rows);
+    } catch (error) {
+        console.log('LOAD USERS ERROR:', error);
 
-        }
-        catch (error) {
-
-            console.log("LOAD USERS ERROR:", error);
-
-            res.status(500)
-                .json({
-                    message: "Cannot load users"
-                });
-
-        }
-
+        res.status(500).json({
+            message: 'Cannot load users',
+        });
     }
-);
+});
 // Add member to workspace
-router.post(
-    "/workspace/:workspaceId",
-    auth,
-    async (req, res) => {
+router.post('/workspace/:workspaceId', auth, async (req, res) => {
+    try {
+        const { user_id, role } = req.body;
 
-        try {
+        const exists = await db.query(
+            `
+            SELECT id
+            FROM workspace_members
+            WHERE workspace_id=$1
+            AND user_id=$2
+            `,
+            [req.params.workspaceId, user_id],
+        );
 
-            const {
+        if (exists.rows.length) {
+            return res.status(400).json({
+                message: 'User already exists in workspace',
+            });
+        }
+
+        const result = await db.query(
+            `
+            INSERT INTO workspace_members
+            (
+                id,
+                workspace_id,
                 user_id,
                 role
-            } = req.body;
+            )
 
+            VALUES
+            ($1,$2,$3,$4)
 
-            const result =
-                await db.query(
-                    `
-INSERT INTO workspace_members
-(
- id,
- workspace_id,
- user_id,
- role
-)
+            RETURNING *
+            `,
+            [uuidv4(), req.params.workspaceId, user_id, role || 'MEMBER'],
+        );
 
-VALUES
-($1,$2,$3,$4)
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.log('ADD WORKSPACE MEMBER ERROR:', error);
 
-RETURNING *
-`,
-                    [
-                        uuidv4(),
-                        req.params.workspaceId,
-                        user_id,
-                        role || "MEMBER"
-                    ]
-                );
-
-
-            res.status(201).json(result.rows[0]);
-
-
-        }
-        catch (error) {
-
-            console.log(
-                "ADD WORKSPACE MEMBER ERROR:",
-                error.detail
-            );
-
-
-            res.status(500).json({
-                message: error.message
-            });
-
-        }
-
-    });
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+});
 module.exports = router;

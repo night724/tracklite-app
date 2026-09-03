@@ -132,6 +132,7 @@ VALUES
 INSERT INTO projects
 (
     id,
+    project_key,
     workspace_id,
     name,
     description,
@@ -140,6 +141,7 @@ INSERT INTO projects
 VALUES
 (
     '33333333-3333-3333-3333-333333333333',
+    'TL',
     '22222222-2222-2222-2222-222222222222',
     'TrackLite Web Application',
     'Project management and issue tracking system',
@@ -306,7 +308,18 @@ VALUES
     'Please check database indexes.'
 );
 
-
+INSERT INTO comments
+(
+    task_id,
+    user_id,
+    body
+)
+VALUES
+(
+    '55555555-5555-5555-5555-555555555555',
+    'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    'Dashboard API is almost complete.'
+);
 
 -- ============================================
 -- ACTIVITY
@@ -329,12 +342,11 @@ VALUES
     'Created issue TL-001'
 );
 
-
 INSERT INTO workspace_invitations
 (
     workspace_id,
     inviter_id,
-    invited_user_id,
+    email,
     role,
     status
 )
@@ -342,7 +354,7 @@ VALUES
 (
     '22222222-2222-2222-2222-222222222222',
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-    'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    'john@tracklite.com',
     'MEMBER',
     'ACCEPTED'
 );
@@ -367,6 +379,44 @@ VALUES
     'frontend'
 );
 
-
-
+INSERT INTO issue_labels
+(
+    issue_id,
+    label_id
+)
+VALUES
+(
+    '77777777-7777-7777-7777-777777777777',
+    (SELECT id FROM labels WHERE name='bug')
+);
+INSERT INTO notifications
+(
+    user_id,
+    sender_id,
+    type,
+    message
+)
+VALUES
+(
+    'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'TASK_ASSIGNED',
+    'You were assigned Build Dashboard task'
+);
+INSERT INTO workspace_invitations
+(
+    workspace_id,
+    inviter_id,
+    email,
+    role,
+    status
+)
+VALUES
+(
+    '22222222-2222-2222-2222-222222222222',
+    'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'newuser@test.com',
+    'MEMBER',
+    'PENDING'
+);
 COMMIT;

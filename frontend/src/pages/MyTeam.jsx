@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import api from "../api/client";
-import InviteMemberModal from "../components/InviteMemberModal";
-import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from 'react';
+import api from '../api/client';
+import InviteMemberModal from '../components/InviteMemberModal';
+import { useAuth } from '../context/AuthContext';
 
 function MyTeam() {
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState('');
     const [team, setTeam] = useState([]);
     const [invitations, setInvitations] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -19,144 +19,73 @@ function MyTeam() {
     async function loadTeam() {
         if (!workspaceId) return;
         try {
-            const res =
-                await api.get(
-                    `/team/workspace/${workspaceId}`
-                );
+            const res = await api.get(`/team/workspace/${workspaceId}`);
 
             setTeam(res.data.members);
             setInvitations(res.data.invitations);
-        }
-        catch (error) {
-
-            console.log(
-                "LOAD TEAM ERROR:",
-                error
-            );
+        } catch (error) {
+            console.log('LOAD TEAM ERROR:', error);
         }
     }
     async function resendInvite(id) {
-
         try {
+            await api.post(`/team/invite/${id}/resend`);
 
-            await api.post(
-                `/team/invite/${id}/resend`
-            );
-
-            alert("Invitation resent");
-
-        }
-        catch (error) {
-
+            alert('Invitation resent');
+        } catch (error) {
             console.log(error);
-
         }
-
     }
 
-
-
     async function revokeInvite(id) {
-
         try {
-
-            await api.delete(
-                `/team/invite/${id}/revoke`
-            );
-
+            await api.delete(`/team/invite/${id}/revoke`);
 
             loadTeam();
-
-        }
-        catch (error) {
-
+        } catch (error) {
             console.log(error);
-
         }
-
     }
 
     const members = {};
 
-    team.forEach(item => {
-
-
+    team.forEach((item) => {
         if (!members[item.user_id]) {
-
             members[item.user_id] = {
-
                 name: item.name,
                 email: item.email,
                 role: item.role,
-                projects: []
-
+                projects: [],
             };
-
         }
 
         if (item.project_id) {
-
-            members[item.user_id]
-                .projects.push({
-
-                    id: item.project_id,
-                    name: item.project_name,
-                    status: item.project_status
-
-                });
-
+            members[item.user_id].projects.push({
+                id: item.project_id,
+                name: item.project_name,
+                status: item.project_status,
+            });
         }
-
-
     });
 
-    const filteredMembers =
-        Object.values(members)
-            .filter(member => {
+    const filteredMembers = Object.values(members).filter((member) => {
+        const keyword = search.toLowerCase();
 
-                const keyword =
-                    search.toLowerCase();
-
-
-                return (
-                    member.name
-                        ?.toLowerCase()
-                        .includes(keyword)
-
-                    ||
-
-                    member.email
-                        ?.toLowerCase()
-                        .includes(keyword)
-
-                    ||
-
-                    member.role
-                        ?.toLowerCase()
-                        .includes(keyword)
-                );
-
-            });
-
+        return (
+            member.name?.toLowerCase().includes(keyword) ||
+            member.email?.toLowerCase().includes(keyword) ||
+            member.role?.toLowerCase().includes(keyword)
+        );
+    });
 
     return (
-
         <div className="team-page">
-
-
             <div className="team-header">
-
                 <div>
-                    <h1>
-                        My Team
-                    </h1>
+                    <h1>My Team</h1>
 
-                    <p>
-                        Manage your workspace members
-                        and their projects
-                    </p>
+                    <p>Manage your workspace members and their projects</p>
                 </div>
-
 
                 <button
                     className="primary-btn"
@@ -164,221 +93,118 @@ function MyTeam() {
                 >
                     + Invite Member
                 </button>
-
-
             </div>
 
-
-
             <div className="team-search">
-
                 <input
                     placeholder="Search members..."
                     value={search}
-                    onChange={
-                        e => setSearch(e.target.value)
-                    }
+                    onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
-
-
-
-
 
             <div className="team-grid">
-                {
-                    filteredMembers.length === 0 && (
-                        <div className="empty">
-                            <h2>
-                                No members found
-                            </h2>
-                            <p>
-                                Try another search
-                            </p>
-                        </div>
-                    )
-                }
+                {filteredMembers.length === 0 && (
+                    <div className="empty">
+                        <h2>No members found</h2>
+                        <p>Try another search</p>
+                    </div>
+                )}
 
-                {
-                    filteredMembers
-                        .map(member => (
-                            <div
-                                className="team-card"
-                                key={member.email}
-                            >
-                                <div className="team-profile">
-                                    <div className="avatar">
-                                        {
-                                            member.name
-                                                .charAt(0)
-                                                .toUpperCase()
-                                        }
-                                    </div>
-                                    <div>
-                                        <h2>
-                                            {member.name}
-                                        </h2>
-                                        <p>
-                                            {member.email}
-                                        </p>
-                                    </div>
-                                    <span className="role-badge">
-                                        {member.role}
-                                    </span>
-                                </div>
-                                <div className="team-projects">
-                                    <h3>
-                                        Projects
-                                    </h3>
-                                    {
-                                        member.projects.length === 0 ? (
-                                            <p className="empty">
-                                                No assigned projects
-                                            </p>
-
-                                        ) : (
-                                            member.projects.map(project => (
-                                                <div
-                                                    className="project-box"
-                                                    key={project.id}
-                                                >
-                                                    <div className="project-info">
-                                                        <strong>
-                                                            📁 {project.name}
-                                                        </strong>
-
-                                                        <span
-                                                            className={
-                                                                `status-badge ${project.status?.toLowerCase()
-                                                                }`
-                                                            }
-                                                        >
-                                                            {
-                                                                project.status
-                                                                    ?.replace("_", " ")
-                                                            }
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        )
-                                    }
-                                </div>
-
+                {filteredMembers.map((member) => (
+                    <div className="team-card" key={member.email}>
+                        <div className="team-profile">
+                            <div className="avatar">
+                                {member.name.charAt(0).toUpperCase()}
                             </div>
+                            <div>
+                                <h2>{member.name}</h2>
+                                <p>{member.email}</p>
+                            </div>
+                            <span className="role-badge">{member.role}</span>
+                        </div>
+                        <div className="team-projects">
+                            <h3>Projects</h3>
+                            {member.projects.length === 0 ? (
+                                <p className="empty">No assigned projects</p>
+                            ) : (
+                                member.projects.map((project) => (
+                                    <div
+                                        className="project-box"
+                                        key={project.id}
+                                    >
+                                        <div className="project-info">
+                                            <strong>📁 {project.name}</strong>
 
-                        ))
-
-                }
+                                            <span
+                                                className={`status-badge ${project.status?.toLowerCase()}`}
+                                            >
+                                                {project.status?.replace(
+                                                    '_',
+                                                    ' ',
+                                                )}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+                ))}
             </div>
             <div className="invite-list">
-
                 <div className="invite-header">
+                    <h2>Pending Invitations</h2>
 
-                    <h2>
-                        Pending Invitations
-                    </h2>
-
-                    <span>
-                        {invitations.length}
-                    </span>
-
+                    <span>{invitations.length}</span>
                 </div>
 
-
-                {
-                    invitations.map(invite => (
-
-                        <div
-                            className="invite-card"
-                            key={invite.id}
-                        >
-
-                            <div className="invite-user">
-
-                                <div className="avatar small">
-                                    {invite.name.charAt(0)}
-                                </div>
-
-
-                                <div>
-
-                                    <h3>
-                                        {invite.name}
-                                    </h3>
-
-                                    <p>
-                                        {invite.email}
-                                    </p>
-
-
-                                    <small>
-                                        Role: {invite.role}
-                                    </small>
-
-                                </div>
-
+                {invitations.map((invite) => (
+                    <div className="invite-card" key={invite.id}>
+                        <div className="invite-user">
+                            <div className="avatar small">
+                                {invite.name?.charAt(0).toUpperCase()}
                             </div>
 
+                            <div>
+                                <h3>{invite.name}</h3>
 
+                                <p>{invite.email}</p>
 
-                            <div className="invite-actions">
-
-
-                                <span className="pending-status">
-                                    Pending
-                                </span>
-
-
-                                <button
-                                    className="resend-btn"
-                                    onClick={() =>
-                                        resendInvite(invite.id)
-                                    }
-                                >
-                                    Resend
-                                </button>
-
-
-
-                                <button
-                                    className="revoke-btn"
-                                    onClick={() =>
-                                        revokeInvite(invite.id)
-                                    }
-                                >
-                                    Revoke
-                                </button>
-
-
+                                <small>Role: {invite.role}</small>
                             </div>
-
-
                         </div>
 
-                    ))
-                }
+                        <div className="invite-actions">
+                            <span className="pending-status">Pending</span>
 
+                            <button
+                                className="resend-btn"
+                                onClick={() => resendInvite(invite.id)}
+                            >
+                                Resend
+                            </button>
 
+                            <button
+                                className="revoke-btn"
+                                onClick={() => revokeInvite(invite.id)}
+                            >
+                                Revoke
+                            </button>
+                        </div>
+                    </div>
+                ))}
             </div>
-            {
-                showModal &&
-
+            {showModal && (
                 <InviteMemberModal
-
                     workspaceId={workspaceId}
 
-                    closeModal={() =>
-                        setShowModal(false)
-                    }
+                    closeModal={() => setShowModal(false)}
 
                     refresh={loadTeam}
-
                 />
-            }
-
+            )}
         </div>
-
     );
 }
 
