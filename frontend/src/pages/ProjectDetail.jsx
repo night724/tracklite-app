@@ -11,7 +11,7 @@ function ProjectDetail() {
     const [project, setProject] = useState(null);
     const [activity, setActivity] = useState([]);
     const [showModal, setShowModal] = useState(false);
-
+    const [tasks, setTasks] = useState([]);
 
 
     useEffect(() => {
@@ -32,12 +32,22 @@ function ProjectDetail() {
             setProject(res.data);
 
 
+
             const activityRes =
                 await api.get(
                     `/activity/project/${projectId}`
                 );
 
             setActivity(activityRes.data);
+
+
+
+            const taskRes =
+                await api.get(
+                    `/tasks/project/${projectId}`
+                );
+
+            setTasks(taskRes.data);
 
 
         }
@@ -223,11 +233,15 @@ function ProjectDetail() {
 
                 <div className="activity-card">
 
+                    <div className="section-header">
+                        <h2>
+                            Recent Activity
+                        </h2>
 
-                    <h2>
-                        Recent Activity
-                    </h2>
-
+                        <span className="activity-count">
+                            {activity.length}
+                        </span>
+                    </div>
 
 
                     {
@@ -235,9 +249,9 @@ function ProjectDetail() {
 
                             <div className="empty-activity">
 
-                                <span>
+                                <div className="empty-icon">
                                     💤
-                                </span>
+                                </div>
 
                                 <h3>
                                     No activity yet
@@ -249,58 +263,64 @@ function ProjectDetail() {
 
                             </div>
 
+
                             :
 
-                            activity.map(item => (
+                            <div className="activity-list">
 
-                                <div
-                                    className="activity-row"
-                                    key={item.id}
-                                >
+                                {
+                                    activity.map(item => (
 
+                                        <div
+                                            className="activity-item"
+                                            key={item.id}
+                                        >
 
-                                    <div>
-                                        ⚡
-                                    </div>
-
-
-                                    <div>
-
-                                        <strong>
-                                            {item.name || "User"}
-                                        </strong>
-
-
-                                        <p>
-                                            {item.action}
-                                        </p>
-
-
-                                        <small>
-
-                                            {
-                                                new Date(
-                                                    item.created_at
-                                                )
-                                                    .toLocaleString()
-
-                                            }
-
-                                        </small>
+                                            <div className="activity-icon">
+                                                {
+                                                    item.action?.includes("created")
+                                                        ? "➕"
+                                                        :
+                                                        item.action?.includes("updated")
+                                                            ? "✏️"
+                                                            :
+                                                            item.action?.includes("completed")
+                                                                ? "✅"
+                                                                :
+                                                                "⚡"
+                                                }
+                                            </div>
 
 
-                                    </div>
+                                            <div className="activity-content">
+
+                                                <h4>
+                                                    {item.name || "User"}
+                                                </h4>
 
 
+                                                <p>
+                                                    {item.action}
+                                                </p>
 
-                                </div>
 
+                                                <small>
+                                                    {
+                                                        new Date(item.created_at)
+                                                            .toLocaleString()
+                                                    }
+                                                </small>
 
-                            ))
+                                            </div>
+
+                                        </div>
+
+                                    ))
+                                }
+
+                            </div>
 
                     }
-
-
 
                 </div>
 
@@ -308,60 +328,85 @@ function ProjectDetail() {
 
 
 
-                <div className="info-card">
+                <div className="recent-task-card">
 
 
-                    <h2>
-                        Project Information
-                    </h2>
+                    <div className="section-header">
 
+                        <h2>
+                            Recent Tasks
+                        </h2>
 
-
-                    <div className="info-row">
-
-                        <span>
-                            Status
-                        </span>
-
-                        <strong>
-                            {project.status}
-                        </strong>
-
+                        <Link
+                            to={`/projects/${project.id}/tasks`}
+                            className="view-link"
+                        >
+                            View All
+                        </Link>
 
                     </div>
 
 
 
+                    {
+                        tasks.length === 0 ?
 
-                    <div className="info-row">
+                            <div className="empty-activity">
 
-                        <span>
-                            Created
-                        </span>
+                                <div className="empty-icon">
+                                    📋
+                                </div>
 
-                        <strong>
-                            {
-                                new Date(
-                                    project.created_at
-                                )
-                                    .toLocaleDateString()
-                            }
-                        </strong>
+                                <h3>
+                                    No tasks yet
+                                </h3>
 
-                    </div>
+                                <p>
+                                    Create your first task.
+                                </p>
 
-                    <div className="info-row">
+                            </div>
 
-                        <span>
-                            Project ID
-                        </span>
 
-                        <strong>
-                            {
-                                project.id.substring(0, 8)
-                            }
-                        </strong>
-                    </div>
+                            :
+
+
+                            tasks.slice(0, 5).map(task => (
+
+                                <Link
+                                    key={task.id}
+                                    to={`/tasks/${task.id}`}
+                                    className="mini-task"
+                                >
+
+                                    <div>
+
+                                        <h3>
+                                            {task.title}
+                                        </h3>
+
+
+                                        <p>
+                                            {task.description || "No description"}
+                                        </p>
+
+                                    </div>
+
+
+                                    <span className={
+                                        `task-status-badge ${task.status?.toLowerCase()}`
+                                    }>
+                                        {task.status}
+                                    </span>
+
+
+                                </Link>
+
+                            ))
+
+                    }
+
+
                 </div>
             </div>
 

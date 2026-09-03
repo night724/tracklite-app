@@ -629,12 +629,6 @@ a {
 
 }
 
-
-/* =========================
-   PROJECTS
-========================= */
-
-
 /* =========================
    PROJECT PAGE
 ========================= */
@@ -1304,7 +1298,399 @@ a {
 }
 
 
+/* =========================
+ PROJECT DETAIL ACTIVITY
+========================= */
 
+
+.section-header {
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+
+}
+
+
+.section-header h2 {
+
+  margin: 0;
+
+}
+
+
+
+.activity-count {
+
+  background: #eef2ff;
+
+  color: #4f46e5;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+}
+
+
+
+
+.activity-list {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+
+}
+
+
+
+.activity-item {
+
+
+  display: flex;
+
+  gap: 15px;
+
+  padding: 16px;
+
+  background: #f8fafc;
+
+  border-radius: 16px;
+
+  transition: .2s;
+
+}
+
+
+
+.activity-item:hover {
+
+  background: #eef2ff;
+
+  transform: translateX(5px);
+
+}
+
+
+
+.activity-icon {
+
+
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: #e0e7ff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 20px;
+
+}
+
+
+
+.activity-content h4 {
+
+
+  margin: 0;
+
+  font-size: 15px;
+
+}
+
+
+
+.activity-content p {
+
+
+  margin: 5px 0;
+
+  color: #64748b;
+
+}
+
+
+
+.activity-content small {
+
+
+  color: #94a3b8;
+
+}
+
+
+
+
+
+.empty-activity {
+
+
+  text-align: center;
+
+  padding: 45px 20px;
+
+}
+
+
+
+.empty-icon {
+
+  font-size: 45px;
+
+  margin-bottom: 10px;
+
+}
+
+
+
+.empty-activity h3 {
+
+  margin: 10px 0;
+
+}
+
+
+
+.empty-activity p {
+
+  color: #64748b;
+
+}
+
+
+
+.project-content {
+
+  display: grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  gap: 25px;
+
+}
+
+
+
+.recent-task-card {
+
+  background: white;
+
+  border-radius: 22px;
+
+  padding: 25px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, .05);
+
+}
+
+
+
+.view-link {
+
+  color: #4f46e5;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+}
+
+
+
+.mini-task {
+
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+
+  padding: 15px;
+
+
+  background: #f8fafc;
+
+
+  border-radius: 15px;
+
+
+  margin-bottom: 12px;
+
+
+  color: #111827;
+
+
+}
+
+
+
+.mini-task:hover {
+
+  background: #eef2ff;
+
+}
+
+
+
+.mini-task h3 {
+
+  margin: 0;
+
+  font-size: 16px;
+
+}
+
+
+
+.mini-task p {
+
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+
+}
+
+
+
+@media(max-width:900px) {
+
+  .project-content {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
+
+
+
+/* =========================
+ PROJECT INFORMATION
+========================= */
+
+
+.info-grid {
+
+
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  gap: 15px;
+
+}
+
+
+
+
+.info-box {
+
+
+  background: #f8fafc;
+
+  padding: 18px;
+
+  border-radius: 16px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+}
+
+
+
+.info-box span {
+
+
+  color: #64748b;
+
+  font-size: 14px;
+
+}
+
+
+
+.info-box strong {
+
+  font-size: 15px;
+
+}
+
+
+
+.active-status {
+
+
+  background: #dcfce7;
+
+  color: #15803d;
+
+  padding: 6px 14px;
+
+  border-radius: 20px;
+
+}
+
+
+
+
+
+
+/* DARK MODE */
+
+
+body.dark .activity-item,
+body.dark .info-box {
+
+
+  background: #1e293b;
+
+}
+
+
+
+body.dark .activity-count {
+
+
+  background: #312e81;
+
+  color: #c7d2fe;
+
+}
+
+
+
+body.dark .active-status {
+
+
+  background: #064e3b;
+
+  color: #86efac;
+
+}
 
 
 /* PROJECT INFORMATION */
@@ -5019,6 +5405,224 @@ label {
 
 }
 
+/* =====================
+   INBOX PAGE
+===================== */
+
+.inbox-page {
+
+  padding: 32px;
+  max-width: 1100px;
+  margin: auto;
+
+}
+
+
+
+.page-header h1 {
+
+  font-size: 32px;
+  margin-bottom: 8px;
+
+}
+
+
+.page-header p {
+
+  color: #64748b;
+
+}
+
+
+
+/* Notification list */
+
+.notification-list {
+
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+}
+
+
+
+/* Card */
+
+.notification-card {
+
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  background: white;
+
+  padding: 20px;
+
+  border-radius: 16px;
+
+  border: 1px solid #e5e7eb;
+
+  transition: .2s;
+
+}
+
+
+.notification-card:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+
+}
+
+
+
+/* unread */
+
+.notification-card.unread {
+
+  border-left: 5px solid #2563eb;
+
+  background: #f8fbff;
+
+}
+
+
+
+/* Icon */
+
+.notification-icon {
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eff6ff;
+
+  font-size: 24px;
+
+}
+
+
+
+/* Content */
+
+
+.notification-content {
+
+  flex: 1;
+
+}
+
+
+.notification-top {
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+}
+
+
+.notification-top h3 {
+
+  margin: 0;
+
+  font-size: 16px;
+
+}
+
+
+.notification-content p {
+
+  margin: 8px 0;
+
+  color: #475569;
+
+}
+
+
+.notification-content small {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* New badge */
+
+.new-badge {
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 3px 9px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+}
+
+
+
+/* Buttons */
+
+.notification-actions {
+
+  display: flex;
+
+  gap: 10px;
+
+}
+
+
+.secondary-btn {
+
+  background: #f1f5f9;
+
+  border: none;
+
+  padding: 10px 16px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+}
+
+
+
+/* Empty */
+
+.empty-box {
+
+  text-align: center;
+
+  padding: 60px;
+
+  background: white;
+
+  border-radius: 20px;
+
+}
+
+
+.empty-icon {
+
+  font-size: 40px;
+
+}
+
 /* =========================
    GLOBAL DARK MODE FIX
 ========================= */
@@ -6149,5 +6753,404 @@ body.dark .invite-modal input {
 body.dark .close-btn {
 
   color: white;
+
+}
+
+/* =========================
+   PROJECT DETAIL DARK MODE
+========================= */
+
+.dark .project-page {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+
+/* Header */
+
+.dark .project-hero {
+  background: #111827;
+  border: 1px solid #1f2937;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+
+.dark .project-title-area h1 {
+  color: #f9fafb;
+}
+
+
+.dark .project-title-area p {
+  color: #9ca3af;
+}
+
+
+/* Status */
+
+.dark .status-badge {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+
+/* Add task button */
+
+.dark .primary-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.dark .primary-btn:hover {
+  background: #1d4ed8;
+}
+
+
+
+/* Overview Cards */
+
+.dark .overview-card {
+  background: #111827;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
+}
+
+
+.dark .overview-card:hover {
+  background: #1e293b;
+}
+
+
+.dark .overview-card strong {
+  color: #f9fafb;
+}
+
+
+.dark .overview-card p {
+  color: #9ca3af;
+}
+
+
+/* Main cards */
+
+.dark .activity-card,
+.dark .recent-task-card,
+.dark .info-card {
+
+  background: #111827;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
+
+}
+
+
+/* Section title */
+
+.dark .section-header h2 {
+  color: #f9fafb;
+}
+
+
+
+/* Activity */
+
+.dark .activity-item {
+  border-bottom: 1px solid #1f2937;
+}
+
+
+.dark .activity-content h4 {
+  color: #f9fafb;
+}
+
+
+.dark .activity-content p {
+  color: #cbd5e1;
+}
+
+
+.dark .activity-content small {
+  color: #94a3b8;
+}
+
+
+/* Recent tasks */
+
+.dark .mini-task {
+
+  background: #0f172a;
+  border: 1px solid #1f2937;
+  color: white;
+
+}
+
+
+.dark .mini-task:hover {
+  background: #1e293b;
+}
+
+
+.dark .mini-task p {
+  color: #94a3b8;
+}
+
+
+
+/* Info boxes */
+
+.dark .info-box {
+
+  background: #0f172a;
+  border: 1px solid #1f2937;
+
+}
+
+
+.dark .info-box span {
+
+  color: #94a3b8;
+
+}
+
+
+.dark .info-box strong {
+
+  color: #f9fafb;
+
+}
+
+
+/* Progress */
+
+.dark .mini-progress {
+
+  background: #374151;
+
+}
+
+/* ======================
+   INBOX DARK MODE
+====================== */
+
+
+.dark .inbox-page {
+
+  color: #e5e7eb;
+
+}
+
+
+
+.dark .page-header h1 {
+
+  color: #f8fafc;
+
+}
+
+
+.dark .page-header p {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* Cards */
+
+.dark .notification-card {
+
+  background: #111827;
+
+  border: 1px solid #1f2937;
+
+}
+
+
+
+.dark .notification-card:hover {
+
+  background: #172033;
+
+}
+
+
+
+/* unread */
+
+.dark .notification-card.unread {
+
+  background: #172554;
+
+  border-left: 5px solid #3b82f6;
+
+}
+
+
+
+/* Icon */
+
+.dark .notification-icon {
+
+  background: #1e3a8a;
+
+}
+
+
+
+/* Text */
+
+
+.dark .notification-top h3 {
+
+  color: #f8fafc;
+
+}
+
+
+.dark .notification-content p {
+
+  color: #cbd5e1;
+
+}
+
+
+.dark .notification-content strong {
+
+  color: white;
+
+}
+
+
+.dark .notification-content small {
+
+  color: #94a3b8;
+
+}
+
+
+
+/* New badge */
+
+.dark .new-badge {
+
+  background: #2563eb;
+
+}
+
+
+
+/* Buttons */
+
+
+.dark .secondary-btn {
+
+  background: #1e293b;
+
+  color: #e5e7eb;
+
+}
+
+
+.dark .secondary-btn:hover {
+
+  background: #334155;
+
+}
+
+
+
+/* Empty state */
+
+
+.dark .empty-box {
+
+  background: #111827;
+
+  border: 1px solid #1f2937;
+
+}
+
+
+.dark .empty-box h3 {
+
+  color: #f8fafc;
+
+}
+
+
+.dark .empty-box p {
+
+  color: #94a3b8;
+
+}
+
+.notification-card {
+
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 22px;
+
+  background: white;
+
+  border-radius: 18px;
+
+}
+
+
+.notification-avatar {
+
+  width: 55px;
+  height: 55px;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+  font-weight: 700;
+
+}
+
+
+.notification-content h2 {
+
+  margin: 0;
+
+  font-size: 20px;
+
+}
+
+
+.notification-content p {
+
+  margin: 5px 0;
+
+  color: #64748b;
+
+}
+
+
+.notification-content strong {
+
+  font-size: 16px;
+
+}
+
+
+.notification-content small {
+
+  display: block;
+
+  margin-top: 10px;
+
+  color: #94a3b8;
 
 }

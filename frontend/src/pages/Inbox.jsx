@@ -115,6 +115,10 @@ function Inbox() {
 
                         <div className="empty-box">
 
+                            <div className="empty-icon">
+                                🔔
+                            </div>
+
                             <h3>
                                 No notifications
                             </h3>
@@ -142,56 +146,119 @@ function Inbox() {
                             }
                         >
 
-                            <div>
 
-                                <h3>
-                                    Notification
-                                </h3>
+                            <div className="notification-avatar">
 
-                                <p>
-                                    {item.message}
-                                </p>
+                                {
+                                    item.sender_name
+                                        ? item.sender_name
+                                            .charAt(0)
+                                            .toUpperCase()
+                                        : "U"
+                                }
+
+                            </div>
+
+
+
+                            <div className="notification-content">
+
+
+                                {
+                                    item.type === "WORKSPACE_INVITE" ? (
+
+                                        <>
+
+                                            <h2>
+                                                {item.sender_name || "Someone"}
+                                            </h2>
+
+
+                                            <p>
+                                                invited you to join
+                                            </p>
+
+
+                                            <strong>
+                                                {item.workspace_name || "workspace"}
+                                            </strong>
+
+                                        </>
+
+                                    )
+                                        :
+                                        (
+
+                                            <>
+
+                                                <h2>
+                                                    Notification
+                                                </h2>
+
+
+                                                <p>
+                                                    {item.message}
+                                                </p>
+
+                                            </>
+
+                                        )
+
+                                }
+
+
 
                                 <small>
                                     {
-                                        new Date(
-                                            item.created_at
-                                        )
+                                        new Date(item.created_at)
                                             .toLocaleString()
                                     }
                                 </small>
 
+
                             </div>
 
-                            {
-                                item.type === "WORKSPACE_INVITE" && (
-
-                                    <button
-                                        className="primary-btn"
-                                        onClick={() =>
-                                            acceptInvite(item.id)
-                                        }
-                                    >
-                                        Accept Invite
-                                    </button>
-
-                                )
-                            }
 
 
-                            {
-                                !item.read && (
+                            <div className="notification-actions">
 
-                                    <button
-                                        onClick={() =>
-                                            markRead(item.id)
-                                        }
-                                    >
-                                        Mark Read
-                                    </button>
 
-                                )
-                            }
+                                {
+                                    item.type === "WORKSPACE_INVITE" && (
+
+                                        <button
+                                            className="primary-btn"
+                                            onClick={() =>
+                                                acceptInvite(item.id)
+                                            }
+                                        >
+                                            Accept Invite
+                                        </button>
+
+                                    )
+                                }
+
+
+
+                                {
+                                    !item.read && (
+
+                                        <button
+                                            className="secondary-btn"
+                                            onClick={() =>
+                                                markRead(item.id)
+                                            }
+                                        >
+                                            Mark Read
+                                        </button>
+
+                                    )
+                                }
+
+
+                            </div>
+
+
                         </div>
 
                     ))

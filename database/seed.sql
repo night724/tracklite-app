@@ -314,20 +314,38 @@ VALUES
 
 INSERT INTO activity_logs
 (
+    project_id,
+    task_id,
     issue_id,
     user_id,
     action
 )
 VALUES
-
 (
+    '33333333-3333-3333-3333-333333333333',
+    '55555555-5555-5555-5555-555555555555',
     '77777777-7777-7777-7777-777777777777',
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
     'Created issue TL-001'
 );
 
 
-
+INSERT INTO workspace_invitations
+(
+    workspace_id,
+    inviter_id,
+    invited_user_id,
+    role,
+    status
+)
+VALUES
+(
+    '22222222-2222-2222-2222-222222222222',
+    'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    'MEMBER',
+    'ACCEPTED'
+);
 -- ============================================
 -- LABELS
 -- ============================================

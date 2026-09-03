@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS workspace_members CASCADE;
 DROP TABLE IF EXISTS workspaces CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS organizations CASCADE;
-
+DROP TABLE IF EXISTS workspace_invitations CASCADE;
 
 CREATE TABLE organizations (
 
@@ -208,7 +208,6 @@ CREATE TABLE project_members (
 );
 
 
-
 -- ============================================
 -- TASKS
 -- ============================================
@@ -217,36 +216,43 @@ CREATE TABLE tasks (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
-    workspace_id UUID NOT NULL,
+
+    project_id UUID NOT NULL,
 
 
     title VARCHAR(255) NOT NULL,
+
 
     description TEXT,
 
 
     status VARCHAR(30)
         DEFAULT 'TODO'
-        CHECK(status IN
-        (
-            'TODO',
-            'IN_PROGRESS',
-            'DONE'
-        )),
+        CHECK(
+            status IN
+            (
+                'TODO',
+                'IN_PROGRESS',
+                'DONE'
+            )
+        ),
 
 
     priority VARCHAR(30)
         DEFAULT 'MEDIUM'
-        CHECK(priority IN
-        (
-            'LOW',
-            'MEDIUM',
-            'HIGH',
-            'URGENT'
-        )),
+        CHECK(
+            priority IN
+            (
+                'LOW',
+                'MEDIUM',
+                'HIGH',
+                'URGENT'
+            )
+        ),
 
 
     assigned_to UUID,
+
 
     created_by UUID,
 
@@ -255,6 +261,7 @@ CREATE TABLE tasks (
 
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
 
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -272,8 +279,8 @@ CREATE TABLE tasks (
     FOREIGN KEY(created_by)
         REFERENCES users(id)
         ON DELETE SET NULL
-);
 
+);
 
 
 -- ============================================
@@ -377,14 +384,19 @@ CREATE TABLE comments (
 );
 
 
-
 -- ============================================
--- ACTIVITY LOG
+-- ACTIVITY LOGS
 -- ============================================
 
 CREATE TABLE activity_logs (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+
+    project_id UUID,
+
+
+    task_id UUID,
 
 
     issue_id UUID,
@@ -399,6 +411,16 @@ CREATE TABLE activity_logs (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
 
+    FOREIGN KEY(project_id)
+        REFERENCES projects(id)
+        ON DELETE CASCADE,
+
+
+    FOREIGN KEY(task_id)
+        REFERENCES tasks(id)
+        ON DELETE CASCADE,
+
+
     FOREIGN KEY(issue_id)
         REFERENCES issues(id)
         ON DELETE CASCADE,
@@ -407,6 +429,7 @@ CREATE TABLE activity_logs (
     FOREIGN KEY(user_id)
         REFERENCES users(id)
         ON DELETE SET NULL
+
 );
 
 
@@ -457,11 +480,35 @@ CREATE TABLE issue_labels (
 -- NOTIFICATIONS
 -- ============================================
 
+-- ============================================
+-- NOTIFICATIONS
+-- ============================================
+
 CREATE TABLE notifications (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
+
     user_id UUID NOT NULL,
+
+
+    sender_id UUID,
+
+
+    type VARCHAR(50)
+        DEFAULT 'GENERAL'
+        CHECK(
+            type IN
+            (
+                'GENERAL',
+                'WORKSPACE_INVITE',
+                'TASK_ASSIGNED',
+                'COMMENT'
+            )
+        ),
+
+
+    reference_id UUID,
 
 
     message TEXT NOT NULL,
@@ -475,9 +522,14 @@ CREATE TABLE notifications (
 
     FOREIGN KEY(user_id)
         REFERENCES users(id)
-        ON DELETE CASCADE
-);
+        ON DELETE CASCADE,
 
+
+    FOREIGN KEY(sender_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL
+
+);
 CREATE TABLE workspace_invitations (
 
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -488,23 +540,41 @@ CREATE TABLE workspace_invitations (
 
     invited_user_id UUID NOT NULL,
 
-    role VARCHAR(50) DEFAULT 'MEMBER',
+    role VARCHAR(50)
+        DEFAULT 'MEMBER',
 
-    status VARCHAR(20) DEFAULT 'PENDING',
+    status VARCHAR(20)
+        DEFAULT 'PENDING'
+        CHECK(status IN(
+            'PENDING',
+            'ACCEPTED',
+            'REJECTED'
+        )),
 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+
+    FOREIGN KEY(workspace_id)
+        REFERENCES workspaces(id)
+        ON DELETE CASCADE,
+
+
+    FOREIGN KEY(inviter_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+
+    FOREIGN KEY(invited_user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+
+    UNIQUE(workspace_id, invited_user_id)
 
 );
-ALTER TABLE notifications
-ADD COLUMN reference_id UUID;
 -- ============================================
 -- INDEXES
 -- ============================================
-
-
-CREATE INDEX idx_projects_workspace
-ON projects(workspace_id);
-
 
 CREATE INDEX idx_tasks_project
 ON tasks(project_id);
@@ -514,9 +584,34 @@ CREATE INDEX idx_tasks_status
 ON tasks(status);
 
 
+CREATE INDEX idx_activity_project
+ON activity_logs(project_id);
+
+
+CREATE INDEX idx_activity_task
+ON activity_logs(task_id);
+
+
+CREATE INDEX idx_notifications_user
+ON notifications(user_id);
+
+
+CREATE INDEX idx_workspace_invites_user
+ON workspace_invitations(invited_user_id);
+
+
 CREATE INDEX idx_issues_task
 ON issues(task_id);
 
 
 CREATE INDEX idx_comments_issue
 ON comments(issue_id);
+
+CREATE INDEX idx_activity_issue
+ON activity_logs(issue_id);
+
+CREATE INDEX idx_activity_user
+ON activity_logs(user_id);
+
+CREATE INDEX idx_notifications_sender
+ON notifications(sender_id);
