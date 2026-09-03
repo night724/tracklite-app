@@ -3262,180 +3262,114 @@ body.dark .active-status {
 ========================= */
 
 .members-page {
+
     padding: 30px;
+
 }
 
-.members-header {
+
+
+.page-header {
+
     display: flex;
 
     justify-content: space-between;
 
     align-items: center;
 
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+
 }
 
-.members-header h1 {
-    font-size: 32px;
 
-    margin-bottom: 6px;
+
+.page-header h1 {
+
+    margin: 0;
+
+    font-size: 28px;
+
 }
 
-.members-header p {
-    color: #6b7280;
-}
 
-.member-count {
-    background: #ffffff;
 
-    border: 1px solid #e5e7eb;
-
-    padding: 12px 18px;
-
-    border-radius: 12px;
-
-    font-weight: 600;
-}
-
-.members-toolbar {
-    margin-bottom: 25px;
-}
-
-.members-toolbar input {
-    width: 320px;
-
-    padding: 12px 16px;
-
-    border-radius: 10px;
-
-    border: 1px solid #d1d5db;
-
-    font-size: 14px;
-}
-
-.members-grid {
-    display: grid;
-
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-
-    gap: 20px;
-}
-
-.member-card {
-    background: white;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 18px;
-
-    padding: 22px;
-
-    transition: 0.2s;
-}
-
-.member-card:hover {
-    transform: translateY(-4px);
-
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-}
-
-.member-top {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 20px;
-}
-
-.member-avatar {
-    width: 55px;
-
-    height: 55px;
-
-    border-radius: 50%;
-
-    background: #2563eb;
-
-    color: white;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 22px;
-
-    font-weight: 700;
-}
-
-.role-badge {
-    padding: 6px 12px;
-
-    border-radius: 20px;
-
-    font-size: 12px;
-
-    font-weight: 700;
-}
-
-.role-badge.owner {
-    background: #fef3c7;
-
-    color: #92400e;
-}
-
-.role-badge.member {
-    background: #dbeafe;
-
-    color: #1d4ed8;
-}
-
-.member-info h2 {
-    font-size: 20px;
-
-    margin-bottom: 5px;
-}
-
-.member-info p {
-    color: #6b7280;
-
-    font-size: 14px;
-}
-
-.member-footer {
-    margin-top: 20px;
-
-    padding-top: 15px;
-
-    border-top: 1px solid #f1f5f9;
+.page-header p {
 
     color: #64748b;
 
-    font-size: 13px;
+    margin-top: 6px;
+
+}
+
+
+
+
+
+/* GRID */
+
+
+.members-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+    gap: 24px;
+
 }
 
 .member-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+
 
     background: white;
 
-    padding: 20px;
+    border: 1px solid #e5e7eb;
 
-    border-radius: 16px;
+    border-radius: 22px;
 
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+
+    display: flex;
+
+    gap: 18px;
+
+    transition: .25s;
+
 }
 
-.member-avatar {
-    width: 55px;
-    height: 55px;
 
-    border-radius: 50%;
+
+.member-card:hover {
+
+
+    transform: translateY(-5px);
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .08);
+
+}
+
+
+
+
+
+
+/* AVATAR */
+
+
+.member-avatar {
+
+
+    width: 65px;
+
+    height: 65px;
+
+    min-width: 65px;
+
+    border-radius: 18px;
+
+    background: #2563eb;
+
+    color: white;
 
     display: flex;
 
@@ -3443,36 +3377,156 @@ body.dark .active-status {
 
     justify-content: center;
 
+    font-size: 26px;
+
+    font-weight: 700;
+
+}
+
+
+
+
+
+
+
+/* INFO */
+
+
+.member-info {
+
+    flex: 1;
+
+}
+
+
+
+.member-info h3 {
+
+
+    margin: 0;
+
+    font-size: 18px;
+
+}
+
+
+
+.member-info p {
+
+
+    margin: 5px 0 12px;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+}
+
+.member-card {
+
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 22px;
+
+    padding: 24px;
+
+    display: flex;
+
+    gap: 18px;
+
+    transition: .25s;
+
+}
+
+
+
+.member-card:hover {
+
+
+    transform: translateY(-5px);
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .08);
+
+}
+
+
+
+
+
+
+/* AVATAR */
+
+
+.member-avatar {
+
+
+    width: 65px;
+
+    height: 65px;
+
+    min-width: 65px;
+
+    border-radius: 18px;
+
     background: #2563eb;
 
     color: white;
 
-    font-size: 22px;
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 26px;
 
     font-weight: 700;
+
 }
 
-.member-card span {
-    display: inline-block;
 
-    margin-top: 8px;
 
-    padding: 5px 12px;
 
-    border-radius: 20px;
 
-    background: #e5e7eb;
 
-    font-size: 13px;
+
+/* INFO */
+
+
+.member-info {
+
+    flex: 1;
+
 }
 
-.members-grid {
-    display: grid;
 
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 
-    gap: 20px;
+.member-info h3 {
+
+
+    margin: 0;
+
+    font-size: 18px;
+
 }
+
+
+
+.member-info p {
+
+
+    margin: 5px 0 12px;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+}
+
+
 
 .team-page {
     padding: 40px;
@@ -5521,7 +5575,7 @@ body.dark .close-btn {
     color: #7c3aed;
 }
 
-.content > * {
+.content>* {
     animation: fadeIn 0.35s ease;
 }
 
@@ -6207,4 +6261,393 @@ body.dark .dropdown button {
 
 body.dark .dropdown button:hover {
     background: #1e293b;
+}
+
+/* =========================
+   DARK MODE MEMBERS
+========================= */
+
+
+body.dark .member-card {
+
+
+    background: #111827;
+
+    border-color: #1f2937;
+
+}
+
+
+
+body.dark .member-card:hover {
+
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .4);
+
+}
+
+
+
+body.dark .member-info h3 {
+
+
+    color: #f8fafc;
+
+}
+
+
+
+body.dark .member-info p {
+
+
+    color: #94a3b8;
+
+}
+
+
+
+body.dark .member-task-status div {
+
+
+    background: #1e293b;
+
+}
+
+
+
+body.dark .member-task-status h4 {
+
+
+    color: #f8fafc;
+
+}
+
+
+
+body.dark .member-task-status span {
+
+
+    color: #94a3b8;
+
+}
+
+.role-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+/* =========================
+   MEMBER TASK STATS
+========================= */
+
+
+.member-task-status {
+
+    margin-top: 25px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+}
+
+
+
+.task-stat {
+
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px 15px;
+
+    border-radius: 16px;
+
+}
+
+
+
+.task-stat h4 {
+
+    margin: 0;
+
+    font-size: 18px;
+
+}
+
+
+
+.task-stat p {
+
+    margin: 2px 0 0;
+
+    font-size: 12px;
+
+    color: #64748b;
+
+}
+
+
+
+
+
+.stat-icon {
+
+
+    width: 38px;
+
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 18px;
+
+}
+
+
+
+
+
+/* TOTAL */
+.member-task-status {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: 25px;
+
+}
+
+
+
+.stat-item {
+
+    flex: 1;
+
+    background: #f8fafc;
+
+    border-radius: 14px;
+
+    padding: 12px 8px;
+
+    text-align: center;
+
+}
+
+
+
+.stat-item strong {
+
+    display: block;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color: #0f172a;
+
+}
+
+
+
+.stat-item span {
+
+    font-size: 12px;
+
+    color: #64748b;
+
+}
+
+.task-stat.total {
+
+    background: #eff6ff;
+
+}
+
+
+.task-stat.total .stat-icon {
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+}
+
+
+
+
+
+/* COMPLETED */
+
+
+.task-stat.completed {
+
+    background: #ecfdf5;
+
+}
+
+
+.task-stat.completed .stat-icon {
+
+    background: #d1fae5;
+
+    color: #059669;
+
+}
+
+
+
+
+
+/* WORKING */
+
+
+.task-stat.working {
+
+    background: #fff7ed;
+
+}
+
+
+.task-stat.working .stat-icon {
+
+    background: #fed7aa;
+
+    color: #ea580c;
+
+}
+
+/* =========================
+   DARK TASK STATS
+========================= */
+
+
+body.dark .task-stat {
+
+    border: 1px solid #1f2937;
+
+}
+
+
+
+/* TOTAL TASKS */
+
+body.dark .task-stat.total {
+
+    background: #172554;
+
+}
+
+
+
+body.dark .task-stat.total .stat-icon {
+
+    background: #1e40af;
+
+    color: #bfdbfe;
+
+}
+
+
+
+
+
+/* COMPLETED */
+
+
+body.dark .task-stat.completed {
+
+    background: #064e3b;
+
+}
+
+
+
+body.dark .task-stat.completed .stat-icon {
+
+    background: #047857;
+
+    color: #a7f3d0;
+
+}
+
+
+
+
+
+
+/* WORKING */
+
+
+body.dark .task-stat.working {
+
+    background: #431407;
+
+}
+
+
+
+body.dark .task-stat.working .stat-icon {
+
+    background: #c2410c;
+
+    color: #fed7aa;
+
+}
+
+
+
+
+
+
+/* TEXT */
+
+
+body.dark .task-stat h4 {
+
+    color: #f8fafc;
+
+}
+
+
+
+body.dark .task-stat p {
+
+    color: #cbd5e1;
+
+}
+
+body.dark .stat-item {
+
+    background: #1e293b;
+
+}
+
+
+body.dark .stat-item strong {
+
+    color: #f8fafc;
+
+}
+
+
+body.dark .stat-item span {
+
+    color: #94a3b8;
+
 }

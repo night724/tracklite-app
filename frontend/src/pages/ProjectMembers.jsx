@@ -50,25 +50,93 @@ function ProjectMembers() {
             </div>
 
             <div className="members-grid">
+
                 {members.map((member) => (
+
                     <div className="member-card" key={member.id}>
+
+
+                        <span className={`role-badge ${member.role.toLowerCase()}`}>
+                            {member.role}
+                        </span>
+
+
+
                         <div className="member-avatar">
                             {member.name.charAt(0).toUpperCase()}
                         </div>
 
-                        <div>
-                            <h3>{member.name}</h3>
 
-                            <p>{member.email}</p>
 
-                            <span
-                                className={`role-badge ${member.role.toLowerCase()}`}
-                            >
-                                {member.role}
-                            </span>
+                        <div className="member-info">
+
+
+                            <h3>
+                                {member.name}
+                            </h3>
+
+
+                            <p>
+                                {member.email}
+                            </p>
+
+
+
+                            <div className="member-task-status">
+
+                                <div className="task-stat total">
+
+                                    <span className="stat-icon">
+                                        📋
+                                    </span>
+
+                                    <div className="stat-item">
+                                        <strong>{member.total_tasks}</strong>
+                                        <span>Tasks</span>
+                                    </div>
+                                </div>
+
+
+
+                                <div className="task-stat completed">
+
+                                    <span className="stat-icon">
+                                        ✓
+                                    </span>
+
+                                    <div className="stat-item">
+                                        <strong>{member.completed_tasks}</strong>
+                                        <span>Done</span>
+                                    </div>
+
+                                </div>
+
+
+
+                                <div className="task-stat working">
+
+                                    <span className="stat-icon">
+                                        ⚡
+                                    </span>
+
+                                    <div className="stat-item">
+                                        <strong>{member.progress_tasks}</strong>
+                                        <span>Working</span>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
                         </div>
+
+
                     </div>
+
                 ))}
+
             </div>
 
             {showModal && (
