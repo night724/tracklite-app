@@ -5306,117 +5306,154 @@ label {
 }
 
 .invite-list {
-
-  margin-top: 40px;
-  background: #111827;
-  padding: 25px;
-  border-radius: 16px;
-
+    margin-top: 40px;
+    background: #111827;
+    border-radius: 18px;
+    padding: 25px;
 }
 
 
 .invite-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 
+.invite-header h2 {
+    color: white;
+    font-size: 22px;
 }
 
 
 .invite-header span {
-
-  background: #2563eb;
-  padding: 6px 12px;
-  border-radius: 20px;
-
+    background: #2563eb;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
 }
 
 
 
 .invite-card {
+    background: #1f2937;
+    border-radius: 14px;
+    padding: 20px;
 
-  margin-top: 15px;
-  padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-  background: #1f2937;
-
-  border-radius: 14px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
+    margin-top: 15px;
 }
 
 
 
 .invite-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-  display: flex;
-  gap: 15px;
-  align-items: center;
 
+
+.invite-user h3 {
+    color: white;
+    margin: 0;
+}
+
+
+.invite-user p {
+    color: #cbd5e1;
+    margin: 5px 0;
+}
+
+
+.invite-user small {
+    color: #94a3b8;
 }
 
 
 
 .avatar.small {
+    width: 42px;
+    height: 42px;
 
-  width: 42px;
-  height: 42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
+    border-radius:50%;
+
+    background:#e0e7ff;
+    color:#2563eb;
+
+    font-weight:bold;
 }
 
 
 
 .invite-actions {
-
-  display: flex;
-  gap: 10px;
-  align-items: center;
-
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
 
 
 .pending-status {
+    background:#d97706;
+    color:white;
 
-  background: #92400e;
-  color: #fde68a;
+    padding:7px 14px;
 
-  padding: 5px 12px;
+    border-radius:20px;
 
-  border-radius: 20px;
-
+    font-size:14px;
 }
 
 
 
 .resend-btn {
 
-  background: #2563eb;
-  color: white;
+    background:#2563eb;
+    color:white;
 
-  border: none;
-  padding: 8px 14px;
+    border:none;
 
-  border-radius: 8px;
+    padding:8px 15px;
 
+    border-radius:8px;
+
+    cursor:pointer;
 }
 
 
 
 .revoke-btn {
 
-  background: #dc2626;
-  color: white;
+    background:#dc2626;
+    color:white;
 
-  border: none;
-  padding: 8px 14px;
+    border:none;
 
-  border-radius: 8px;
+    padding:8px 15px;
 
+    border-radius:8px;
+
+    cursor:pointer;
+}
+
+
+
+.resend-btn:hover {
+    background:#1d4ed8;
+}
+
+
+.revoke-btn:hover {
+    background:#b91c1c;
 }
 
 /* =========================

@@ -297,7 +297,7 @@ function MyTeam() {
                             <div className="invite-user">
 
                                 <div className="avatar small">
-                                    {invite.name.charAt(0)}
+                                    {invite.name?.charAt(0).toUpperCase()}
                                 </div>
 
 
