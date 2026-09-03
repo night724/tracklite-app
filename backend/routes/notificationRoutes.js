@@ -1,21 +1,13 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const db = require("../config/database");
-const auth = require("../middleware/auth");
+const db = require('../config/database');
+const auth = require('../middleware/auth');
 
-
-
-router.get(
-    "/",
-    auth,
-    async (req, res) => {
-
-        try {
-
-            const result =
-                await db.query(
-                    `
+router.get('/', auth, async (req, res) => {
+    try {
+        const result = await db.query(
+            `
                     SELECT
 
                         n.id,
@@ -54,72 +46,39 @@ router.get(
 
                     ORDER BY n.created_at DESC
                     `,
-                    [
-                        req.user.id
-                    ]
-                );
+            [req.user.id],
+        );
 
+        res.json(result.rows);
+    } catch (error) {
+        console.log('LOAD NOTIFICATIONS ERROR:', error);
 
-            res.json(result.rows);
+        res.status(500).json({
+            message: 'Cannot load notifications',
+        });
+    }
+});
 
-        }
-        catch (error) {
-
-            console.log(
-                "LOAD NOTIFICATIONS ERROR:",
-                error
-            );
-
-            res.status(500)
-                .json({
-                    message:
-                        "Cannot load notifications"
-                });
-
-        }
-
-    });
-
-
-
-router.patch(
-    "/:id/read",
-    auth,
-    async (req, res) => {
-
-
-        try {
-
-            await db.query(
-                `
+router.patch('/:id/read', auth, async (req, res) => {
+    try {
+        await db.query(
+            `
         UPDATE notifications
         SET read=true
         WHERE id=$1
         AND user_id=$2
         `,
-                [
-                    req.params.id,
-                    req.user.id
-                ]);
+            [req.params.id, req.user.id],
+        );
 
-
-            res.json({
-                message: "Notification read"
-            });
-
-
-        }
-        catch (error) {
-
-            res.status(500)
-                .json({
-                    message: "Update failed"
-                });
-
-        }
-
-
-    });
-
+        res.json({
+            message: 'Notification read',
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Update failed',
+        });
+    }
+});
 
 module.exports = router;

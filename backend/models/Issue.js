@@ -1,9 +1,8 @@
-const db = require("../config/database");
+const db = require('../config/database');
 class Issue {
     static async getByTask(taskId) {
-        const result =
-            await db.query(
-                `
+        const result = await db.query(
+            `
                 SELECT
                 i.*,
                 u.name AS assigned_name
@@ -13,15 +12,14 @@ class Issue {
                 WHERE i.task_id=$1
                 ORDER BY i.created_at DESC
                 `,
-                [taskId]
-            );
+            [taskId],
+        );
         return result.rows;
     }
 
     static async getById(id) {
-        const issue =
-            await db.query(
-                `
+        const issue = await db.query(
+            `
                 SELECT
                 i.*,
                 u.name AS assigned_name
@@ -31,26 +29,17 @@ class Issue {
                 WHERE i.id=$1
                 `,
 
-                [id]
-            );
+            [id],
+        );
         return issue.rows[0];
     }
 
     static async create(data) {
-        const {
-            id,
-            task_id,
-            issue_key,
-            title,
-            description,
-            priority,
-            assigned_to,
-            created_by
-        } = data;
+        const { id, task_id, issue_key, title, description, priority, assigned_to, created_by } =
+            data;
 
-        const result =
-            await db.query(
-                `
+        const result = await db.query(
+            `
                 INSERT INTO issues
                 (
                 id,
@@ -66,31 +55,15 @@ class Issue {
                 ($1,$2,$3,$4,$5,$6,$7,$8)
                 RETURNING *
                 `,
-                [
-                    id,
-                    task_id,
-                    issue_key,
-                    title,
-                    description,
-                    priority,
-                    assigned_to,
-                    created_by
-                ]
-            );
+            [id, task_id, issue_key, title, description, priority, assigned_to, created_by],
+        );
         return result.rows[0];
     }
 
     static async update(id, data) {
-        const {
-            title,
-            description,
-            status,
-            priority,
-            assigned_to
-        } = data;
-        const result =
-            await db.query(
-                `
+        const { title, description, status, priority, assigned_to } = data;
+        const result = await db.query(
+            `
                 UPDATE issues
                 SET
                 title=$1,
@@ -102,23 +75,12 @@ class Issue {
                 WHERE id=$6
                 RETURNING *
                 `,
-                [
-                    title,
-                    description,
-                    status,
-                    priority,
-                    assigned_to,
-                    id
-                ]
-            );
+            [title, description, status, priority, assigned_to, id],
+        );
         return result.rows[0];
     }
 
-    static async addActivity(
-        issueId,
-        userId,
-        action
-    ) {
+    static async addActivity(issueId, userId, action) {
         await db.query(
             `
             INSERT INTO activity_logs
@@ -130,11 +92,7 @@ class Issue {
             VALUES
             ($1,$2,$3)
             `,
-            [
-                issueId,
-                userId,
-                action
-            ]
+            [issueId, userId, action],
         );
     }
 }

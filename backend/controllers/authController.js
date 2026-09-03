@@ -1,64 +1,36 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { v4: uuidv4 } = require("uuid");
-const User = require("../models/User");
-const db = require("../config/database");
-
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
+const User = require('../models/User');
+const db = require('../config/database');
 
 // =======================
 // REGISTER
 // =======================
 
 exports.register = async (req, res) => {
-
     try {
-
-        const {
-            name,
-            email,
-            password
-        } = req.body;
-
-
+        const { name, email, password } = req.body;
 
         // Check existing user
 
-        const existing =
-            await User.findByEmail(email);
-
+        const existing = await User.findByEmail(email);
 
         if (existing) {
-
             return res.status(400).json({
-
-                message:
-                    "Email already exists"
-
+                message: 'Email already exists',
             });
-
         }
 
-
-
-        const hashedPassword =
-            await bcrypt.hash(
-                password,
-                10
-            );
-
-
-
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         /*
             1. CREATE ORGANIZATION
         */
 
-
         const organizationId = uuidv4();
 
-
         await db.query(
-
             `
             INSERT INTO organizations
             (
@@ -73,33 +45,16 @@ exports.register = async (req, res) => {
             )
             `,
 
-            [
-
-                organizationId,
-
-                `${name}'s Organization`
-
-            ]
-
+            [organizationId, `${name}'s Organization`],
         );
-
-
-
-
-
-
 
         /*
             2. CREATE USER
         */
 
-
         const userId = uuidv4();
 
-
-
         await User.create({
-
             id: userId,
 
             organization_id: organizationId,
@@ -110,28 +65,16 @@ exports.register = async (req, res) => {
 
             password: hashedPassword,
 
-            role: "OWNER"
-
+            role: 'OWNER',
         });
-
-
-
-
-
-
-
 
         /*
             3. CREATE WORKSPACE
         */
 
-
         const workspaceId = uuidv4();
 
-
-
         await db.query(
-
             `
             INSERT INTO workspaces
             (
@@ -151,35 +94,14 @@ exports.register = async (req, res) => {
 
             `,
 
-            [
-
-                workspaceId,
-
-                organizationId,
-
-                `${name}'s Workspace`,
-
-                userId
-
-            ]
-
+            [workspaceId, organizationId, `${name}'s Workspace`, userId],
         );
-
-
-
-
-
-
-
-
 
         /*
             4. ADD USER TO WORKSPACE
         */
 
-
         await db.query(
-
             `
             INSERT INTO workspace_members
             (
@@ -199,140 +121,59 @@ exports.register = async (req, res) => {
 
             `,
 
-            [
-
-                uuidv4(),
-
-                workspaceId,
-
-                userId,
-
-                "OWNER"
-
-            ]
-
+            [uuidv4(), workspaceId, userId, 'OWNER'],
         );
 
-
-
-
-
-
-
-
         res.status(201).json({
-
-            message:
-                "User created",
+            message: 'User created',
 
             user: {
-
                 id: userId,
 
                 name,
 
                 email,
 
-                role: "OWNER",
+                role: 'OWNER',
 
-                workspaceId
-
-            }
-
+                workspaceId,
+            },
         });
-
-
-
-    }
-
-    catch (error) {
-
-
-        console.log(
-            "REGISTER ERROR:",
-            error.message
-        );
-
+    } catch (error) {
+        console.log('REGISTER ERROR:', error.message);
 
         res.status(500).json({
-
-            message: error.message
-
+            message: error.message,
         });
-
-
     }
-
 };
-
-
-
-
 
 // =======================
 // LOGIN
 // =======================
 
-
 exports.login = async (req, res) => {
-
-
     try {
+        const { email, password } = req.body;
 
-
-        const {
-            email,
-            password
-        } = req.body;
-
-
-
-
-        const user =
-            await User.findByEmail(email);
-
-
+        const user = await User.findByEmail(email);
 
         if (!user) {
-
             return res.status(404).json({
-
-                message: "User not found"
-
+                message: 'User not found',
             });
-
         }
 
-
-
-
-
-        const valid =
-            await bcrypt.compare(
-                password,
-                user.password
-            );
-
-
+        const valid = await bcrypt.compare(password, user.password);
 
         if (!valid) {
-
             return res.status(401).json({
-
-                message: "Wrong password"
-
+                message: 'Wrong password',
             });
-
         }
 
-
-
-
-
-        const workspace =
-            await db.query(
-
-                `
+        const workspace = await db.query(
+            `
                 SELECT workspace_id
 
                 FROM workspace_members
@@ -342,51 +183,29 @@ exports.login = async (req, res) => {
                 LIMIT 1
                 `,
 
-                [
-                    user.id
-                ]
+            [user.id],
+        );
 
-            );
+        const workspaceId = workspace.rows[0]?.workspace_id || null;
 
+        const token = jwt.sign(
+            {
+                id: user.id,
 
+                email: user.email,
+            },
 
+            process.env.JWT_SECRET,
 
-        const workspaceId =
-            workspace.rows[0]?.workspace_id || null;
-
-
-
-
-
-        const token =
-            jwt.sign(
-
-                {
-                    id: user.id,
-
-                    email: user.email
-                },
-
-                process.env.JWT_SECRET,
-
-                {
-                    expiresIn: "7d"
-                }
-
-            );
-
-
-
-
-
+            {
+                expiresIn: '7d',
+            },
+        );
 
         res.json({
-
             token,
 
-
             user: {
-
                 id: user.id,
 
                 name: user.name,
@@ -395,74 +214,40 @@ exports.login = async (req, res) => {
 
                 role: user.role,
 
-                workspaceId
-
-            }
-
-
+                workspaceId,
+            },
         });
-
-
-
-    }
-
-    catch (error) {
-
-
-        console.log(
-            "LOGIN ERROR:",
-            error.message
-        );
-
+    } catch (error) {
+        console.log('LOGIN ERROR:', error.message);
 
         res.status(500).json({
-
-            message: "Login failed"
-
+            message: 'Login failed',
         });
-
-
     }
-
-
 };
 
-
-
 exports.me = async (req, res) => {
-
-
     try {
-
-
-        const user =
-            await User.findById(
-                req.user.id
-            );
+        const user = await User.findById(req.user.id);
 
         if (!user) {
             return res.status(404).json({
-                message: "User not found"
+                message: 'User not found',
             });
-
         }
 
-        const workspace =
-            await db.query(
-                `
+        const workspace = await db.query(
+            `
                 SELECT workspace_id
                 FROM workspace_members
                 WHERE user_id=$1
                 LIMIT 1
 
                 `,
-                [
-                    user.id
-                ]
-            );
+            [user.id],
+        );
 
-        const workspaceId =
-            workspace.rows[0]?.workspace_id || null;
+        const workspaceId = workspace.rows[0]?.workspace_id || null;
 
         res.json({
             id: user.id,
@@ -470,14 +255,12 @@ exports.me = async (req, res) => {
             email: user.email,
             role: user.role,
             avatar: user.avatar || null,
-            workspaceId
+            workspaceId,
         });
-    }
-
-    catch (error) {
+    } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: "Cannot get user"
+            message: 'Cannot get user',
         });
     }
 };
@@ -487,58 +270,28 @@ exports.me = async (req, res) => {
 // =======================
 
 exports.changePassword = async (req, res) => {
-
     try {
+        const { currentPassword, newPassword } = req.body;
 
-        const {
-            currentPassword,
-            newPassword
-        } = req.body;
-
-
-        const user =
-            await User.findById(
-                req.user.id
-            );
-
+        const user = await User.findById(req.user.id);
 
         if (!user) {
-
             return res.status(404).json({
-                message: "User not found"
+                message: 'User not found',
             });
-
         }
 
-
-
-        const valid =
-            await bcrypt.compare(
-                currentPassword,
-                user.password
-            );
-
+        const valid = await bcrypt.compare(currentPassword, user.password);
 
         if (!valid) {
-
             return res.status(400).json({
-                message: "Current password is incorrect"
+                message: 'Current password is incorrect',
             });
-
         }
 
-
-
-        const hashedPassword =
-            await bcrypt.hash(
-                newPassword,
-                10
-            );
-
-
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         await db.query(
-
             `
             UPDATE users
 
@@ -547,61 +300,30 @@ exports.changePassword = async (req, res) => {
             WHERE id=$2
             `,
 
-            [
-                hashedPassword,
-                req.user.id
-            ]
-
+            [hashedPassword, req.user.id],
         );
-
-
 
         res.json({
-
-            message:
-                "Password changed successfully"
-
+            message: 'Password changed successfully',
         });
-
-
-
-    }
-
-    catch (error) {
-
-        console.log(
-            "CHANGE PASSWORD ERROR:",
-            error.message
-        );
-
+    } catch (error) {
+        console.log('CHANGE PASSWORD ERROR:', error.message);
 
         res.status(500).json({
-
-            message:
-                "Password change failed"
-
+            message: 'Password change failed',
         });
-
     }
-
 };
 // =======================
 // UPDATE PROFILE
 // =======================
 
 exports.updateProfile = async (req, res) => {
-
     try {
+        const { name, email } = req.body;
 
-        const {
-            name,
-            email
-        } = req.body;
-
-
-        const result =
-            await db.query(
-                `
+        const result = await db.query(
+            `
             UPDATE users
 
             SET
@@ -612,38 +334,19 @@ exports.updateProfile = async (req, res) => {
 
             RETURNING id,name,email,role,avatar
             `,
-                [
-                    name,
-                    email,
-                    req.user.id
-                ]
-            );
-
-
-        res.json({
-
-            message: "Profile updated",
-
-            user: result.rows[0]
-
-        });
-
-
-    }
-    catch (error) {
-
-        console.log(
-            "UPDATE PROFILE ERROR:",
-            error.message
+            [name, email, req.user.id],
         );
 
+        res.json({
+            message: 'Profile updated',
+
+            user: result.rows[0],
+        });
+    } catch (error) {
+        console.log('UPDATE PROFILE ERROR:', error.message);
 
         res.status(500).json({
-
-            message: "Update failed"
-
+            message: 'Update failed',
         });
-
     }
-
 };

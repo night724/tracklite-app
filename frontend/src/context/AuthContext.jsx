@@ -1,10 +1,5 @@
-import {
-    createContext,
-    useContext,
-    useState,
-    useEffect
-} from "react";
-import api from "../api/client";
+import { createContext, useContext, useState, useEffect } from 'react';
+import api from '../api/client';
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -12,54 +7,39 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token =
-            localStorage.getItem("token");
+        const token = localStorage.getItem('token');
         if (token) {
-            api.get("/auth/me")
-                .then(res => {
+            api.get('/auth/me')
+                .then((res) => {
                     setUser(res.data);
                 })
                 .catch(() => {
-                    localStorage.removeItem("token");
+                    localStorage.removeItem('token');
                 })
                 .finally(() => {
                     setLoading(false);
                 });
-        }
-        else {
+        } else {
             setLoading(false);
         }
     }, []);
 
-    async function login( email, password ) {
-        const res = await api.post(
-                "/auth/login",
-                {
-                    email,
-                    password
-                }
-            );
-        localStorage.setItem(
-            "token",
-            res.data.token
-        );
-        setUser( res.data.user );
+    async function login(email, password) {
+        const res = await api.post('/auth/login', {
+            email,
+            password,
+        });
+        localStorage.setItem('token', res.data.token);
+        setUser(res.data.user);
         return res.data;
     }
 
-    async function register(
-        data
-    ) {
-        return await api.post(
-            "/auth/register",
-            data
-        );
+    async function register(data) {
+        return await api.post('/auth/register', data);
     }
 
     function logout() {
-        localStorage.removeItem(
-            "token"
-        );
+        localStorage.removeItem('token');
         setUser(null);
     }
 
@@ -70,7 +50,7 @@ export function AuthProvider({ children }) {
                 loading,
                 login,
                 register,
-                logout
+                logout,
             }}
         >
             {children}

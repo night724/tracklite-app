@@ -1,11 +1,9 @@
-const db = require("../config/database");
+const db = require('../config/database');
 
 class Project {
     static async getAll(workspaceId) {
-
-        const result =
-            await db.query(
-                `
+        const result = await db.query(
+            `
             SELECT
 
                 p.id,
@@ -54,25 +52,15 @@ class Project {
 
             ORDER BY p.created_at DESC
             `,
-                [
-                    workspaceId
-                ]
-            );
-        return result.rows.map(project => {
-            const totalTasks =
-                Number(project.taskCount);
-            const completedTasks =
-                Number(project.completedTasks);
+            [workspaceId],
+        );
+        return result.rows.map((project) => {
+            const totalTasks = Number(project.taskCount);
+            const completedTasks = Number(project.completedTasks);
 
             return {
                 ...project,
-                progress:
-                    totalTasks === 0
-                        ? 0
-                        :
-                        Math.round(
-                            (completedTasks / totalTasks) * 100
-                        )
+                progress: totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100),
             };
         });
     }
@@ -115,25 +103,15 @@ class Project {
 
         WHERE p.id=$1
         `,
-            [
-                id
-            ]
+            [id],
         );
         return result.rows[0];
-
     }
 
     static async create(data) {
-        const {
-            id,
-            workspace_id,
-            name,
-            description,
-            created_by
-        } = data;
-        const result =
-            await db.query(
-                `
+        const { id, workspace_id, name, description, created_by } = data;
+        const result = await db.query(
+            `
                 INSERT INTO projects
                 (
                     id,
@@ -148,27 +126,15 @@ class Project {
 
                 RETURNING *
                 `,
-                [
-                    id,
-                    workspace_id,
-                    name,
-                    description,
-                    created_by
-                ]
-            );
+            [id, workspace_id, name, description, created_by],
+        );
         return result.rows[0];
     }
     static async update(id, data) {
-        const {
-            name,
-            description,
-            status
-        } = data;
+        const { name, description, status } = data;
 
-        const result =
-            await db.query(
-
-                `
+        const result = await db.query(
+            `
                 UPDATE projects
                 SET
                 name=$1,
@@ -178,13 +144,8 @@ class Project {
                 WHERE id=$4
                 RETURNING *
                 `,
-                [
-                    name,
-                    description,
-                    status,
-                    id
-                ]
-            );
+            [name, description, status, id],
+        );
         return result.rows[0];
     }
 
@@ -194,7 +155,7 @@ class Project {
             DELETE FROM projects
             WHERE id=$1
             `,
-            [id]
+            [id],
         );
         return true;
     }

@@ -1,18 +1,18 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const projectController = require("../controllers/projectController");
-const authenticate = require("../middleware/auth");
+const projectController = require('../controllers/projectController');
+const authenticate = require('../middleware/auth');
 
-router.use( authenticate );
+router.use(authenticate);
 
-router.get( "/workspace/:workspaceId", projectController.getProjects );
+router.get('/workspace/:workspaceId', projectController.getProjects);
 
-router.get( "/:id", projectController.getProject );
+router.get('/:id', projectController.getProject);
 
-router.post( "/", projectController.createProject );
+router.post('/', projectController.createProject);
 
-router.patch( "/:id", projectController.updateProject );
+router.patch('/:id', projectController.updateProject);
 
-router.delete( "/:id", projectController.deleteProject );
+router.delete('/:id', projectController.deleteProject);
 
 module.exports = router;

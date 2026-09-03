@@ -1,8 +1,8 @@
-const db = require("../config/database");
+const db = require('../config/database');
 class Comment {
     static async getByIssue(issueId) {
-        const result =  await db.query(
-                `
+        const result = await db.query(
+            `
                 SELECT
                 c.*,
                 u.name,
@@ -13,21 +13,15 @@ class Comment {
                 WHERE c.issue_id=$1
                 ORDER BY c.created_at ASC
                 `,
-                [issueId]
-            );
+            [issueId],
+        );
         return result.rows;
     }
 
     static async create(data) {
-        const {
-            id,
-            issue_id,
-            user_id,
-            body
-        } = data;
-        const result =
-            await db.query(
-                `
+        const { id, issue_id, user_id, body } = data;
+        const result = await db.query(
+            `
                 INSERT INTO comments
                 (
                 id,
@@ -39,13 +33,8 @@ class Comment {
                 ($1,$2,$3,$4)
                 RETURNING *
                 `,
-                [
-                    id,
-                    issue_id,
-                    user_id,
-                    body
-                ]
-            );
+            [id, issue_id, user_id, body],
+        );
         return result.rows[0];
     }
 
@@ -55,7 +44,7 @@ class Comment {
             DELETE FROM comments
             WHERE id=$1
             `,
-            [id]
+            [id],
         );
     }
 }

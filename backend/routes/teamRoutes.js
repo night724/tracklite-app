@@ -1,21 +1,14 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const db = require("../config/database");
-const auth = require("../middleware/auth");
-
+const db = require('../config/database');
+const auth = require('../middleware/auth');
 
 // GET TEAM MEMBERS
-router.get(
-    "/workspace/:workspaceId",
-    auth,
-    async (req, res) => {
-
-        try {
-
-
-            const members = await db.query(
-                `
+router.get('/workspace/:workspaceId', auth, async (req, res) => {
+    try {
+        const members = await db.query(
+            `
                 SELECT
 
                     u.id AS user_id,
@@ -51,15 +44,11 @@ router.get(
                 ORDER BY u.name
 
                 `,
-                [
-                    req.params.workspaceId
-                ]
-            );
+            [req.params.workspaceId],
+        );
 
-
-
-            const invitations = await db.query(
-                `
+        const invitations = await db.query(
+            `
                 SELECT
 
                     wi.id,
@@ -85,153 +74,83 @@ router.get(
                 ORDER BY wi.created_at DESC
 
                 `,
-                [
-                    req.params.workspaceId
-                ]
-            );
+            [req.params.workspaceId],
+        );
 
+        res.json({
+            members: members.rows,
 
+            invitations: invitations.rows,
+        });
+    } catch (error) {
+        console.log('LOAD TEAM ERROR:', error);
 
-            res.json({
-
-                members: members.rows,
-
-                invitations: invitations.rows
-
-            });
-
-
-        }
-        catch (error) {
-
-            console.log(
-                "LOAD TEAM ERROR:",
-                error
-            );
-
-
-            res.status(500).json({
-
-                message: "Cannot load team"
-
-            });
-
-        }
-
+        res.status(500).json({
+            message: 'Cannot load team',
+        });
     }
-);
-
-
+});
 
 // INVITE MEMBER
-router.post(
-    "/invite",
-    auth,
-    async (req, res) => {
+router.post('/invite', auth, async (req, res) => {
+    try {
+        const { workspace_id, email, role } = req.body;
 
+        if (!workspace_id || !email) {
+            return res.status(400).json({
+                message: 'Workspace and email required',
+            });
+        }
 
-        try {
+        // find user
 
-
-            const {
-                workspace_id,
-                email,
-                role
-            } = req.body;
-
-
-
-            if (!workspace_id || !email) {
-
-                return res.status(400).json({
-
-                    message:
-                        "Workspace and email required"
-
-                });
-
-            }
-
-
-
-            // find user
-
-            const user =
-                await db.query(
-                    `
+        const user = await db.query(
+            `
                 SELECT id
                 FROM users
                 WHERE email=$1
                 `,
-                    [
-                        email
-                    ]
-                );
+            [email],
+        );
 
+        if (user.rows.length === 0) {
+            return res.status(404).json({
+                message: 'User does not exist',
+            });
+        }
 
+        const userId = user.rows[0].id;
 
-            if (user.rows.length === 0) {
+        // check already member
 
-                return res.status(404).json({
-
-                    message:
-                        "User does not exist"
-
-                });
-
-            }
-
-
-
-            const userId =
-                user.rows[0].id;
-
-
-
-            // check already member
-
-            const existing =
-                await db.query(
-                    `
+        const existing = await db.query(
+            `
                 SELECT id
                 FROM workspace_members
                 WHERE workspace_id=$1
                 AND user_id=$2
                 `,
-                    [
-                        workspace_id,
-                        userId
-                    ]
-                );
+            [workspace_id, userId],
+        );
 
-
-
-            if (existing.rows.length) {
-
-                return res.status(400).json({
-
-                    message:
-                        "User already in workspace"
-
-                });
-
-            }
-
-            console.log({
-
-                workspace_id,
-
-                inviter: req.user,
-
-                invited_user: userId,
-
-                role
-
+        if (existing.rows.length) {
+            return res.status(400).json({
+                message: 'User already in workspace',
             });
+        }
 
-            const invitation =
-                await db.query(
-                    `
+        console.log({
+            workspace_id,
+
+            inviter: req.user,
+
+            invited_user: userId,
+
+            role,
+        });
+
+        const invitation = await db.query(
+            `
                     INSERT INTO workspace_invitations
                     (
                     workspace_id,
@@ -250,23 +169,19 @@ router.post(
 
                     RETURNING id
                     `,
-                    [
-                        workspace_id,
-                        req.user.id,
-                        userId,
-                        ["OWNER", "ADMIN", "MEMBER"].includes(role)
-                            ? role
-                            : "MEMBER"
-                    ]
-                );
+            [
+                workspace_id,
+                req.user.id,
+                userId,
+                ['OWNER', 'ADMIN', 'MEMBER'].includes(role) ? role : 'MEMBER',
+            ],
+        );
 
+        const invitationId = invitation.rows[0].id;
+        // CREATE INBOX NOTIFICATION
 
-            const invitationId =
-                invitation.rows[0].id;
-            // CREATE INBOX NOTIFICATION
-
-            await db.query(
-                `
+        await db.query(
+            `
                 INSERT INTO notifications
                 (
                 user_id,
@@ -283,55 +198,27 @@ router.post(
                 $4
                 )
                 `,
-                [
-                    userId,
-                    "You have been invited to join a workspace",
-                    "WORKSPACE_INVITE",
-                    invitationId
-                ]
-            );
+            [userId, 'You have been invited to join a workspace', 'WORKSPACE_INVITE', invitationId],
+        );
 
+        res.json({
+            message: 'Member invited successfully',
+        });
+    } catch (error) {
+        console.log('INVITE ERROR:', error.message);
 
-            res.json({
-
-                message:
-                    "Member invited successfully"
-
-            });
-
-
-
-        }
-
-        catch (error) {
-
-            console.log(
-                "INVITE ERROR:",
-                error.message
-            );
-
-            res.status(500).json({
-
-                message:
-                    error.message
-
-            });
-        }
+        res.status(500).json({
+            message: error.message,
+        });
     }
-);
+});
 // RESEND INVITATION
-router.post(
-    "/invite/:id/resend",
-    auth,
-    async (req, res) => {
+router.post('/invite/:id/resend', auth, async (req, res) => {
+    try {
+        const inviteId = req.params.id;
 
-        try {
-
-            const inviteId = req.params.id;
-
-
-            const invite = await db.query(
-                `
+        const invite = await db.query(
+            `
                 SELECT
                     wi.invited_user_id,
                     wi.workspace_id
@@ -339,28 +226,19 @@ router.post(
                 WHERE wi.id=$1
                 AND wi.status='PENDING'
                 `,
-                [
-                    inviteId
-                ]
-            );
+            [inviteId],
+        );
 
+        if (invite.rows.length === 0) {
+            return res.status(404).json({
+                message: 'Invitation not found',
+            });
+        }
 
-            if (invite.rows.length === 0) {
+        const userId = invite.rows[0].invited_user_id;
 
-                return res.status(404).json({
-                    message: "Invitation not found"
-                });
-
-            }
-
-
-            const userId =
-                invite.rows[0].invited_user_id;
-
-
-
-            await db.query(
-                `
+        await db.query(
+            `
                 INSERT INTO notifications
                 (
                     user_id,
@@ -377,95 +255,53 @@ router.post(
                     $4
                 )
                 `,
-                [
-                    userId,
-                    "You have a workspace invitation reminder",
-                    "WORKSPACE_INVITE",
-                    inviteId
-                ]
-            );
+            [userId, 'You have a workspace invitation reminder', 'WORKSPACE_INVITE', inviteId],
+        );
 
+        res.json({
+            message: 'Invitation resent',
+        });
+    } catch (error) {
+        console.log('RESEND ERROR:', error);
 
-            res.json({
-                message: "Invitation resent"
-            });
-
-
-        }
-        catch (error) {
-
-            console.log(
-                "RESEND ERROR:",
-                error
-            );
-
-            res.status(500).json({
-                message: "Resend failed"
-            });
-
-        }
-
+        res.status(500).json({
+            message: 'Resend failed',
+        });
     }
-);
-
-
+});
 
 // REVOKE INVITATION
-router.delete(
-    "/invite/:id/revoke",
-    auth,
-    async (req, res) => {
-
-        try {
-
-
-            await db.query(
-                `
+router.delete('/invite/:id/revoke', auth, async (req, res) => {
+    try {
+        await db.query(
+            `
                 UPDATE workspace_invitations
 
                 SET status='REJECTED'
 
                 WHERE id=$1
                 `,
-                [
-                    req.params.id
-                ]
-            );
+            [req.params.id],
+        );
 
+        res.json({
+            message: 'Invitation revoked',
+        });
+    } catch (error) {
+        console.log('REVOKE ERROR:', error);
 
-            res.json({
-                message: "Invitation revoked"
-            });
-
-
-        }
-        catch (error) {
-
-            console.log(
-                "REVOKE ERROR:",
-                error
-            );
-
-            res.status(500).json({
-                message: "Revoke failed"
-            });
-
-        }
-
+        res.status(500).json({
+            message: 'Revoke failed',
+        });
     }
-);
+});
 // ACCEPT WORKSPACE INVITE
-router.post(
-    "/invite/:notificationId/accept",
-    auth,
-    async (req, res) => {
-        try {
-            const notificationId =
-                req.params.notificationId;
+router.post('/invite/:notificationId/accept', auth, async (req, res) => {
+    try {
+        const notificationId = req.params.notificationId;
 
-            const invite =
-                await db.query(
-                    `
+        const invite = await db.query(
+            `
                     SELECT
                     wi.id,
                     wi.workspace_id,
@@ -484,24 +320,19 @@ router.post(
 
                     LIMIT 1
                     `,
-                    [
-                        notificationId,
-                        req.user.id
-                    ]
-                );
+            [notificationId, req.user.id],
+        );
 
-            if (invite.rows.length === 0) {
-                return res.status(404).json({
-                    message:
-                        "Invitation not found"
-                });
-            }
+        if (invite.rows.length === 0) {
+            return res.status(404).json({
+                message: 'Invitation not found',
+            });
+        }
 
-            const invitation =
-                invite.rows[0];
+        const invitation = invite.rows[0];
 
-            await db.query(
-                `
+        await db.query(
+            `
                 INSERT INTO workspace_members
                 (
                     id,
@@ -517,51 +348,35 @@ router.post(
                     $3
                 )
                 `,
-                [
-                    invitation.workspace_id,
-                    req.user.id,
-                    invitation.role
-                ]
-            );
+            [invitation.workspace_id, req.user.id, invitation.role],
+        );
 
-            await db.query(
-                `
+        await db.query(
+            `
                 UPDATE workspace_invitations
                 SET status='ACCEPTED'
                 WHERE id=$1
                 `,
-                [
-                    invitation.id
-                ]
-            );
+            [invitation.id],
+        );
 
-            await db.query(
-                `
+        await db.query(
+            `
                 UPDATE notifications
                 SET read=true
                 WHERE id=$1
                 `,
-                [
-                    notificationId
-                ]
-            );
-            res.json({
-                message:
-                    "Joined workspace successfully"
-            });
-        }
-        catch (error) {
-            console.log(
-                "ACCEPT INVITE ERROR:",
-                error
-            );
-            res.status(500).json({
-                message:
-                    "Accept invite failed"
-            });
-        }
+            [notificationId],
+        );
+        res.json({
+            message: 'Joined workspace successfully',
+        });
+    } catch (error) {
+        console.log('ACCEPT INVITE ERROR:', error);
+        res.status(500).json({
+            message: 'Accept invite failed',
+        });
     }
-);
-
+});
 
 module.exports = router;

@@ -1,21 +1,14 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { v4: uuidv4 } = require("uuid");
-const db = require("../config/database");
-const auth = require("../middleware/auth");
-
+const { v4: uuidv4 } = require('uuid');
+const db = require('../config/database');
+const auth = require('../middleware/auth');
 
 // Workspace Members
-router.get(
-    "/workspace/:workspaceId",
-    auth,
-    async (req, res) => {
-
-        try {
-
-            const result =
-                await db.query(
-                    `
+router.get('/workspace/:workspaceId', auth, async (req, res) => {
+    try {
+        const result = await db.query(
+            `
                 SELECT
                     wm.id,
                     wm.role,
@@ -28,43 +21,24 @@ router.get(
                 WHERE wm.workspace_id=$1
                 ORDER BY u.name
                 `,
-                    [
-                        req.params.workspaceId
-                    ]
-                );
+            [req.params.workspaceId],
+        );
 
+        res.json(result.rows);
+    } catch (error) {
+        console.log(error);
 
-            res.json(result.rows);
-
-        }
-        catch (error) {
-
-            console.log(error);
-
-            res.status(500)
-                .json({
-                    message: "Cannot load members"
-                });
-
-        }
-
+        res.status(500).json({
+            message: 'Cannot load members',
+        });
     }
-);
-
-
-
+});
 
 // Project Members
-router.get(
-    "/project/:projectId",
-    auth,
-    async (req, res) => {
-
-        try {
-
-            const result =
-                await db.query(
-                    `
+router.get('/project/:projectId', auth, async (req, res) => {
+    try {
+        const result = await db.query(
+            `
                     SELECT
                         pm.id,
                         pm.role,
@@ -81,50 +55,25 @@ router.get(
 
                     ORDER BY u.name
                     `,
-                    [
-                        req.params.projectId
-                    ]
-                );
+            [req.params.projectId],
+        );
 
+        res.json(result.rows);
+    } catch (error) {
+        console.log('LOAD PROJECT MEMBERS ERROR:', error.message);
 
-            res.json(result.rows);
-
-
-        }
-        catch (error) {
-
-            console.log(
-                "LOAD PROJECT MEMBERS ERROR:",
-                error.message
-            );
-
-
-            res.status(500)
-                .json({
-                    message: error.message
-                });
-
-        }
-
+        res.status(500).json({
+            message: error.message,
+        });
     }
-);
+});
 // Add member to project
-router.post(
-    "/project/:projectId",
-    auth,
-    async (req, res) => {
+router.post('/project/:projectId', auth, async (req, res) => {
+    try {
+        const { user_id, role } = req.body;
 
-        try {
-
-            const {
-                user_id,
-                role
-            } = req.body;
-
-
-            const result =
-                await db.query(
-                    `
+        const result = await db.query(
+            `
                 INSERT INTO project_members
                 (
                     id,
@@ -137,85 +86,47 @@ router.post(
 
                 RETURNING *
                 `,
-                    [
-                        uuidv4(),
-                        req.params.projectId,
-                        user_id,
-                        role || "MEMBER"
-                    ]
-                );
+            [uuidv4(), req.params.projectId, user_id, role || 'MEMBER'],
+        );
 
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.log('ADD MEMBER ERROR:', error);
 
-            res.status(201)
-                .json(result.rows[0]);
-
-
-        }
-        catch (error) {
-
-            console.log("ADD MEMBER ERROR:", error);
-
-            res.status(500)
-                .json({
-                    message: error.message
-                });
-
-        }
-
+        res.status(500).json({
+            message: error.message,
+        });
     }
-);
-router.get(
-    "/users",
-    auth,
-    async (req, res) => {
-
-        try {
-
-            const result =
-                await db.query(
-                    `
+});
+router.get('/users', auth, async (req, res) => {
+    try {
+        const result = await db.query(
+            `
                 SELECT
                     id,
                     name,
                     email
                 FROM users
                 ORDER BY name
-                `
-                );
+                `,
+        );
 
-            res.json(result.rows);
+        res.json(result.rows);
+    } catch (error) {
+        console.log('LOAD USERS ERROR:', error);
 
-        }
-        catch (error) {
-
-            console.log("LOAD USERS ERROR:", error);
-
-            res.status(500)
-                .json({
-                    message: "Cannot load users"
-                });
-
-        }
-
+        res.status(500).json({
+            message: 'Cannot load users',
+        });
     }
-);
+});
 // Add member to workspace
-router.post(
-    "/workspace/:workspaceId",
-    auth,
-    async (req, res) => {
+router.post('/workspace/:workspaceId', auth, async (req, res) => {
+    try {
+        const { user_id, role } = req.body;
 
-        try {
-
-            const {
-                user_id,
-                role
-            } = req.body;
-
-
-            const result =
-                await db.query(
-                    `
+        const result = await db.query(
+            `
 INSERT INTO workspace_members
 (
  id,
@@ -229,32 +140,16 @@ VALUES
 
 RETURNING *
 `,
-                    [
-                        uuidv4(),
-                        req.params.workspaceId,
-                        user_id,
-                        role || "MEMBER"
-                    ]
-                );
+            [uuidv4(), req.params.workspaceId, user_id, role || 'MEMBER'],
+        );
 
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.log('ADD WORKSPACE MEMBER ERROR:', error.detail);
 
-            res.status(201).json(result.rows[0]);
-
-
-        }
-        catch (error) {
-
-            console.log(
-                "ADD WORKSPACE MEMBER ERROR:",
-                error.detail
-            );
-
-
-            res.status(500).json({
-                message: error.message
-            });
-
-        }
-
-    });
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+});
 module.exports = router;
