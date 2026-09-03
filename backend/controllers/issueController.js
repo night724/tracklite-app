@@ -29,24 +29,15 @@ exports.createIssue = async (req, res) => {
     try {
         console.log('========== CREATE ISSUE ==========');
 
-        console.log("BODY:", req.body);
+        console.log('BODY:', req.body);
 
-        console.log("USER:", req.user);
+        console.log('USER:', req.user);
 
+        const { task_id, title, description, priority, assigned_to } = req.body;
 
-        const {
-            task_id,
-            title,
-            description,
-            priority,
-            assigned_to
-        } = req.body;
-
-
-        console.log("TASK ID:", task_id);
-        console.log("TITLE:", title);
-        console.log("PRIORITY:", priority);
-
+        console.log('TASK ID:', task_id);
+        console.log('TITLE:', title);
+        console.log('PRIORITY:', priority);
 
         const issue = await Issue.create({
             id: uuidv4(),
@@ -59,26 +50,21 @@ exports.createIssue = async (req, res) => {
             created_by: req.user.id,
         });
 
-
-        console.log("ISSUE CREATED:", issue);
-
+        console.log('ISSUE CREATED:', issue);
 
         res.status(201).json(issue);
-
-
     } catch (error) {
+        console.log('========== ERROR ==========');
 
-        console.log("========== ERROR ==========");
+        console.log('MESSAGE:', error.message);
 
-        console.log("MESSAGE:", error.message);
+        console.log('DETAIL:', error.detail);
 
-        console.log("DETAIL:", error.detail);
-
-        console.log("CODE:", error.code);
+        console.log('CODE:', error.code);
 
         res.status(500).json({
             message: error.message,
-            detail: error.detail
+            detail: error.detail,
         });
     }
 };

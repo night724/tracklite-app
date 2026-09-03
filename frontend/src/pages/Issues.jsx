@@ -48,7 +48,6 @@ function Issues() {
                     <h1>Issues</h1>
                     <p>Manage project bugs and problems</p>
                 </div>
-
             </div>
 
             <div className="issue-controls">

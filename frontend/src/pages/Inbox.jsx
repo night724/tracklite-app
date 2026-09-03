@@ -26,19 +26,14 @@ function Inbox() {
     }
 
     async function acceptInvite(inviteId) {
-
-        console.log("ACCEPT ID:", inviteId);
+        console.log('ACCEPT ID:', inviteId);
 
         try {
             await api.post(`/team/invite/${inviteId}/accept`);
             alert('Workspace joined successfully');
             loadInbox();
-
         } catch (error) {
-            console.log(
-                'ACCEPT INVITE ERROR:',
-                error.response?.data || error
-            );
+            console.log('ACCEPT INVITE ERROR:', error.response?.data || error);
         }
     }
 
@@ -103,7 +98,9 @@ function Inbox() {
                             {item.type === 'WORKSPACE_INVITE' && (
                                 <button
                                     className="primary-btn"
-                                    onClick={() => acceptInvite(item.notification_id)}
+                                    onClick={() =>
+                                        acceptInvite(item.notification_id)
+                                    }
                                 >
                                     Accept Invite
                                 </button>
@@ -112,7 +109,9 @@ function Inbox() {
                             {!item.read && (
                                 <button
                                     className="secondary-btn"
-                                    onClick={() => markRead(item.notification_id)}
+                                    onClick={() =>
+                                        markRead(item.notification_id)
+                                    }
                                 >
                                     Mark Read
                                 </button>

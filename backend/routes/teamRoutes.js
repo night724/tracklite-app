@@ -184,12 +184,7 @@ VALUES
  $4
 )
 `,
-            [
-                userId,
-                'You have been invited to join a workspace',
-                'WORKSPACE_INVITE',
-                invitationId
-            ]
+            [userId, 'You have been invited to join a workspace', 'WORKSPACE_INVITE', invitationId],
         );
 
         res.json({
@@ -306,11 +301,8 @@ router.delete('/invite/:id/revoke', auth, async (req, res) => {
 });
 // ACCEPT WORKSPACE INVITE
 router.post('/invite/:notificationId/accept', auth, async (req, res) => {
-
     try {
-
         const notificationId = req.params.notificationId;
-
 
         const invite = await db.query(
             `
@@ -330,29 +322,18 @@ router.post('/invite/:notificationId/accept', auth, async (req, res) => {
             AND wi.status='PENDING'
 
             `,
-            [
-                notificationId,
-                req.user.id
-            ]
+            [notificationId, req.user.id],
         );
 
-
-        console.log("INVITE RESULT:", invite.rows);
-
-
+        console.log('INVITE RESULT:', invite.rows);
 
         if (invite.rows.length === 0) {
-
             return res.status(404).json({
-                message: "Invitation not found"
+                message: 'Invitation not found',
             });
-
         }
 
-
         const invitation = invite.rows[0];
-
-
 
         // check duplicate member
 
@@ -364,22 +345,14 @@ router.post('/invite/:notificationId/accept', auth, async (req, res) => {
             WHERE workspace_id=$1
             AND user_id=$2
             `,
-            [
-                invitation.workspace_id,
-                req.user.id
-            ]
+            [invitation.workspace_id, req.user.id],
         );
 
-
         if (exists.rows.length) {
-
             return res.status(400).json({
-                message: "Already joined workspace"
+                message: 'Already joined workspace',
             });
-
         }
-
-
 
         // add member
 
@@ -401,14 +374,8 @@ router.post('/invite/:notificationId/accept', auth, async (req, res) => {
                 $3
             )
             `,
-            [
-                invitation.workspace_id,
-                req.user.id,
-                invitation.role
-            ]
+            [invitation.workspace_id, req.user.id, invitation.role],
         );
-
-
 
         // update invitation
 
@@ -421,12 +388,8 @@ router.post('/invite/:notificationId/accept', auth, async (req, res) => {
             WHERE id=$1
 
             `,
-            [
-                invitation.id
-            ]
+            [invitation.id],
         );
-
-
 
         // mark notification read
 
@@ -439,28 +402,19 @@ router.post('/invite/:notificationId/accept', auth, async (req, res) => {
             WHERE id=$1
 
             `,
-            [
-                notificationId
-            ]
+            [notificationId],
         );
 
-
         res.json({
-            message: "Workspace joined successfully"
+            message: 'Workspace joined successfully',
         });
-
-
     } catch (error) {
-
-        console.log("ACCEPT INVITE ERROR:", error);
-
+        console.log('ACCEPT INVITE ERROR:', error);
 
         res.status(500).json({
-            message: error.message
+            message: error.message,
         });
-
     }
-
 });
 
 module.exports = router;

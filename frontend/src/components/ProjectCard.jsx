@@ -70,39 +70,23 @@ function ProjectCard({ project }) {
                     tasks completed
                 </p>
                 <div className="project-team-status">
-
                     <div>
                         <span>👥</span>
-                        <strong>
-                            {project.memberCount || 0}
-                        </strong>
-                        <small>
-                            Members
-                        </small>
+                        <strong>{project.memberCount || 0}</strong>
+                        <small>Members</small>
                     </div>
-
 
                     <div>
                         <span>✅</span>
-                        <strong>
-                            {project.completedTasks || 0}
-                        </strong>
-                        <small>
-                            Done
-                        </small>
+                        <strong>{project.completedTasks || 0}</strong>
+                        <small>Done</small>
                     </div>
-
 
                     <div>
                         <span>🔄</span>
-                        <strong>
-                            {project.activeTasks || 0}
-                        </strong>
-                        <small>
-                            Active
-                        </small>
+                        <strong>{project.activeTasks || 0}</strong>
+                        <small>Active</small>
                     </div>
-
                 </div>
             </div>
 
