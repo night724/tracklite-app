@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api/client';
-import CreateIssueModal from '../components/CreateIssueModal';
 
 function Issues() {
     const { projectId, workspaceId } = useParams();
@@ -9,7 +8,6 @@ function Issues() {
     const [search, setSearch] = useState('');
     const [status, setStatus] = useState('ALL');
     const [priority, setPriority] = useState('ALL');
-    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         if (projectId || workspaceId) {
@@ -51,14 +49,6 @@ function Issues() {
                     <p>Manage project bugs and problems</p>
                 </div>
 
-                {projectId && (
-                    <button
-                        className="primary-btn"
-                        onClick={() => setShowModal(true)}
-                    >
-                        + New Issue
-                    </button>
-                )}
             </div>
 
             <div className="issue-controls">
@@ -118,13 +108,6 @@ function Issues() {
                     </Link>
                 ))}
             </div>
-            {showModal && (
-                <CreateIssueModal
-                    projectId={projectId}
-                    closeModal={() => setShowModal(false)}
-                    refresh={loadIssues}
-                />
-            )}
         </div>
     );
 }

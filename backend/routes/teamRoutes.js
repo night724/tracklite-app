@@ -168,23 +168,28 @@ router.post('/invite', auth, async (req, res) => {
 
         await db.query(
             `
-                INSERT INTO notifications
-                (
-                user_id,
-                message,
-                type,
-                reference_id
-                )
+INSERT INTO notifications
+(
+ user_id,
+ message,
+ type,
+ reference_id
+)
 
-                VALUES
-                (
-                $1,
-                $2,
-                $3,
-                $4
-                )
-                `,
-            [userId, 'You have been invited to join a workspace', 'WORKSPACE_INVITE', invitationId],
+VALUES
+(
+ $1,
+ $2,
+ $3,
+ $4
+)
+`,
+            [
+                userId,
+                'You have been invited to join a workspace',
+                'WORKSPACE_INVITE',
+                invitationId
+            ]
         );
 
         res.json({
@@ -301,8 +306,11 @@ router.delete('/invite/:id/revoke', auth, async (req, res) => {
 });
 // ACCEPT WORKSPACE INVITE
 router.post('/invite/:notificationId/accept', auth, async (req, res) => {
+
     try {
+
         const notificationId = req.params.notificationId;
+
 
         const invite = await db.query(
             `
@@ -312,46 +320,68 @@ router.post('/invite/:notificationId/accept', auth, async (req, res) => {
                 wi.role,
                 wi.email
 
-            FROM workspace_invitations wi
+            FROM notifications n
 
-            WHERE wi.id = (
-                SELECT reference_id
-                FROM notifications
-                WHERE id=$1
-            )
+            JOIN workspace_invitations wi
+            ON n.reference_id = wi.id
 
+            WHERE n.id=$1
+            AND n.user_id=$2
             AND wi.status='PENDING'
 
-            LIMIT 1
             `,
-            [notificationId],
+            [
+                notificationId,
+                req.user.id
+            ]
         );
 
+
+        console.log("INVITE RESULT:", invite.rows);
+
+
+
         if (invite.rows.length === 0) {
+
             return res.status(404).json({
-                message: 'Invitation not found',
+                message: "Invitation not found"
             });
+
         }
+
 
         const invitation = invite.rows[0];
 
-        // find invited user
-        const user = await db.query(
+
+
+        // check duplicate member
+
+        const exists = await db.query(
             `
-    SELECT id
-    FROM users
-    WHERE email=$1
-    `,
-            [invitation.email],
+            SELECT id
+            FROM workspace_members
+
+            WHERE workspace_id=$1
+            AND user_id=$2
+            `,
+            [
+                invitation.workspace_id,
+                req.user.id
+            ]
         );
 
-        if (user.rows.length === 0) {
-            return res.status(404).json({
-                message: 'User not found',
+
+        if (exists.rows.length) {
+
+            return res.status(400).json({
+                message: "Already joined workspace"
             });
+
         }
 
-        const userId = user.rows[0].id;
+
+
+        // add member
 
         await db.query(
             `
@@ -371,8 +401,16 @@ router.post('/invite/:notificationId/accept', auth, async (req, res) => {
                 $3
             )
             `,
-            [invitation.workspace_id, user.rows[0].id, invitation.role],
+            [
+                invitation.workspace_id,
+                req.user.id,
+                invitation.role
+            ]
         );
+
+
+
+        // update invitation
 
         await db.query(
             `
@@ -381,9 +419,16 @@ router.post('/invite/:notificationId/accept', auth, async (req, res) => {
             SET status='ACCEPTED'
 
             WHERE id=$1
+
             `,
-            [invitation.id],
+            [
+                invitation.id
+            ]
         );
+
+
+
+        // mark notification read
 
         await db.query(
             `
@@ -392,20 +437,30 @@ router.post('/invite/:notificationId/accept', auth, async (req, res) => {
             SET read=true
 
             WHERE id=$1
+
             `,
-            [notificationId],
+            [
+                notificationId
+            ]
         );
 
+
         res.json({
-            message: 'Joined workspace successfully',
+            message: "Workspace joined successfully"
         });
+
+
     } catch (error) {
-        console.log('ACCEPT INVITE ERROR:', error);
+
+        console.log("ACCEPT INVITE ERROR:", error);
+
 
         res.status(500).json({
-            message: error.message,
+            message: error.message
         });
+
     }
+
 });
 
 module.exports = router;

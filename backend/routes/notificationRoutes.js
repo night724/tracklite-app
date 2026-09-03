@@ -8,43 +8,34 @@ router.get('/', auth, async (req, res) => {
     try {
         const result = await db.query(
             `
-                    SELECT
+                   SELECT
 
-                        n.id,
-                        n.message,
-                        n.type,
-                        n.reference_id,
-                        n.read,
-                        n.created_at,
+                    n.id AS notification_id,
+                    n.message,
+                    n.type,
+                    n.reference_id,
+                    n.read,
+                    n.created_at,
 
+                    inviter.name AS sender_name,
+                    inviter.email AS sender_email,
 
-                        inviter.name AS sender_name,
-                        inviter.email AS sender_email,
+                    w.name AS workspace_name
 
+                FROM notifications n
 
-                        w.name AS workspace_name
+                LEFT JOIN workspace_invitations wi
+                ON wi.id = n.reference_id
 
+                LEFT JOIN users inviter
+                ON wi.inviter_id = inviter.id
 
-                    FROM notifications n
+                LEFT JOIN workspaces w
+                ON wi.workspace_id = w.id
 
+                WHERE n.user_id=$1
 
-                    LEFT JOIN workspace_invitations wi
-                    ON n.reference_id = wi.id
-                    AND n.type='WORKSPACE_INVITE'
-
-
-                    LEFT JOIN users inviter
-                    ON wi.inviter_id = inviter.id
-
-
-                    LEFT JOIN workspaces w
-                    ON wi.workspace_id = w.id
-
-
-                    WHERE n.user_id=$1
-
-
-                    ORDER BY n.created_at DESC
+                ORDER BY n.created_at DESC
                     `,
             [req.user.id],
         );

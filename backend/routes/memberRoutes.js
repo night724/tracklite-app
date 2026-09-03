@@ -72,26 +72,49 @@ router.post('/project/:projectId', auth, async (req, res) => {
     try {
         const { user_id, role } = req.body;
 
+        if (!user_id) {
+            return res.status(400).json({
+                message: 'User required',
+            });
+        }
+
+        const exists = await db.query(
+            `
+            SELECT id
+            FROM project_members
+            WHERE project_id=$1
+            AND user_id=$2
+            `,
+            [req.params.projectId, user_id],
+        );
+
+        if (exists.rows.length) {
+            return res.status(400).json({
+                message: 'User already assigned to project',
+            });
+        }
+
         const result = await db.query(
             `
-                INSERT INTO project_members
-                (
-                    id,
-                    project_id,
-                    user_id,
-                    role
-                )
-                VALUES
-                ($1,$2,$3,$4)
+            INSERT INTO project_members
+            (
+                id,
+                project_id,
+                user_id,
+                role
+            )
 
-                RETURNING *
-                `,
+            VALUES
+            ($1,$2,$3,$4)
+
+            RETURNING *
+            `,
             [uuidv4(), req.params.projectId, user_id, role || 'MEMBER'],
         );
 
         res.status(201).json(result.rows[0]);
     } catch (error) {
-        console.log('ADD MEMBER ERROR:', error);
+        console.log('ADD PROJECT MEMBER ERROR:', error);
 
         res.status(500).json({
             message: error.message,
@@ -125,27 +148,43 @@ router.post('/workspace/:workspaceId', auth, async (req, res) => {
     try {
         const { user_id, role } = req.body;
 
+        const exists = await db.query(
+            `
+            SELECT id
+            FROM workspace_members
+            WHERE workspace_id=$1
+            AND user_id=$2
+            `,
+            [req.params.workspaceId, user_id],
+        );
+
+        if (exists.rows.length) {
+            return res.status(400).json({
+                message: 'User already exists in workspace',
+            });
+        }
+
         const result = await db.query(
             `
-INSERT INTO workspace_members
-(
- id,
- workspace_id,
- user_id,
- role
-)
+            INSERT INTO workspace_members
+            (
+                id,
+                workspace_id,
+                user_id,
+                role
+            )
 
-VALUES
-($1,$2,$3,$4)
+            VALUES
+            ($1,$2,$3,$4)
 
-RETURNING *
-`,
+            RETURNING *
+            `,
             [uuidv4(), req.params.workspaceId, user_id, role || 'MEMBER'],
         );
 
         res.status(201).json(result.rows[0]);
     } catch (error) {
-        console.log('ADD WORKSPACE MEMBER ERROR:', error.detail);
+        console.log('ADD WORKSPACE MEMBER ERROR:', error);
 
         res.status(500).json({
             message: error.message,

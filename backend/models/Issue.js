@@ -35,14 +35,34 @@ class Issue {
     }
 
     static async create(data) {
-        const { id, task_id, issue_key, title, description, priority, assigned_to, created_by } =
-            data;
+        const {
+            task_id,
+            issue_key,
+            title,
+            description,
+            priority,
+            assigned_to,
+            created_by
+        } = data;
 
         const result = await db.query(
             `
                 INSERT INTO issues
-                (
-                id,
+(
+task_id,
+issue_key,
+title,
+description,
+priority,
+assigned_to,
+created_by
+)
+
+VALUES
+($1,$2,$3,$4,$5,$6,$7)
+                RETURNING *
+                `,
+            [
                 task_id,
                 issue_key,
                 title,
@@ -50,12 +70,7 @@ class Issue {
                 priority,
                 assigned_to,
                 created_by
-                )
-                VALUES
-                ($1,$2,$3,$4,$5,$6,$7,$8)
-                RETURNING *
-                `,
-            [id, task_id, issue_key, title, description, priority, assigned_to, created_by],
+            ],
         );
         return result.rows[0];
     }
