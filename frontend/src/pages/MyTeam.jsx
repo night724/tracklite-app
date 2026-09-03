@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 function MyTeam() {
     const [search, setSearch] = useState("");
     const [team, setTeam] = useState([]);
+    const [invitations, setInvitations] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const { user } = useAuth();
     const workspaceId = user?.workspaceId;
@@ -23,7 +24,8 @@ function MyTeam() {
                     `/team/workspace/${workspaceId}`
                 );
 
-            setTeam(res.data);
+            setTeam(res.data.members);
+            setInvitations(res.data.invitations);
         }
         catch (error) {
 
@@ -33,9 +35,48 @@ function MyTeam() {
             );
         }
     }
+    async function resendInvite(id) {
+
+        try {
+
+            await api.post(
+                `/team/invite/${id}/resend`
+            );
+
+            alert("Invitation resent");
+
+        }
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+
+
+    async function revokeInvite(id) {
+
+        try {
+
+            await api.delete(
+                `/team/invite/${id}/revoke`
+            );
+
+
+            loadTeam();
+
+        }
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
 
     const members = {};
-
 
     team.forEach(item => {
 
@@ -185,34 +226,43 @@ function MyTeam() {
                                         {member.role}
                                     </span>
                                 </div>
-
                                 <div className="team-projects">
                                     <h3>
                                         Projects
                                     </h3>
                                     {
-                                        member.projects.length === 0 ?
+                                        member.projects.length === 0 ? (
                                             <p className="empty">
                                                 No assigned projects
                                             </p>
-                                            :
+
+                                        ) : (
                                             member.projects.map(project => (
                                                 <div
                                                     className="project-box"
                                                     key={project.id}
                                                 >
-                                                    <div>
+                                                    <div className="project-info">
                                                         <strong>
                                                             📁 {project.name}
                                                         </strong>
-                                                        <p>
-                                                            {project.status}
-                                                        </p>
+
+                                                        <span
+                                                            className={
+                                                                `status-badge ${project.status?.toLowerCase()
+                                                                }`
+                                                            }
+                                                        >
+                                                            {
+                                                                project.status
+                                                                    ?.replace("_", " ")
+                                                            }
+                                                        </span>
                                                     </div>
                                                 </div>
                                             ))
+                                        )
                                     }
-
                                 </div>
 
                             </div>
@@ -220,6 +270,96 @@ function MyTeam() {
                         ))
 
                 }
+            </div>
+            <div className="invite-list">
+
+                <div className="invite-header">
+
+                    <h2>
+                        Pending Invitations
+                    </h2>
+
+                    <span>
+                        {invitations.length}
+                    </span>
+
+                </div>
+
+
+                {
+                    invitations.map(invite => (
+
+                        <div
+                            className="invite-card"
+                            key={invite.id}
+                        >
+
+                            <div className="invite-user">
+
+                                <div className="avatar small">
+                                    {invite.name.charAt(0)}
+                                </div>
+
+
+                                <div>
+
+                                    <h3>
+                                        {invite.name}
+                                    </h3>
+
+                                    <p>
+                                        {invite.email}
+                                    </p>
+
+
+                                    <small>
+                                        Role: {invite.role}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div className="invite-actions">
+
+
+                                <span className="pending-status">
+                                    Pending
+                                </span>
+
+
+                                <button
+                                    className="resend-btn"
+                                    onClick={() =>
+                                        resendInvite(invite.id)
+                                    }
+                                >
+                                    Resend
+                                </button>
+
+
+
+                                <button
+                                    className="revoke-btn"
+                                    onClick={() =>
+                                        revokeInvite(invite.id)
+                                    }
+                                >
+                                    Revoke
+                                </button>
+
+
+                            </div>
+
+
+                        </div>
+
+                    ))
+                }
+
+
             </div>
             {
                 showModal &&
