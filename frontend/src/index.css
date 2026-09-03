@@ -3262,15 +3262,10 @@ body.dark .active-status {
 ========================= */
 
 .members-page {
-
     padding: 30px;
-
 }
 
-
-
 .page-header {
-
     display: flex;
 
     justify-content: space-between;
@@ -3278,49 +3273,31 @@ body.dark .active-status {
     align-items: center;
 
     margin-bottom: 30px;
-
 }
 
-
-
 .page-header h1 {
-
     margin: 0;
 
     font-size: 28px;
-
 }
 
-
-
 .page-header p {
-
     color: #64748b;
 
     margin-top: 6px;
-
 }
-
-
-
-
 
 /* GRID */
 
-
 .members-grid {
-
     display: grid;
 
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 
     gap: 24px;
-
 }
 
 .member-card {
-
-
     background: white;
 
     border: 1px solid #e5e7eb;
@@ -3333,32 +3310,18 @@ body.dark .active-status {
 
     gap: 18px;
 
-    transition: .25s;
-
+    transition: 0.25s;
 }
-
-
 
 .member-card:hover {
-
-
     transform: translateY(-5px);
 
-    box-shadow: 0 15px 35px rgba(0, 0, 0, .08);
-
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
-
-
-
-
-
 
 /* AVATAR */
 
-
 .member-avatar {
-
-
     width: 65px;
 
     height: 65px;
@@ -3380,51 +3343,29 @@ body.dark .active-status {
     font-size: 26px;
 
     font-weight: 700;
-
 }
-
-
-
-
-
-
 
 /* INFO */
 
-
 .member-info {
-
     flex: 1;
-
 }
 
-
-
 .member-info h3 {
-
-
     margin: 0;
 
     font-size: 18px;
-
 }
 
-
-
 .member-info p {
-
-
     margin: 5px 0 12px;
 
     color: #64748b;
 
     font-size: 14px;
-
 }
 
 .member-card {
-
-
     background: white;
 
     border: 1px solid #e5e7eb;
@@ -3437,32 +3378,18 @@ body.dark .active-status {
 
     gap: 18px;
 
-    transition: .25s;
-
+    transition: 0.25s;
 }
-
-
 
 .member-card:hover {
-
-
     transform: translateY(-5px);
 
-    box-shadow: 0 15px 35px rgba(0, 0, 0, .08);
-
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
-
-
-
-
-
 
 /* AVATAR */
 
-
 .member-avatar {
-
-
     width: 65px;
 
     height: 65px;
@@ -3484,49 +3411,27 @@ body.dark .active-status {
     font-size: 26px;
 
     font-weight: 700;
-
 }
-
-
-
-
-
-
 
 /* INFO */
 
-
 .member-info {
-
     flex: 1;
-
 }
 
-
-
 .member-info h3 {
-
-
     margin: 0;
 
     font-size: 18px;
-
 }
 
-
-
 .member-info p {
-
-
     margin: 5px 0 12px;
 
     color: #64748b;
 
     font-size: 14px;
-
 }
-
-
 
 .team-page {
     padding: 40px;
@@ -5575,7 +5480,7 @@ body.dark .close-btn {
     color: #7c3aed;
 }
 
-.content>* {
+.content > * {
     animation: fadeIn 0.35s ease;
 }
 
@@ -6267,68 +6172,34 @@ body.dark .dropdown button:hover {
    DARK MODE MEMBERS
 ========================= */
 
-
 body.dark .member-card {
-
-
     background: #111827;
 
     border-color: #1f2937;
-
 }
-
-
 
 body.dark .member-card:hover {
-
-
-    box-shadow: 0 15px 35px rgba(0, 0, 0, .4);
-
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
 }
-
-
 
 body.dark .member-info h3 {
-
-
     color: #f8fafc;
-
 }
-
-
 
 body.dark .member-info p {
-
-
     color: #94a3b8;
-
 }
-
-
 
 body.dark .member-task-status div {
-
-
     background: #1e293b;
-
 }
-
-
 
 body.dark .member-task-status h4 {
-
-
     color: #f8fafc;
-
 }
 
-
-
 body.dark .member-task-status span {
-
-
     color: #94a3b8;
-
 }
 
 .role-badge {
@@ -6341,9 +6212,7 @@ body.dark .member-task-status span {
    MEMBER TASK STATS
 ========================= */
 
-
 .member-task-status {
-
     margin-top: 25px;
 
     display: flex;
@@ -6351,14 +6220,9 @@ body.dark .member-task-status span {
     flex-direction: column;
 
     gap: 10px;
-
 }
 
-
-
 .task-stat {
-
-
     display: flex;
 
     align-items: center;
@@ -6368,38 +6232,23 @@ body.dark .member-task-status span {
     padding: 12px 15px;
 
     border-radius: 16px;
-
 }
 
-
-
 .task-stat h4 {
-
     margin: 0;
 
     font-size: 18px;
-
 }
 
-
-
 .task-stat p {
-
     margin: 2px 0 0;
 
     font-size: 12px;
 
     color: #64748b;
-
 }
 
-
-
-
-
 .stat-icon {
-
-
     width: 38px;
 
     height: 38px;
@@ -6413,16 +6262,10 @@ body.dark .member-task-status span {
     border-radius: 12px;
 
     font-size: 18px;
-
 }
-
-
-
-
 
 /* TOTAL */
 .member-task-status {
-
     display: flex;
 
     justify-content: space-between;
@@ -6430,13 +6273,9 @@ body.dark .member-task-status span {
     gap: 12px;
 
     margin-top: 25px;
-
 }
 
-
-
 .stat-item {
-
     flex: 1;
 
     background: #f8fafc;
@@ -6446,13 +6285,9 @@ body.dark .member-task-status span {
     padding: 12px 8px;
 
     text-align: center;
-
 }
 
-
-
 .stat-item strong {
-
     display: block;
 
     font-size: 22px;
@@ -6460,194 +6295,110 @@ body.dark .member-task-status span {
     font-weight: 700;
 
     color: #0f172a;
-
 }
 
-
-
 .stat-item span {
-
     font-size: 12px;
 
     color: #64748b;
-
 }
 
 .task-stat.total {
-
     background: #eff6ff;
-
 }
 
-
 .task-stat.total .stat-icon {
-
     background: #dbeafe;
 
     color: #2563eb;
-
 }
-
-
-
-
 
 /* COMPLETED */
 
-
 .task-stat.completed {
-
     background: #ecfdf5;
-
 }
 
-
 .task-stat.completed .stat-icon {
-
     background: #d1fae5;
 
     color: #059669;
-
 }
-
-
-
-
 
 /* WORKING */
 
-
 .task-stat.working {
-
     background: #fff7ed;
-
 }
 
-
 .task-stat.working .stat-icon {
-
     background: #fed7aa;
 
     color: #ea580c;
-
 }
 
 /* =========================
    DARK TASK STATS
 ========================= */
 
-
 body.dark .task-stat {
-
     border: 1px solid #1f2937;
-
 }
-
-
 
 /* TOTAL TASKS */
 
 body.dark .task-stat.total {
-
     background: #172554;
-
 }
 
-
-
 body.dark .task-stat.total .stat-icon {
-
     background: #1e40af;
 
     color: #bfdbfe;
-
 }
-
-
-
-
 
 /* COMPLETED */
 
-
 body.dark .task-stat.completed {
-
     background: #064e3b;
-
 }
 
-
-
 body.dark .task-stat.completed .stat-icon {
-
     background: #047857;
 
     color: #a7f3d0;
-
 }
-
-
-
-
-
 
 /* WORKING */
 
-
 body.dark .task-stat.working {
-
     background: #431407;
-
 }
 
-
-
 body.dark .task-stat.working .stat-icon {
-
     background: #c2410c;
 
     color: #fed7aa;
-
 }
-
-
-
-
-
 
 /* TEXT */
 
-
 body.dark .task-stat h4 {
-
     color: #f8fafc;
-
 }
 
-
-
 body.dark .task-stat p {
-
     color: #cbd5e1;
-
 }
 
 body.dark .stat-item {
-
     background: #1e293b;
-
 }
-
 
 body.dark .stat-item strong {
-
     color: #f8fafc;
-
 }
 
-
 body.dark .stat-item span {
-
     color: #94a3b8;
-
 }
