@@ -170,9 +170,12 @@ function Inbox() {
                                         <>
 
                                             <h2>
-                                                {item.sender_name || "Someone"}
+                                                {item.sender_name}
                                             </h2>
 
+                                            <p className="sender-email">
+                                                {item.sender_email}
+                                            </p>
 
                                             <p>
                                                 invited you to join

@@ -4,7 +4,8 @@ import { useAuth } from "../context/AuthContext";
 
 function Sidebar() {
 
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
+    const workspaceId = user?.workspaceId;
 
 
     return (
@@ -41,6 +42,14 @@ function Sidebar() {
                     📊 Dashboard
                 </NavLink>
 
+                <NavLink
+                    to={`/workspace/${workspaceId}/projects`}
+                    className={({ isActive }) =>
+                        isActive ? "active" : ""
+                    }
+                >
+                    📊 Project
+                </NavLink>
 
 
                 <NavLink
