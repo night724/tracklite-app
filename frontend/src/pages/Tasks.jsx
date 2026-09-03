@@ -13,12 +13,28 @@ function Tasks() {
     const [showModal, setShowModal] = useState(false);
 
     const [searchParams] = useSearchParams();
+    const [selectedProject, setSelectedProject] = useState('');
 
+    const [projects, setProjects] = useState([]);
     const statusFilter = searchParams.get('status');
+    useEffect(() => {
+        if (workspaceId) {
+            loadProjects();
+        }
+    }, [workspaceId]);
 
+    async function loadProjects() {
+        try {
+            const res = await api.get(`/projects/workspace/${workspaceId}`);
+
+            setProjects(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     useEffect(() => {
         loadTasks();
-    }, [projectId, workspaceId, statusFilter]);
+    }, [projectId, workspaceId]);
 
     async function loadTasks() {
         try {
@@ -53,17 +69,15 @@ function Tasks() {
         },
     ];
 
-    const visibleColumns = statusFilter
-        ? columns.filter((column) => column.status === statusFilter)
-        : columns;
+    const visibleColumns = columns;
 
     return (
         <div className="tasks-page">
             <div className="tasks-header">
                 <div>
-                    <h1>Tasks</h1>
+                    <h1>Project Tasks</h1>
 
-                    <p>Manage your project workflow</p>
+                    <p>Track progress and manage your team's work</p>
                 </div>
 
                 {projectId && (
@@ -71,22 +85,37 @@ function Tasks() {
                         className="primary-btn"
                         onClick={() => setShowModal(true)}
                     >
-                        + New Task
+                        + Create Task
                     </button>
                 )}
             </div>
 
-            <div className="task-search">
-                🔍
-                <input
-                    placeholder="Search tasks..."
+            <div className="task-toolbar">
+                <div className="task-search">
+                    🔍
+                    <input
+                        placeholder="Search tasks..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
 
-                    value={search}
+                {workspaceId && (
+                    <select
+                        className="project-filter"
+                        value={selectedProject}
+                        onChange={(e) => setSelectedProject(e.target.value)}
+                    >
+                        <option value="">All Projects</option>
 
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+                        {projects.map((project) => (
+                            <option key={project.id} value={project.id}>
+                                {project.name}
+                            </option>
+                        ))}
+                    </select>
+                )}
             </div>
-
             <div className="kanban-board">
                 {visibleColumns.map((column) => (
                     <div className="kanban-column" key={column.status}>
@@ -96,39 +125,32 @@ function Tasks() {
                             <span>
                                 {
                                     tasks.filter(
-                                        (t) =>
-                                            t.status === column.status &&
-                                            (!statusFilter ||
-                                                t.status === statusFilter),
+                                        (t) => t.status === column.status,
                                     ).length
                                 }
                             </span>
                         </div>
 
                         {tasks
-
                             .filter((task) => {
                                 const searchMatch = task.title
                                     .toLowerCase()
                                     .includes(search.toLowerCase());
 
-                                const statusMatch =
-                                    !statusFilter ||
-                                    task.status === statusFilter;
+                                const projectMatch =
+                                    !selectedProject ||
+                                    task.project_id === selectedProject;
 
                                 return (
                                     task.status === column.status &&
                                     searchMatch &&
-                                    statusMatch
+                                    projectMatch
                                 );
                             })
-
                             .map((task) => (
                                 <Link
                                     key={task.id}
-
                                     to={`/tasks/${task.id}`}
-
                                     className={`task-card ${task.priority?.toLowerCase()}`}
                                 >
                                     <div className="task-card-top">
@@ -148,7 +170,10 @@ function Tasks() {
                                     </p>
 
                                     <div className="task-card-footer">
-                                        <span>👤 Assigned</span>
+                                        <span>
+                                            👤{' '}
+                                            {task.assigned_name || 'Unassigned'}
+                                        </span>
 
                                         <span>→</span>
                                     </div>
@@ -161,9 +186,8 @@ function Tasks() {
             {showModal && (
                 <CreateTaskModal
                     projectId={projectId}
-
+                    workspaceId={workspaceId}
                     closeModal={() => setShowModal(false)}
-
                     refresh={loadTasks}
                 />
             )}

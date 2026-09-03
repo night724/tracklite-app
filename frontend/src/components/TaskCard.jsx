@@ -13,7 +13,10 @@ function TaskCard({ task }) {
                 Priority:
                 <strong>{task.priority}</strong>
             </div>
-
+            <div>
+                Assigned:
+                <strong>{task.assigned_name || 'Unassigned'}</strong>
+            </div>
             <Link to={`/tasks/${task.id}`}>View Task</Link>
         </div>
     );

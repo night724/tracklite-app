@@ -28,7 +28,7 @@ function Sidebar() {
                     to={`/workspace/${workspaceId}/projects`}
                     className={({ isActive }) => (isActive ? 'active' : '')}
                 >
-                    📊 Project
+                    📁 Project
                 </NavLink>
 
                 <NavLink

@@ -127,14 +127,6 @@ function Settings() {
                     </button>
 
                     <button
-                        className={activeTab === 'alerts' ? 'active' : ''}
-
-                        onClick={() => setActiveTab('alerts')}
-                    >
-                        🔔 Alerts
-                    </button>
-
-                    <button
                         className={activeTab === 'appearance' ? 'active' : ''}
 
                         onClick={() => setActiveTab('appearance')}
@@ -149,75 +141,92 @@ function Settings() {
                     >
                         🏢 Workspace
                     </button>
-
-                    <button
-                        className={
-                            activeTab === 'danger' ? 'active danger' : ''
-                        }
-
-                        onClick={() => setActiveTab('danger')}
-                    >
-                        ⚠ Danger
-                    </button>
                 </div>
 
                 {/* CONTENT */}
 
                 <div className="settings-content">
                     {activeTab === 'account' && (
-                        <div className="settings-card">
-                            <h2>👤 Profile</h2>
-
-                            <div className="profile-area">
-                                <div className="profile-avatar">
-                                    {name.charAt(0)}
-                                </div>
-
+                        <div className="settings-card account-card">
+                            <div className="card-header">
                                 <div>
-                                    <h3>{name}</h3>
-
-                                    <p>{email}</p>
+                                    <h2>👤 Account Profile</h2>
+                                    <p>Manage your personal information</p>
                                 </div>
                             </div>
 
+                            <div className="profile-header">
+                                <div className="profile-avatar large">
+                                    {name.charAt(0).toUpperCase()}
+                                </div>
+
+                                <div className="profile-info">
+                                    <h3>{name}</h3>
+                                    <span>{email}</span>
+                                </div>
+                            </div>
+
+                            <div className="divider"></div>
+
                             {editing ? (
-                                <>
-                                    <label>Name</label>
+                                <div className="profile-form">
+                                    <div className="form-group">
+                                        <label>Name</label>
 
-                                    <input
-                                        value={name}
+                                        <input
+                                            value={name}
+                                            onChange={(e) =>
+                                                setName(e.target.value)
+                                            }
+                                        />
+                                    </div>
 
-                                        onChange={(e) =>
-                                            setName(e.target.value)
-                                        }
-                                    />
+                                    <div className="form-group">
+                                        <label>Email</label>
 
-                                    <label>Email</label>
+                                        <input
+                                            value={email}
+                                            onChange={(e) =>
+                                                setEmail(e.target.value)
+                                            }
+                                        />
+                                    </div>
 
-                                    <input
-                                        value={email}
+                                    <div className="form-actions">
+                                        <button
+                                            className="cancel-btn"
+                                            onClick={() => setEditing(false)}
+                                        >
+                                            Cancel
+                                        </button>
 
-                                        onChange={(e) =>
-                                            setEmail(e.target.value)
-                                        }
-                                    />
+                                        <button
+                                            className="primary-btn"
+                                            onClick={saveProfile}
+                                        >
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="profile-details">
+                                    <div>
+                                        <small>Name</small>
+                                        <p>{name}</p>
+                                    </div>
+
+                                    <div>
+                                        <small>Email</small>
+                                        <p>{email}</p>
+                                    </div>
 
                                     <button
                                         className="primary-btn"
-
-                                        onClick={saveProfile}
+                                        onClick={() => setEditing(true)}
                                     >
-                                        Save Changes
+                                        Edit Profile
                                     </button>
-                                </>
-                            ) : (
-                                <button
-                                    className="secondary-btn"
-
-                                    onClick={() => setEditing(true)}
-                                >
-                                    Edit Profile
-                                </button>
+                                </div>
                             )}
                         </div>
                     )}
@@ -235,32 +244,6 @@ function Settings() {
                             >
                                 Change Password
                             </button>
-                        </div>
-                    )}
-
-                    {activeTab === 'alerts' && (
-                        <div className="settings-card">
-                            <h2>🔔 Notifications</h2>
-
-                            {Object.keys(notifications).map((item) => (
-                                <div className="toggle-row" key={item}>
-                                    <span>{item}</span>
-
-                                    <input
-                                        type="checkbox"
-
-                                        checked={notifications[item]}
-
-                                        onChange={(e) =>
-                                            setNotifications({
-                                                ...notifications,
-
-                                                [item]: e.target.checked,
-                                            })
-                                        }
-                                    />
-                                </div>
-                            ))}
                         </div>
                     )}
 
@@ -302,22 +285,6 @@ function Settings() {
                                 onClick={() => navigate('/team')}
                             >
                                 Manage My Team
-                            </button>
-                        </div>
-                    )}
-
-                    {activeTab === 'danger' && (
-                        <div className="settings-card danger-card">
-                            <h2>⚠ Danger Zone</h2>
-
-                            <p>Delete workspace permanently.</p>
-
-                            <button
-                                className="delete-btn"
-
-                                onClick={deleteWorkspace}
-                            >
-                                Delete Workspace
                             </button>
                         </div>
                     )}

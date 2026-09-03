@@ -34,6 +34,7 @@ exports.createProject = async (req, res) => {
 
         const project = await Project.create({
             id: uuidv4(),
+            project_key: name.substring(0, 3).toUpperCase(),
             workspace_id,
             name,
             description,
@@ -43,6 +44,7 @@ exports.createProject = async (req, res) => {
         res.status(201).json(project);
     } catch (error) {
         console.log('CREATE PROJECT ERROR:', error);
+
         res.status(500).json({
             message: error.message,
         });
@@ -68,5 +70,31 @@ exports.deleteProject = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: 'Delete failed' });
+    }
+};
+exports.getProjectMembers = async (req, res) => {
+    try {
+        const { projectId } = req.params;
+        const result = await db.query(
+            `
+            SELECT
+                u.id,
+                u.name,
+                u.email
+            FROM projects p
+            JOIN workspace_members wm
+            ON p.workspace_id = wm.workspace_id
+            JOIN users u
+            ON wm.user_id = u.id
+            WHERE p.id = $1
+            `,
+            [projectId],
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.log('GET PROJECT MEMBERS ERROR:', error);
+        res.status(500).json({
+            message: 'Cannot load project members',
+        });
     }
 };

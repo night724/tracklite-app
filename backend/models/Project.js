@@ -110,24 +110,31 @@ class Project {
 
     static async create(data) {
         const { id, workspace_id, name, description, created_by } = data;
+
+        const projectKey =
+            name.replace(/\s+/g, '').substring(0, 4).toUpperCase() +
+            Math.floor(Math.random() * 1000);
+
         const result = await db.query(
             `
-                INSERT INTO projects
-                (
-                    id,
-                    workspace_id,
-                    name,
-                    description,
-                    created_by
-                )
+        INSERT INTO projects
+        (
+            id,
+            project_key,
+            workspace_id,
+            name,
+            description,
+            created_by
+        )
 
-                VALUES
-                ($1,$2,$3,$4,$5)
+        VALUES
+        ($1,$2,$3,$4,$5,$6)
 
-                RETURNING *
-                `,
-            [id, workspace_id, name, description, created_by],
+        RETURNING *
+        `,
+            [id, projectKey, workspace_id, name, description, created_by],
         );
+
         return result.rows[0];
     }
     static async update(id, data) {

@@ -43,7 +43,7 @@ exports.createTask = async (req, res) => {
             description,
             status: status || 'TODO',
             priority: priority || 'MEDIUM',
-            assigned_to,
+            assigned_to: assigned_to || null,
             created_by: req.user.id,
         });
 
@@ -79,9 +79,10 @@ exports.getWorkspaceTasks = async (req, res) => {
         const tasks = await Task.getByWorkspace(req.params.workspaceId, status);
         res.json(tasks);
     } catch (error) {
-        console.log(error);
+        console.log('GET WORKSPACE TASKS ERROR:', error.message);
+
         res.status(500).json({
-            message: 'Cannot load workspace tasks',
+            message: error.message,
         });
     }
 };

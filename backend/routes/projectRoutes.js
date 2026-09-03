@@ -7,6 +7,8 @@ router.use(authenticate);
 
 router.get('/workspace/:workspaceId', projectController.getProjects);
 
+router.get('/:projectId/members', projectController.getProjectMembers);
+
 router.get('/:id', projectController.getProject);
 
 router.post('/', projectController.createProject);
