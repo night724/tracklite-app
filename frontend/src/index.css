@@ -113,10 +113,7 @@ a {
    SIDEBAR
 ========================= */
 
-
 .sidebar {
-
-
     width: 260px;
 
     height: 100vh;
@@ -136,19 +133,11 @@ a {
     display: flex;
 
     flex-direction: column;
-
 }
-
-
-
-
 
 /* BRAND */
 
-
 .sidebar-brand {
-
-
     display: flex;
 
     align-items: center;
@@ -156,14 +145,9 @@ a {
     gap: 12px;
 
     margin-bottom: 35px;
-
 }
 
-
-
 .sidebar-logo {
-
-
     width: 45px;
 
     height: 45px;
@@ -183,54 +167,31 @@ a {
     font-size: 24px;
 
     font-weight: bold;
-
 }
 
-
-
 .sidebar-brand h2 {
-
-
     margin: 0;
 
     font-size: 21px;
-
 }
 
-
-
 .sidebar-brand span {
-
-
     font-size: 12px;
 
     color: #64748b;
-
 }
-
-
-
-
 
 /* MENU */
 
-
 .sidebar-menu {
-
-
     display: flex;
 
     flex-direction: column;
 
     gap: 8px;
-
 }
 
-
-
 .sidebar-link {
-
-
     display: flex;
 
     align-items: center;
@@ -247,53 +208,30 @@ a {
 
     font-size: 15px;
 
-    transition: .2s;
-
+    transition: 0.2s;
 }
 
-
-
 .sidebar-link:hover {
-
-
     background: #f1f5f9;
 
     color: #2563eb;
-
 }
 
-
-
 .sidebar-link.active {
-
     background: rgba(37, 99, 235, 0.18);
 
     color: #60a5fa;
 
-    border: 1px solid rgba(96, 165, 250, .25);
-
+    border: 1px solid rgba(96, 165, 250, 0.25);
 }
-
-
 
 .menu-icon {
-
-
     font-size: 20px;
-
 }
-
-
-
-
-
 
 /* WORKSPACE CARD */
 
-
 .workspace-card {
-
-
     margin-top: auto;
 
     background: #f8fafc;
@@ -307,25 +245,14 @@ a {
     flex-direction: column;
 
     gap: 5px;
-
 }
-
-
 
 .workspace-card small {
-
-
     color: #64748b;
-
 }
 
-
-
 .workspace-card strong {
-
-
     font-size: 14px;
-
 }
 
 /* =========================
@@ -5594,7 +5521,7 @@ body.dark .close-btn {
     color: #7c3aed;
 }
 
-.content>* {
+.content > * {
     animation: fadeIn 0.35s ease;
 }
 
@@ -6112,351 +6039,172 @@ body.dark input::placeholder {
    DARK SIDEBAR
 ========================= */
 
-
 body.dark .sidebar {
-
-
     background: #111827;
 
     border-color: #1f2937;
-
 }
-
-
 
 body.dark .sidebar-brand h2 {
-
-
     color: #f8fafc;
-
 }
-
-
 
 body.dark .sidebar-brand span {
-
-
     color: #94a3b8;
-
 }
-
-
 
 body.dark .sidebar-link {
-
-
     color: #cbd5e1;
-
 }
-
-
 
 body.dark .sidebar-link:hover {
-
-
     background: #1e293b;
-
 }
 
-
-
 body.dark .sidebar-link.active {
-
-
     background: #2563eb;
 
     color: white;
-
 }
-
-
 
 body.dark .workspace-card {
-
-
     background: #1e293b;
-
 }
-
-
 
 body.dark .workspace-card small {
-
-
     color: #94a3b8;
-
 }
 
-
-
 body.dark .workspace-card strong {
-
-
     color: #f8fafc;
-
 }
 
 .main {
-
     margin-left: 260px;
 
     width: calc(100% - 260px);
-
 }
 
-
-
 .content-area {
-
     padding: 30px;
-
 }
 
 /* =========================
    TRACKLITE DARK MODE
 ========================= */
 
-
 /* GLOBAL */
 
 body.dark {
-
     background: #0b1220;
 
     color: #e5e7eb;
-
 }
-
-
-
-
 
 /* SIDEBAR */
 
 body.dark .sidebar {
-
     background: #0f172a;
 
     border-right: 1px solid #1e293b;
-
 }
-
-
-
-
-
 
 /* LOGO */
 
 body.dark .sidebar-logo {
-
     background: #3b82f6;
-
 }
-
-
-
-
-
 
 body.dark .sidebar-brand h2 {
-
     color: #f8fafc;
-
 }
-
 
 body.dark .sidebar-brand span {
-
     color: #64748b;
-
 }
-
-
-
-
-
-
 
 /* MENU LINKS */
 
-
 body.dark .sidebar-link {
-
     color: #94a3b8;
-
 }
 
-
-
 body.dark .sidebar-link:hover {
-
-
     background: #1e293b;
 
     color: #f8fafc;
-
 }
-
-
-
-
 
 /* ACTIVE */
 
-
 body.dark .sidebar-link.active {
-
-
     background: #2563eb;
 
     color: white;
 
-    box-shadow: 0 8px 20px rgba(37, 99, 235, .25);
-
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
 }
-
-
-
-
-
-
 
 /* WORKSPACE CARD */
 
-
 body.dark .workspace-card {
-
-
     background: #111827;
 
     border: 1px solid #1f2937;
-
 }
-
-
 
 body.dark .workspace-card small {
-
-
     color: #64748b;
-
 }
-
-
 
 body.dark .workspace-card strong {
-
-
     color: #f1f5f9;
-
 }
-
-
-
-
-
-
 
 /* NAVBAR */
 
-
 body.dark .navbar {
-
-
     background: #0f172a;
 
     border-bottom: 1px solid #1e293b;
-
 }
 
-
-
-
-
 body.dark .notification-btn {
-
-
     background: #1e293b;
 
     color: #e5e7eb;
-
 }
-
-
 
 body.dark .notification-btn:hover {
-
-
     background: #334155;
-
 }
-
-
-
-
-
-
 
 /* PROFILE */
 
-
 body.dark .profile:hover {
-
-
     background: #1e293b;
-
 }
-
-
 
 body.dark .profile-info strong {
-
-
     color: #f8fafc;
-
 }
-
 
 body.dark .profile-info small {
-
-
     color: #94a3b8;
-
 }
-
-
-
-
-
-
 
 /* DROPDOWN */
 
-
 body.dark .dropdown {
-
-
     background: #111827;
 
     border: 1px solid #334155;
-
 }
-
-
 
 body.dark .dropdown button {
-
-
     color: #e5e7eb;
-
 }
 
-
-
 body.dark .dropdown button:hover {
-
-
     background: #1e293b;
-
 }
