@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import api from '../api/client';
 import CreateTaskModal from '../components/CreateTaskModal';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 
 function Tasks() {
     const { projectId, workspaceId } = useParams();
@@ -22,7 +23,22 @@ function Tasks() {
             loadProjects();
         }
     }, [workspaceId]);
+    const [deleteTaskData, setDeleteTaskData] = useState(null);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    async function deleteTask() {
+        try {
+            setDeleteLoading(true);
 
+            await api.delete(`/tasks/${deleteTaskData.id}`);
+
+            loadTasks();
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setDeleteLoading(false);
+            setDeleteTaskData(null);
+        }
+    }
     async function loadProjects() {
         try {
             const res = await api.get(`/projects/workspace/${workspaceId}`);
@@ -124,9 +140,24 @@ function Tasks() {
 
                             <span>
                                 {
-                                    tasks.filter(
-                                        (t) => t.status === column.status,
-                                    ).length
+                                    tasks.filter((t) => {
+                                        const statusMatch =
+                                            t.status === column.status;
+
+                                        const projectMatch =
+                                            !selectedProject ||
+                                            t.project_id === selectedProject;
+
+                                        const filterMatch =
+                                            !statusFilter ||
+                                            t.status === statusFilter;
+
+                                        return (
+                                            statusMatch &&
+                                            projectMatch &&
+                                            filterMatch
+                                        );
+                                    }).length
                                 }
                             </span>
                         </div>
@@ -141,16 +172,20 @@ function Tasks() {
                                     !selectedProject ||
                                     task.project_id === selectedProject;
 
+                                const statusMatch =
+                                    !statusFilter ||
+                                    task.status === statusFilter;
+
                                 return (
                                     task.status === column.status &&
                                     searchMatch &&
-                                    projectMatch
+                                    projectMatch &&
+                                    statusMatch
                                 );
                             })
                             .map((task) => (
-                                <Link
+                                <div
                                     key={task.id}
-                                    to={`/tasks/${task.id}`}
                                     className={`task-card ${task.priority?.toLowerCase()}`}
                                 >
                                     <div className="task-card-top">
@@ -163,7 +198,12 @@ function Tasks() {
                                         </span>
                                     </div>
 
-                                    <h3>{task.title}</h3>
+                                    <Link
+                                        to={`/tasks/${task.id}`}
+                                        className="task-card-link"
+                                    >
+                                        <h3>{task.title}</h3>
+                                    </Link>
 
                                     <p>
                                         {task.description || 'No description'}
@@ -174,10 +214,26 @@ function Tasks() {
                                             👤{' '}
                                             {task.assigned_name || 'Unassigned'}
                                         </span>
-
-                                        <span>→</span>
                                     </div>
-                                </Link>
+
+                                    <div className="task-actions">
+                                        <Link
+                                            to={`/tasks/${task.id}`}
+                                            className="view-task-btn"
+                                        >
+                                            View →
+                                        </Link>
+
+                                        <button
+                                            className="delete-task-btn"
+                                            onClick={() =>
+                                                setDeleteTaskData(task)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
                             ))}
                     </div>
                 ))}
@@ -189,6 +245,19 @@ function Tasks() {
                     workspaceId={workspaceId}
                     closeModal={() => setShowModal(false)}
                     refresh={loadTasks}
+                />
+            )}
+            {deleteTaskData && (
+                <DeleteConfirmModal
+                    title="Delete Task?"
+
+                    message={`Delete "${deleteTaskData.title}"? This action cannot be undone.`}
+
+                    onConfirm={deleteTask}
+
+                    onCancel={() => setDeleteTaskData(null)}
+
+                    loading={deleteLoading}
                 />
             )}
         </div>

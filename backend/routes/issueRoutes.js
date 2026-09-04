@@ -10,5 +10,6 @@ router.get('/workspace/:workspaceId', issueController.getWorkspaceIssues);
 router.get('/:id', issueController.getIssue);
 router.post('/', issueController.createIssue);
 router.patch('/:id', issueController.updateIssue);
+router.delete('/:id', issueController.deleteIssue);
 
 module.exports = router;

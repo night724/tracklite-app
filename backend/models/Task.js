@@ -100,20 +100,25 @@ class Task {
 
         const result = await db.query(
             `
-                UPDATE tasks
-                SET
-                title=$1,
-                description=$2,
-                status=$3,
-                priority=$4,
-                assigned_to=$5,
-                due_date=$6,
-                updated_at=CURRENT_TIMESTAMP
-                WHERE id=$7
-                RETURNING *
-                `,
+        UPDATE tasks
+        SET
+
+        title = COALESCE($1,title),
+        description = COALESCE($2,description),
+        status = COALESCE($3,status),
+        priority = COALESCE($4,priority),
+        assigned_to = COALESCE($5,assigned_to),
+        due_date = COALESCE($6,due_date),
+
+        updated_at=CURRENT_TIMESTAMP
+
+        WHERE id=$7
+
+        RETURNING *
+        `,
             [title, description, status, priority, assigned_to, due_date, id],
         );
+
         return result.rows[0];
     }
     static async delete(id) {

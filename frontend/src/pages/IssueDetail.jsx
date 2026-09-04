@@ -1,15 +1,33 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import api from '../api/client';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
+import EditIssueModal from '../components/EditIssueModal';
 
 function IssueDetail() {
     const { id } = useParams();
     const [issue, setIssue] = useState(null);
     const [comment, setComment] = useState('');
+    const [showEdit, setShowEdit] = useState(false);
     useEffect(() => {
         loadIssue();
     }, [id]);
+    const [showDelete, setShowDelete] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    async function deleteIssue() {
+        try {
+            setDeleteLoading(true);
 
+            await api.delete(`/issues/${id}`);
+
+            window.history.back();
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setDeleteLoading(false);
+            setShowDelete(false);
+        }
+    }
     async function loadIssue() {
         try {
             const issueRes = await api.get(`/issues/${id}`);
@@ -37,7 +55,26 @@ function IssueDetail() {
             console.log(error);
         }
     }
+    const [showCommentDelete, setShowCommentDelete] = useState(false);
+    const [selectedComment, setSelectedComment] = useState(null);
+    const [commentDeleteLoading, setCommentDeleteLoading] = useState(false);
+    async function deleteComment() {
+        try {
+            setCommentDeleteLoading(true);
 
+            await api.delete(`/comments/${selectedComment}`);
+
+            await loadIssue();
+        } catch (error) {
+            console.log('DELETE COMMENT ERROR:', error);
+        } finally {
+            setCommentDeleteLoading(false);
+
+            setShowCommentDelete(false);
+
+            setSelectedComment(null);
+        }
+    }
     if (!issue) {
         return <h2>Loading...</h2>;
     }
@@ -46,15 +83,7 @@ function IssueDetail() {
         <div className="issue-detail-page">
             {/* HEADER */}
 
-            <div className="issue-header-card">
-                <div className="issue-main-title">
-                    <span className="issue-number">{issue.issue_key}</span>
-
-                    <h1>{issue.title}</h1>
-
-                    <p>{issue.description || 'No description'}</p>
-                </div>
-
+            <div className="issue-header-right">
                 <div className="issue-badge-area">
                     <span
                         className={`priority-badge ${issue.priority?.toLowerCase()}`}
@@ -64,8 +93,23 @@ function IssueDetail() {
 
                     <span className="status-badge">{issue.status}</span>
                 </div>
-            </div>
 
+                <div className="issue-actions">
+                    <button
+                        className="edit-btn"
+                        onClick={() => setShowEdit(true)}
+                    >
+                        ✏ Edit
+                    </button>
+
+                    <button
+                        className="delete-btn"
+                        onClick={() => setShowDelete(true)}
+                    >
+                        🗑 Delete
+                    </button>
+                </div>
+            </div>
             <div className="issue-layout">
                 {/* LEFT */}
 
@@ -106,11 +150,27 @@ function IssueDetail() {
 
                                         <div className="comment-body">
                                             <div className="comment-top">
-                                                <strong>
-                                                    {comment.name || 'User'}
-                                                </strong>
+                                                <div className="comment-user">
+                                                    <strong>
+                                                        {comment.name || 'User'}
+                                                    </strong>
 
-                                                <small>Recently</small>
+                                                    <small>Recently</small>
+                                                </div>
+
+                                                <button
+                                                    className="comment-delete-btn"
+                                                    onClick={() => {
+                                                        setSelectedComment(
+                                                            comment.id,
+                                                        );
+                                                        setShowCommentDelete(
+                                                            true,
+                                                        );
+                                                    }}
+                                                >
+                                                    🗑
+                                                </button>
                                             </div>
 
                                             <p>{comment.body}</p>
@@ -176,6 +236,44 @@ function IssueDetail() {
                     </div>
                 </div>
             </div>
+            {showDelete && (
+                <DeleteConfirmModal
+                    title="Delete Issue?"
+
+                    message="This action cannot be undone. This issue will be permanently deleted."
+
+                    onConfirm={deleteIssue}
+
+                    onCancel={() => setShowDelete(false)}
+
+                    loading={deleteLoading}
+                />
+            )}
+            {showEdit && (
+                <EditIssueModal
+                    issue={issue}
+
+                    closeModal={() => setShowEdit(false)}
+
+                    refresh={loadIssue}
+                />
+            )}
+            {showCommentDelete && (
+                <DeleteConfirmModal
+                    title="Delete Comment?"
+
+                    message="This comment will be permanently deleted."
+
+                    onConfirm={deleteComment}
+
+                    onCancel={() => {
+                        setShowCommentDelete(false);
+                        setSelectedComment(null);
+                    }}
+
+                    loading={commentDeleteLoading}
+                />
+            )}
         </div>
     );
 }

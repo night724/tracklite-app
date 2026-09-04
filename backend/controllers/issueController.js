@@ -68,15 +68,39 @@ exports.createIssue = async (req, res) => {
         });
     }
 };
-
 exports.updateIssue = async (req, res) => {
     try {
+        console.log('========== UPDATE ISSUE ==========');
+        console.log('ID:', req.params.id);
+        console.log('BODY:', req.body);
+
         const issue = await Issue.update(req.params.id, req.body);
-        await Issue.addActivity(issue.id, req.user.id, 'Updated issue');
+
+        if (!issue) {
+            return res.status(404).json({
+                message: 'Issue not found',
+            });
+        }
+
+        // temporarily disable activity log
+        /*
+        if (req.user) {
+
+            await Issue.addActivity(
+                issue.id,
+                req.user.id,
+                "Updated issue"
+            );
+
+        }
+        */
+
         res.json(issue);
     } catch (error) {
+        console.log('UPDATE ERROR:', error);
+
         res.status(500).json({
-            message: 'Update failed',
+            message: error.message,
         });
     }
 };
@@ -135,6 +159,21 @@ exports.getWorkspaceIssues = async (req, res) => {
         console.log('WORKSPACE ISSUES ERROR:', error);
         res.status(500).json({
             message: 'Cannot load workspace issues',
+        });
+    }
+};
+exports.deleteIssue = async (req, res) => {
+    try {
+        await Issue.delete(req.params.id);
+
+        res.json({
+            message: 'Issue deleted',
+        });
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({
+            message: 'Delete failed',
         });
     }
 };

@@ -16,14 +16,27 @@ exports.getProjects = async (req, res) => {
 
 exports.getProject = async (req, res) => {
     try {
-        const project = await Project.getById(req.params.id);
+        const { projectId } = req.params;
+
+        console.log('REQUEST PROJECT:', projectId);
+
+        const project = await Project.getById(projectId);
+
+        console.log('FOUND PROJECT:', project);
+
         if (!project) {
-            return res.status(404).json({ message: 'Project not found' });
+            return res.status(404).json({
+                message: 'Project not found',
+                id: projectId,
+            });
         }
+
         res.json(project);
     } catch (error) {
+        console.log('GET PROJECT ERROR:', error);
+
         res.status(500).json({
-            message: 'Error loading project',
+            message: 'Server error',
         });
     }
 };

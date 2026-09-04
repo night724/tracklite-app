@@ -2,16 +2,21 @@ import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import api from '../api/client';
 import CreateIssueModal from '../components/CreateIssueModal';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
+import EditTaskModal from '../components/EditTaskModal';
 
 function TaskDetail() {
     const { id } = useParams();
     const [issues, setIssues] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
     const [task, setTask] = useState(null);
 
     useEffect(() => {
-        loadTask();
-    }, []);
+        if (id) {
+            loadTask();
+        }
+    }, [id]);
 
     async function loadTask() {
         try {
@@ -23,7 +28,22 @@ function TaskDetail() {
             console.log(error);
         }
     }
+    const [showDelete, setShowDelete] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    async function deleteTask() {
+        try {
+            setDeleteLoading(true);
 
+            await api.delete(`/tasks/${id}`);
+
+            window.history.back();
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setDeleteLoading(false);
+            setShowDelete(false);
+        }
+    }
     if (!task) {
         return <h2>Loading...</h2>;
     }
@@ -35,12 +55,28 @@ function TaskDetail() {
                     <h1>{task.title}</h1>
                     <p>{task.description || 'No description'}</p>
                 </div>
-                <button
-                    className="primary-btn"
-                    onClick={() => setShowModal(true)}
-                >
-                    + New Issue
-                </button>
+                <div className="task-actions">
+                    <button
+                        className="primary-btn"
+                        onClick={() => setShowModal(true)}
+                    >
+                        + New Issue
+                    </button>
+
+                    <button
+                        className="edit-btn"
+                        onClick={() => setShowEdit(true)}
+                    >
+                        ✏ Edit
+                    </button>
+
+                    <button
+                        className="delete-btn"
+                        onClick={() => setShowDelete(true)}
+                    >
+                        🗑 Delete
+                    </button>
+                </div>
             </div>
 
             <div className="task-info-grid">
@@ -110,6 +146,28 @@ function TaskDetail() {
                 <CreateIssueModal
                     taskId={id}
                     closeModal={() => setShowModal(false)}
+                    refresh={loadTask}
+                />
+            )}
+            {showDelete && (
+                <DeleteConfirmModal
+                    title="Delete Task?"
+
+                    message="This action cannot be undone. This task and related data will be deleted."
+
+                    onConfirm={deleteTask}
+
+                    onCancel={() => setShowDelete(false)}
+
+                    loading={deleteLoading}
+                />
+            )}
+            {showEdit && (
+                <EditTaskModal
+                    task={task}
+
+                    closeModal={() => setShowEdit(false)}
+
                     refresh={loadTask}
                 />
             )}

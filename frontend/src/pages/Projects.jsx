@@ -18,6 +18,7 @@ function Projects() {
     async function loadProjects() {
         try {
             const res = await api.get(`/projects/workspace/${workspaceId}`);
+            console.log('PROJECT LIST:', res.data);
 
             setProjects(res.data);
         } catch (error) {
@@ -56,7 +57,11 @@ function Projects() {
 
             <div className="projects-grid">
                 {filteredProjects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+                    <ProjectCard
+                        key={project.id}
+                        project={project}
+                        refresh={loadProjects}
+                    />
                 ))}
 
                 {filteredProjects.length === 0 && (
