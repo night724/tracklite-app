@@ -46,14 +46,37 @@ exports.createComment = async (req, res) => {
         });
     }
 };
-
 exports.deleteComment = async (req, res) => {
     try {
+        const result = await db.query(
+            `
+            SELECT user_id
+            FROM comments
+            WHERE id=$1
+            `,
+            [req.params.id],
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: 'Comment not found',
+            });
+        }
+
+        if (result.rows[0].user_id !== req.user.id) {
+            return res.status(403).json({
+                message: 'Not allowed',
+            });
+        }
+
         await Comment.delete(req.params.id);
+
         res.json({
             message: 'Comment deleted',
         });
     } catch (error) {
+        console.log(error);
+
         res.status(500).json({
             message: 'Delete failed',
         });

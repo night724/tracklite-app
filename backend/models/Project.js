@@ -65,6 +65,7 @@ class Project {
         });
     }
     static async getById(id) {
+        console.log('MODEL ID:', id);
         const result = await db.query(
             `
         SELECT
@@ -105,6 +106,7 @@ class Project {
         `,
             [id],
         );
+        console.log(result.rows);
         return result.rows[0];
     }
 

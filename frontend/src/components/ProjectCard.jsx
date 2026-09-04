@@ -1,8 +1,29 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import api from '../api/client';
+import DeleteConfirmModal from './DeleteConfirmModal';
 
-function ProjectCard({ project }) {
+function ProjectCard({ project, refresh }) {
+    console.log('PROJECT DATA:', project);
     const progress = project.progress || 0;
+    const [showDelete, setShowDelete] = useState(false);
+    const [loading, setLoading] = useState(false);
 
+    async function deleteProject() {
+        try {
+            setLoading(true);
+
+            await api.delete(`/projects/${project.id}`);
+
+            refresh();
+
+            setShowDelete(false);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
         <div className="project-card">
             {/* HEADER */}
@@ -90,13 +111,41 @@ function ProjectCard({ project }) {
                 </div>
             </div>
 
-            <Link
-                to={`/projects/${project.id}`}
+            <div className="project-actions">
+                <Link
+                    to={`/projects/${project.id}`}
+                    onClick={() => {
+                        console.log('CLICK PROJECT:', project.id);
+                    }}
+                    className="project-action"
+                >
+                    Open Project →
+                </Link>
 
-                className="project-action"
-            >
-                Open Project →
-            </Link>
+                <button
+                    className="delete-project-btn"
+                    onClick={() => {
+                        setShowDelete(true);
+                    }}
+                >
+                    Delete
+                </button>
+            </div>
+            {showDelete && (
+                <DeleteConfirmModal
+                    title="Delete Project?"
+
+                    message="This action cannot be undone. All tasks, issues and comments will be deleted."
+
+                    onConfirm={deleteProject}
+
+                    onCancel={() => {
+                        setShowDelete(false);
+                    }}
+
+                    loading={loading}
+                />
+            )}
         </div>
     );
 }

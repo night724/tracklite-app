@@ -58,27 +58,29 @@ VALUES
         );
         return result.rows[0];
     }
-
     static async update(id, data) {
         const { title, description, status, priority, assigned_to } = data;
+
         const result = await db.query(
             `
-                UPDATE issues
-                SET
-                title=$1,
-                description=$2,
-                status=$3,
-                priority=$4,
-                assigned_to=$5,
-                updated_at=CURRENT_TIMESTAMP
-                WHERE id=$6
-                RETURNING *
-                `,
+        UPDATE issues
+        SET
+            title=$1,
+            description=$2,
+            status=$3,
+            priority=$4,
+            assigned_to=$5,
+            updated_at=CURRENT_TIMESTAMP
+
+        WHERE id=$6
+
+        RETURNING *
+        `,
             [title, description, status, priority, assigned_to, id],
         );
+
         return result.rows[0];
     }
-
     static async addActivity(issueId, userId, action) {
         await db.query(
             `
@@ -92,6 +94,23 @@ VALUES
             ($1,$2,$3)
             `,
             [issueId, userId, action],
+        );
+    }
+    static async delete(id) {
+        await db.query(
+            `
+        DELETE FROM activity_logs
+        WHERE issue_id=$1
+        `,
+            [id],
+        );
+
+        await db.query(
+            `
+        DELETE FROM issues
+        WHERE id=$1
+        `,
+            [id],
         );
     }
 }

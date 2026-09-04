@@ -4,12 +4,11 @@ const projectController = require('../controllers/projectController');
 const authenticate = require('../middleware/auth');
 
 router.use(authenticate);
+router.get('/:projectId/members', projectController.getProjectMembers);
 
 router.get('/workspace/:workspaceId', projectController.getProjects);
 
-router.get('/:projectId/members', projectController.getProjectMembers);
-
-router.get('/:id', projectController.getProject);
+router.get('/:projectId', projectController.getProject);
 
 router.post('/', projectController.createProject);
 

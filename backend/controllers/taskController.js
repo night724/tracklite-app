@@ -59,10 +59,18 @@ exports.createTask = async (req, res) => {
 
 exports.updateTask = async (req, res) => {
     try {
+        console.log('UPDATE TASK ID:', req.params.id);
+        console.log('UPDATE DATA:', req.body);
+
         const task = await Task.update(req.params.id, req.body);
+
         res.json(task);
     } catch (error) {
-        res.status(500).json({ message: 'Task update failed' });
+        console.log('UPDATE TASK ERROR:', error);
+
+        res.status(500).json({
+            message: error.message,
+        });
     }
 };
 exports.deleteTask = async (req, res) => {

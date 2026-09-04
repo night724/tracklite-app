@@ -1,21 +1,50 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import api from '../api/client';
 import CreateTaskModal from '../components/CreateTaskModal';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
+import EditProjectModal from '../components/EditProjectModal';
 
 function ProjectDetail() {
+    const params = useParams();
+
+    console.log('PARAMS:', params);
     const { projectId } = useParams();
 
+    console.log('PROJECT ID:', projectId);
+    const navigate = useNavigate();
     const [project, setProject] = useState(null);
+    const [showEdit, setShowEdit] = useState(false);
+
+    async function deleteProject() {
+        try {
+            setDeleteLoading(true);
+
+            await api.delete(`/projects/${projectId}`);
+
+            navigate(`/projects/workspace/${project.workspace_id}`);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setDeleteLoading(false);
+            setShowDelete(false);
+        }
+    }
     const [activity, setActivity] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [tasks, setTasks] = useState([]);
+    const [showDelete, setShowDelete] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
     useEffect(() => {
-        loadProject();
+        if (projectId) {
+            loadProject();
+        }
     }, [projectId]);
 
     async function loadProject() {
+        console.log('LOADING PROJECT:', projectId);
+
         try {
             const res = await api.get(`/projects/${projectId}`);
 
@@ -59,15 +88,28 @@ function ProjectDetail() {
                 </div>
 
                 <div className="hero-actions">
-                    <span className="status-badge">
-                        {project.status || 'ACTIVE'}
-                    </span>
+                    <span className="status-badge">{project.status}</span>
+
+                    <button
+                        className="edit-btn"
+                        onClick={() => setShowEdit(true)}
+                    >
+                        ✏️ Edit
+                    </button>
 
                     <button
                         className="primary-btn"
                         onClick={() => setShowModal(true)}
                     >
                         + Add Task
+                    </button>
+
+                    <button
+                        className="delete-btn"
+
+                        onClick={() => setShowDelete(true)}
+                    >
+                        🗑 Delete Project
                     </button>
                 </div>
             </div>
@@ -227,6 +269,28 @@ function ProjectDetail() {
                 <CreateTaskModal
                     projectId={project.id}
                     closeModal={() => setShowModal(false)}
+                    refresh={loadProject}
+                />
+            )}
+            {showDelete && (
+                <DeleteConfirmModal
+                    title="Delete Project?"
+
+                    message="This action cannot be undone. All tasks, issues and comments will be deleted."
+
+                    onConfirm={deleteProject}
+
+                    onCancel={() => setShowDelete(false)}
+
+                    loading={deleteLoading}
+                />
+            )}
+            {showEdit && (
+                <EditProjectModal
+                    project={project}
+
+                    closeModal={() => setShowEdit(false)}
+
                     refresh={loadProject}
                 />
             )}
